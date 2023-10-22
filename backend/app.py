@@ -21,6 +21,7 @@ def login():
         password = str(data["password"])
 
         cur = mysql.connection.cursor()
+
         query = "SELECT * FROM user WHERE username=%s;"
         val = (username,)
 
@@ -42,8 +43,9 @@ def registerUser():
         data=request.get_json()
         username = str(data["username"])
         password = str(data["password"])
-
+        
         cur = mysql.connection.cursor()
+
         query = "SELECT * FROM user WHERE username=%s;"
         val = (username,)
         
