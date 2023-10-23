@@ -1,0 +1,17 @@
+cur = mysql.connection.cursor()
+cur.execute('''QUERY''')
+
+using this lines will allow to make any query to the DB
+
+---------------------------------------------------------------------------------------------------
+info = cur.fetchall()
+
+using this line will allow to give the variable 'info' any information from the database
+
+---------------------------------------------------------------------------------------------------
+mysql.connection.commit()
+
+will allow us to send information and update the database with new values
+
+---------------------------------------------------------------------------------------------------
+in order to run: python.exe .\flask\app.py 
