@@ -1,8 +1,8 @@
-import 'package:acr_tfc/pages/consultar_pedido.dart';
-import 'package:acr_tfc/pages/fazer_pedido.dart';
-import 'package:acr_tfc/pages/lista_atletas.dart';
-import 'package:acr_tfc/pages/lista_supervisores.dart';
-import 'package:acr_tfc/pages/add_player_page.dart';
+import 'package:deisi66/pages/consultar_pedido.dart';
+import 'package:deisi66/pages/fazer_pedido.dart';
+import 'package:deisi66/pages/lista_atletas.dart';
+import 'package:deisi66/pages/lista_supervisores.dart';
+import 'package:deisi66/pages/add_player_page.dart';
 import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
 import 'pages/home.dart';
