@@ -32,7 +32,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(191, 191, 191, 1),
+      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
         child: CustomAppBar(

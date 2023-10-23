@@ -33,7 +33,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(191, 191, 191, 1),
+      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
         child: CustomAppBar(
@@ -52,19 +52,20 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddPlayerPage()));
-              },
-              style: ElevatedButton.styleFrom(
-                primary: const Color.fromRGBO(3, 110, 73, 1),
-                onPrimary: Colors.white,
-              ),
-              child: const Text('Adicionar Atleta'),
-            )
-            )
+                padding: const EdgeInsets.only(top: 20.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddPlayerPage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromRGBO(3, 110, 73, 1),
+                    onPrimary: Colors.white,
+                  ),
+                  child: const Text('Adicionar Atleta'),
+                ))
           ],
         ),
       ),

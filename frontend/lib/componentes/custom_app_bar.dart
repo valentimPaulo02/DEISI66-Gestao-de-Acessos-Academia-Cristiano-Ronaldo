@@ -21,20 +21,19 @@ class CustomAppBar extends StatelessWidget {
                 Scaffold.of(context).openDrawer();
               },
               child: Opacity(
-                  opacity: 0.9,
-                  child: Container(
-                    margin: const EdgeInsets.all(10.0),
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('lib/images/leaoGarraMenu.png'),
-                        fit: BoxFit.cover,
-                      ),
+                opacity: 0.9,
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('lib/images/leaoGarraMenu.png'),
+                      fit: BoxFit.cover,
                     ),
-                    width: 10,
-                    height: 10,
                   ),
-              )
-          );
+                  width: 10,
+                  height: 10,
+                ),
+              ));
         },
       ),
       title: Row(

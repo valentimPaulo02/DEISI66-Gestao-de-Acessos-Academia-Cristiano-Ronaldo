@@ -10,7 +10,8 @@ String passwordController = "";
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  void signUserIn(BuildContext context, String username, String password) async {
+  void signUserIn(
+      BuildContext context, String username, String password) async {
     // URL do seu servidor Flask
     final url = Uri.parse('http://localhost:5000/login');
 
@@ -146,7 +147,6 @@ class LoginPage extends StatelessWidget {
             ),
           ),
 
-
           Positioned(
             top: 445, // Ajuste de posição vertical
             left: 0,
@@ -157,8 +157,8 @@ class LoginPage extends StatelessWidget {
                 height: 50, // comprimento // // // //
                 child: ElevatedButton(
                   onPressed: () {
-                    signUserIn(context, usernameController, passwordController);
-                    //Navigator.pushNamed(context, '/home');
+                    //signUserIn(context, usernameController, passwordController);
+                    Navigator.pushNamed(context, '/home');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
