@@ -52,7 +52,7 @@ class CustomAppBar extends StatelessWidget {
       actions: <Widget>[
         GestureDetector(
           onTap: () {
-            // code when profile image is clicked
+            Navigator.pushNamed(context, '/');
           },
           child: Opacity(
             opacity: 0.9,

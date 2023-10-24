@@ -45,7 +45,7 @@ class CustomAppBarWithBack extends StatelessWidget {
       actions: <Widget>[
         GestureDetector(
           onTap: () {
-            // código quando a imagem do perfil é clicada
+            Navigator.pushNamed(context, '/');
           },
           child: Opacity(
             opacity: 0.9,
