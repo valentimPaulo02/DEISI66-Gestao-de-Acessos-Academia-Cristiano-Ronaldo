@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/inputfield.dart';
 
@@ -9,7 +8,7 @@ String usernameController = "";
 String passwordController = "";
 
 class AddPlayerPage extends StatelessWidget {
-  AddPlayerPage({Key? key}) : super(key: key);
+  const AddPlayerPage({Key? key}) : super(key: key);
 
   void addPlayer(BuildContext context, String username, String password) async {
     final url = Uri.parse('http://localhost:5000/registerUser');

@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/fazer_pedido': (context) => const FazerPedidoPage(),
         '/consultar_pedido': (context) => const ConsultarPedidoPage(),
         '/lista_de_atletas': (context) => const ListaAtletasPage(),
-        '/registerUser': (context) => AddPlayerPage(),
+        '/register_user': (context) => const AddPlayerPage(),
         '/lista_de_supervisores': (context) => const ListaSupervisoresPage(),
       },
     );

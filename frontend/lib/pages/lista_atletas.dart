@@ -55,10 +55,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddPlayerPage()));
+                    Navigator.of(context).pushNamed('/register_user');
                   },
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromRGBO(3, 110, 73, 1),
