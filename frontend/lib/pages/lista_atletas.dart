@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_player_page.dart';
+import './add_player_page.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/navigation_manager.dart';
