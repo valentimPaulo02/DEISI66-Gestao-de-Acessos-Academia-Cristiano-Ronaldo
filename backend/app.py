@@ -41,9 +41,14 @@ def login():
 def registerUser():
     if request.method=="POST":
         data=request.get_json()
-        username = str(data["username"])
+        name = str(data["name"])
+        surname = str(data["surname"])
         password = str(data["password"])
+        age = str(data["class"])
         
+        username = name + "_" + surname
+        role = "atleta"
+
         cur = mysql.connection.cursor()
 
         query = "SELECT * FROM user WHERE username=%s;"
@@ -54,8 +59,8 @@ def registerUser():
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "INSERT INTO academiasporting.user (username, password) VALUES (%s, %s);"
-        val = (username, password)
+        query = "INSERT INTO academiasporting.user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
+        val = (username, name, surname, password, role, age)
 
         cur.execute(query, val)
         mysql.connection.commit()
