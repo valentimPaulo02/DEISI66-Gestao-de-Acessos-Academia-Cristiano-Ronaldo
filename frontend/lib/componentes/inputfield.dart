@@ -15,14 +15,13 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0), //def tamanho box's
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         obscureText: isPassword,
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white70 // DEFINIR COR
-              ),
+          labelStyle: const TextStyle(color: Colors.white70),
           filled: true,
           fillColor: const Color.fromRGBO(150, 150, 150, 0.5),
           enabledBorder: const OutlineInputBorder(
@@ -39,7 +38,7 @@ class InputField extends StatelessWidget {
           ),
         ),
         style: const TextStyle(
-          color: Colors.white70, // DEFINIR COR TEXTO
+          color: Colors.white70,
           fontSize: 16,
         ),
       ),
