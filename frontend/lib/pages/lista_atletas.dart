@@ -48,12 +48,28 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         onMenuItemSelected: _navigateToPage,
         pageIcons: pageIcons,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: ElevatedButton(
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                'Lista de Atletas',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed('/register_user');
                   },
@@ -62,9 +78,11 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     onPrimary: Colors.white,
                   ),
                   child: const Text('Adicionar Atleta'),
-                ))
-          ],
-        ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

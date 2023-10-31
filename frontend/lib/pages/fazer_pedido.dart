@@ -32,31 +32,34 @@ class _FazerPedidoPageState extends State<FazerPedidoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0),
-        child: CustomAppBar(
-          currentPage: currentPage,
-          onMenuItemSelected: _navigateToPage,
-        ),
-      ),
-      drawer: AppPages(
-        menuItems: menuItems,
-        currentPageTitle: menuItems[currentPage - 1],
-        currentPageIndex: currentPage,
-        onMenuItemSelected: _navigateToPage,
-        pageIcons: pageIcons,
-      ),
-      body: Center(
-        child: Text(
-          menuItems[currentPage - 1],
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+        backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: CustomAppBar(
+            currentPage: currentPage,
+            onMenuItemSelected: _navigateToPage,
           ),
         ),
-      ),
-    );
+        drawer: AppPages(
+          menuItems: menuItems,
+          currentPageTitle: menuItems[currentPage - 1],
+          currentPageIndex: currentPage,
+          onMenuItemSelected: _navigateToPage,
+          pageIcons: pageIcons,
+        ),
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              menuItems[currentPage - 1],
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ));
   }
 }

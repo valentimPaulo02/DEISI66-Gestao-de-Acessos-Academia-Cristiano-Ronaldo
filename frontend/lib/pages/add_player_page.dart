@@ -128,9 +128,9 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Add Player',
+              'Adicionar Atleta',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -213,7 +213,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                 foregroundColor: Colors.white,
                 backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
               ),
-              child: const Text('Add Player'),
+              child: const Text('Adicionar Atleta'),
             ),
           ],
         ),

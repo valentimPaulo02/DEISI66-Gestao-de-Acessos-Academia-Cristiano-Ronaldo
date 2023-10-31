@@ -47,16 +47,20 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
         onMenuItemSelected: _navigateToPage,
         pageIcons: pageIcons,
       ),
-      body: Center(
-        child: Text(
-          menuItems[currentPage - 1],
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              menuItems[currentPage - 1],
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
           ),
-        ),
-      ),
+        )
     );
   }
 }
