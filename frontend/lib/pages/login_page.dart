@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../componentes/inputfield.dart';
@@ -29,6 +30,7 @@ class LoginPage extends StatelessWidget {
       if (data['success'] == true) {
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/home');
+        setToken(data['token']);                                                // <-------------------------------------------------------------------------------------------
       } else {
         // login malsucedido (mostrar mensagem de erro, etc.)
       }

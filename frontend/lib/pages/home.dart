@@ -29,6 +29,8 @@ class _HomePageState extends State<HomePage> {
     navigationManager.navigateToPage(index);
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -28,6 +28,18 @@ final List<IconData> pageIcons = [
   Icons.supervisor_account,
 ];
 
+// Token Related Stuff ----------------
+String token = "";
+
+String getToken() {
+  return token;
+}                                                                             // <-------------------------------------------------------------------------------------------
+
+void setToken(String value){
+  token = value;
+}
+// ------------------------------------
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key, Key? k});
 
