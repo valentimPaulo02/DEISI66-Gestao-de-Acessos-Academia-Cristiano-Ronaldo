@@ -53,7 +53,7 @@ def login():
 # -----------------------------------------------
 
 
-# Ceate User ------------------------------------
+# Create User -----------------------------------
 @app.route('/registerUser', methods=["POST"])
 
 def registerUser():
