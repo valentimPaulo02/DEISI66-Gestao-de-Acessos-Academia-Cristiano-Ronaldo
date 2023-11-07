@@ -74,8 +74,8 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     Navigator.of(context).pushNamed('/register_user');
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromRGBO(3, 110, 73, 1),
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
                   ),
                   child: const Text('Adicionar Atleta'),
                 ),
