@@ -1,11 +1,22 @@
-from flask import request
+from flask import Flask, request
+from flask_mysqldb import MySQL
 from uuid import uuid4
-from app import app, mysql
+
+
+
+app = Flask(__name__)
+
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = "sportingtfc2023"
+app.config['MYSQL_HOST'] = "localhost"
+app.config['MYSQL_DB'] = "academiasporting"
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+
+mysql = MySQL(app)
 
 
 
 @app.route('/login', methods=["POST"])
-
 def login():
     if request.method=="POST":
         data=request.get_json()
@@ -34,7 +45,6 @@ def login():
 
 
 @app.route('/registerUser', methods=["POST"])
-
 def registerUser():
     if request.method=="POST":
         data=request.get_json()
@@ -61,3 +71,14 @@ def registerUser():
         mysql.connection.commit()
         
         return {"success":True}
+    
+
+
+
+
+
+
+
+
+if __name__=="__main__" :
+    app.run(debug=True)
