@@ -19,6 +19,7 @@ mysql = MySQL(app)
 @app.route('/login', methods=["POST"])
 def login():
     if request.method=="POST":
+
         data=request.get_json()
 
         username = str(data["username"])
@@ -30,11 +31,11 @@ def login():
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
         ptr.execute(query, values)
-        info = ptr.fetchall()
+        list = ptr.fetchall()
 
-        if len(info)==0: return {"success":False,"error":"invalid_username"}
+        if len(list)==0: return {"success":False,"error":"invalid_username"}
 
-        if password != info[0]["password"]: return {"success":False,"error":"invalid_password"}
+        if password != list[0]["password"]: return {"success":False,"error":"invalid_password"}
 
         query = "UPDATE user SET token=%s WHERE username=%s"
         values = (token, username)
@@ -47,6 +48,7 @@ def login():
 @app.route('/registerUser', methods=["POST"])
 def registerUser():
     if request.method=="POST":
+
         data=request.get_json()
 
         name = str(data["name"])
@@ -61,16 +63,31 @@ def registerUser():
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
         ptr.execute(query, values)
-        info = ptr.fetchall()
+        list = ptr.fetchall()
 
-        if len(info)!=0: return {"success":False,"error":"username_already_exists"}
+        if len(list)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "INSERT INTO academiasporting.user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
+        query = "INSERT INTO user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
         values = (username, name, surname, password, role, age)
         ptr.execute(query, values)
         mysql.connection.commit()
         
         return {"success":True}
+    
+
+@app.route('/getAthletList', methods=["GET"])
+def getAthletList():
+    if request.method=="GET":
+
+        ptr = mysql.connection.cursor()
+
+        query = "SELECT name, surname, class FROM user;"
+        ptr.execute(query)
+        list = ptr.fetchall()
+
+        if len(list)==0: return {"success":False,"error":"no_athlets_found"}
+
+        return {"success":True, "list":list}
     
 
 
