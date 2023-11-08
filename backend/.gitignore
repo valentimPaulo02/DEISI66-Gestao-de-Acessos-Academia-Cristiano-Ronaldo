@@ -3,3 +3,4 @@ Scripts/*
 Lib/*
 .vscode/
 .idea/
+__pycache__
