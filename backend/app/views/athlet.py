@@ -32,7 +32,6 @@ def registAthlet():
         
         return {"success":True}
     
-
 @athlet_bp.route('/getAthletList', methods=["GET"])
 def getAthletList():
     if request.method=="GET":

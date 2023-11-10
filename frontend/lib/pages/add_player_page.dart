@@ -42,6 +42,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
       final data = json.decode(response.body);
 
       if (data['success'] == true) {
+        Navigator.pushNamed(context, '/lista_de_atletas');
         //showSuccess(context, 'O jogador foi adicionado com sucesso.');
       } else {
         // showError(
