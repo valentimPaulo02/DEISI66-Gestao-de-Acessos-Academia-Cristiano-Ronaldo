@@ -1,13 +1,15 @@
 from flask import Flask
+from flask_cors import CORS
 from database import mysql
 from views.geral import geral_bp
 from views.athlet import athlet_bp
 
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "sportingtfc2023"
+app.config['MYSQL_PASSWORD'] = "frizze2002"
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_DB'] = "academiasporting"
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"

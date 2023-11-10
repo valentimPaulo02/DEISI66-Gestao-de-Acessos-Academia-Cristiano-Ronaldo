@@ -2,7 +2,6 @@ from flask import request, Blueprint
 from uuid import uuid4
 from database import mysql
 
-
 geral_bp = Blueprint("geral", __name__)
 
 @geral_bp.route('/login', methods=["POST"])
