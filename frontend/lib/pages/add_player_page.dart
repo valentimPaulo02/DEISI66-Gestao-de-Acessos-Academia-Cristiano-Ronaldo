@@ -27,7 +27,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
 
   void addPlayer(BuildContext context, String name, String surname,
       String password, String under) async {
-    final url = Uri.parse('http://localhost:5000/registAthlet');
+    final url = Uri.parse('http://localhost:5000/registAthlete');
 
     final response = await http.post(url,
         body: json.encode({

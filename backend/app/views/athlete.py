@@ -1,10 +1,10 @@
 from flask import request, Blueprint
 from database import mysql
 
-athlet_bp = Blueprint("athlet", __name__)
+athlete_bp = Blueprint("athlete", __name__)
 
-@athlet_bp.route('/registAthlet', methods=["POST"])
-def registAthlet():
+@athlete_bp.route('/registAthlete', methods=["POST"])
+def registAthlete():
     if request.method=="POST":
 
         data=request.get_json()
@@ -12,7 +12,7 @@ def registAthlet():
         name = str(data["name"])
         surname = str(data["surname"])
         password = str(data["password"])
-        age = str(data["class"])
+        category = str(data["class"])
         username = name + "_" + surname
         role = "atleta"
 
@@ -26,14 +26,14 @@ def registAthlet():
         if len(list)!=0: return {"success":False,"error":"username_already_exists"}
 
         query = "INSERT INTO user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
-        values = (username, name, surname, password, role, age)
+        values = (username, name, surname, password, role, category)
         ptr.execute(query, values)
         mysql.connection.commit()
         
         return {"success":True}
     
-@athlet_bp.route('/getAthletList', methods=["GET"])
-def getAthletList():
+@athlete_bp.route('/getAthleteList', methods=["GET"])
+def getAthleteList():
     if request.method=="GET":
 
         ptr = mysql.connection.cursor()
@@ -42,7 +42,7 @@ def getAthletList():
         ptr.execute(query)
         list = ptr.fetchall()
 
-        if len(list)==0: return {"success":False,"error":"no_athlets_found"}
+        if len(list)==0: return {"success":False,"error":"no_athletes_found"}
 
         return {"success":True, "list":list}
     

@@ -44,12 +44,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     // ];
 
     // função que vai buscar a lista initstate
-    _getAthletList();
+    _getAthleteList();
   }
 
   // ir buscar a lista de atletas no backend
-  Future<void> _getAthletList() async {
-    final url = await http.get(Uri.parse('http://localhost:5000/getAthletList'));
+  Future<void> _getAthleteList() async {
+    final url = await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);

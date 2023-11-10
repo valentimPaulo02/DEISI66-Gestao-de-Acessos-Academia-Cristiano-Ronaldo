@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from database import mysql
 from views.geral import geral_bp
-from views.athlet import athlet_bp
+from views.athlete import athlete_bp
 
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 mysql.init_app(app)
 
 app.register_blueprint(geral_bp)
-app.register_blueprint(athlet_bp)
+app.register_blueprint(athlete_bp)
 
 
 if __name__=="__main__" :
