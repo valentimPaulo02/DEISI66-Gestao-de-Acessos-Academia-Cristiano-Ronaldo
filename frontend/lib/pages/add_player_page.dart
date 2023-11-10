@@ -45,7 +45,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
         //showSuccess(context, 'O jogador foi adicionado com sucesso.');
       } else {
         // showError(
-        //      context, 'Não foi possível adicionar o jogador. Tente novamente.');
+        // context, 'Não foi possível adicionar o jogador. Tente novamente.');
       }
     } else {
       // showNetworkError(context);

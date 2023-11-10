@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/inputfield.dart';
@@ -5,6 +6,7 @@ import '../main.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/navigation_manager.dart';
+import 'package:http/http.dart' as http;
 
 class Atleta {
   final String name;
@@ -35,12 +37,41 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     super.initState();
     navigationManager = NavigationManager(context, currentPage);
 
-    atletas = [
-      Atleta(name: 'João', surname: 'Anacleto', under: 'under15'),
-      Atleta(name: 'Valentim', surname: 'Paulo', under: 'under16'),
-      Atleta(name: 'test', surname: 'aaa', under: 'under19')
-    ];
+    // atletas = [
+    //   Atleta(name: 'João', surname: 'Anacleto', under: 'under15'),
+    //   Atleta(name: 'Valentim', surname: 'Paulo', under: 'under16'),
+    //   Atleta(name: 'test', surname: 'aaa', under: 'under19')
+    // ];
+
+    // função que vai buscar a lista initstate
+    _getAthletList();
   }
+
+  // ir buscar a lista de atletas no backend
+  Future<void> _getAthletList() async {
+    final url = await http.get(Uri.parse('http://localhost:5000/getAthletList'));
+
+    if (url.statusCode == 200) {
+      final data = jsonDecode(url.body);
+
+      if (data['success']) {
+        setState(() {
+          atletas = (data['list'] as List).map((atleta) => Atleta(
+            name: atleta['name'],
+            surname: atleta['surname'],
+            under: atleta['class'],
+          )).toList();
+        });
+      } else {
+        // Tratar erro ao buscar a lista
+        print('Erro ao buscar a lista de atletas: ${data['error']}');
+      }
+    } else {
+      // Tratar erro de conexão
+      print('Erro de conexão ao buscar a lista de atletas');
+    }
+  }
+
 
   void _navigateToPage(int index) {
     setState(() {
