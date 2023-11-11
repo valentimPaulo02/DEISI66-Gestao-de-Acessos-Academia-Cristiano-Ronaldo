@@ -7,6 +7,7 @@ athlete_bp = Blueprint("athlete", __name__)
 def registAthlete():
     if request.method=="POST":
 
+        ptr = mysql.connection.cursor()
         data=request.get_json()
 
         name = str(data["name"])
@@ -16,14 +17,12 @@ def registAthlete():
         username = name + "_" + surname
         role = "atleta"
 
-        ptr = mysql.connection.cursor()
-
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
         ptr.execute(query, values)
-        list = ptr.fetchall()
+        info = ptr.fetchall()
 
-        if len(list)!=0: return {"success":False,"error":"username_already_exists"}
+        if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
         query = "INSERT INTO user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
         values = (username, name, surname, password, role, category)
@@ -31,7 +30,8 @@ def registAthlete():
         mysql.connection.commit()
         
         return {"success":True}
-    
+
+
 @athlete_bp.route('/getAthleteList', methods=["GET"])
 def getAthleteList():
     if request.method=="GET":
