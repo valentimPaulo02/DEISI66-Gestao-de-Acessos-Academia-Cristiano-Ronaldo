@@ -8,7 +8,7 @@ def registAthlete():
     if request.method=="POST":
 
         ptr = mysql.connection.cursor()
-        data=request.get_json()
+        data = request.get_json()
 
         name = str(data["name"])
         surname = str(data["surname"])

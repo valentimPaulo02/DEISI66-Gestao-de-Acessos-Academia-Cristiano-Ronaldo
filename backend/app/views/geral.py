@@ -9,20 +9,31 @@ def login():
     if request.method=="POST":
 
         ptr = mysql.connection.cursor()
-        data=request.get_json()
+        data = request.get_json()
 
         username = str(data["username"])
         password = str(data["password"])
         token = uuid4()
+
+        while True:
+            query = "SELECT * FROM user WHERE token=%s;"
+            values = (token,)
+            ptr.execute(query, values)
+            list = ptr.fetchall()
+
+            if len(list)==0: break
+            else: token=uuid4()
 
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
         ptr.execute(query, values)
         info = ptr.fetchall()
 
+        dbpassword = info[0]["password"]
+
         if len(info)==0: return {"success":False,"error":"invalid_username"}
 
-        if password != info[0]["password"]: return {"success":False,"error":"invalid_password"}
+        if password!=dbpassword: return {"success":False,"error":"invalid_password"}
 
         query = "UPDATE user SET token=%s WHERE username=%s"
         values = (token, username)
@@ -37,7 +48,7 @@ def logout():
     if request.method=="POST":
 
         ptr = mysql.connection.cursor()
-        data=request.get_json()
+        data = request.get_json()
 
         token = str(data["token"])
 
