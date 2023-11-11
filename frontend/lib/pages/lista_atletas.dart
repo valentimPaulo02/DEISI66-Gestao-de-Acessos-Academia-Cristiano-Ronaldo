@@ -11,12 +11,12 @@ import 'package:http/http.dart' as http;
 class Atleta {
   final String name;
   final String surname;
-  final String under;
+  final String category;
 
   Atleta({
     required this.name,
     required this.surname,
-    required this.under,
+    required this.category,
   });
 }
 
@@ -38,9 +38,9 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     navigationManager = NavigationManager(context, currentPage);
 
     // atletas = [
-    //   Atleta(name: 'João', surname: 'Anacleto', under: 'under15'),
-    //   Atleta(name: 'Valentim', surname: 'Paulo', under: 'under16'),
-    //   Atleta(name: 'test', surname: 'aaa', under: 'under19')
+    //   Atleta(name: 'João', surname: 'Anacleto', category: 'under15'),
+    //   Atleta(name: 'Valentim', surname: 'Paulo', category: 'under16'),
+    //   Atleta(name: 'test', surname: 'aaa', category: 'under19')
     // ];
 
     // função que vai buscar a lista initstate
@@ -59,7 +59,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           atletas = (data['list'] as List).map((atleta) => Atleta(
             name: atleta['name'],
             surname: atleta['surname'],
-            under: atleta['class'],
+            category: atleta['category'],
           )).toList();
         });
       } else {
@@ -149,7 +149,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                 final atleta = atletas[index];
                 return ListTile(
                   title: Text(
-                    '${atleta.name} ${atleta.surname} | ${atleta.under}',
+                    '${atleta.name} ${atleta.surname} | ${atleta.category}',
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.edit),
@@ -179,14 +179,14 @@ class EditAtletaPage extends StatefulWidget {
 class _EditAtletaPageState extends State<EditAtletaPage> {
   String nameController = "";
   String surnameController = "";
-  String underController = "";
+  String categoryController = "";
 
   @override
   void initState() {
     super.initState();
     nameController = widget.atleta.name;
     surnameController = widget.atleta.surname;
-    underController = widget.atleta.under;
+    categoryController = widget.atleta.category;
   }
 
   void _updateAtleta() {
@@ -232,9 +232,9 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
             ),
             const SizedBox(height: 10),
             InputField(
-              labelText: 'Class',
+              labelText: 'Category',
               onChanged: (value) {
-                underController = value;
+                categoryController = value;
               },
             ),
             const SizedBox(height: 10),

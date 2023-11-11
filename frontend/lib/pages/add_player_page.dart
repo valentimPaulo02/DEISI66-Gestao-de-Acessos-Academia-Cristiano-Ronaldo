@@ -8,7 +8,7 @@ import '../componentes/inputfield.dart';
 String nameController = "";
 String surnameController = "";
 String passwordController = "";
-String underController = "sub15"; // Valor padrão
+String categoryController = "sub15"; // Valor padrão
 
 class AddPlayerPage extends StatefulWidget {
   const AddPlayerPage({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
   ];
 
   void addPlayer(BuildContext context, String name, String surname,
-      String password, String under) async {
+      String password, String category) async {
     final url = Uri.parse('http://localhost:5000/registAthlete');
 
     final response = await http.post(url,
@@ -34,7 +34,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
           'name': name,
           'surname': surname,
           'password': password,
-          'class': under,
+          'category': category,
         }),
         headers: {"Content-Type": "application/json"});
 
@@ -166,7 +166,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                   dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   decoration: const InputDecoration(
-                    labelText: 'Class',
+                    labelText: 'Category',
                     labelStyle: TextStyle(color: Colors.white70),
                     filled: true,
                     fillColor: Color.fromRGBO(150, 150, 150, 0.5),
@@ -187,7 +187,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                   onChanged: (String? newValue) {
                     if (newValue != null) {
                       setState(() {
-                        underController = newValue;
+                        categoryController = newValue;
                       });
                     }
                   },
@@ -209,7 +209,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
             ElevatedButton(
               onPressed: () {
                 addPlayer(context, nameController, surnameController,
-                    passwordController, underController);
+                    passwordController, categoryController);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

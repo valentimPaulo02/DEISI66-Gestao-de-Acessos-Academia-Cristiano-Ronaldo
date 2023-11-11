@@ -19,9 +19,9 @@ def login():
             query = "SELECT * FROM user WHERE token=%s;"
             values = (token,)
             ptr.execute(query, values)
-            list = ptr.fetchall()
+            info = ptr.fetchall()
 
-            if len(list)==0: break
+            if len(info)==0: break
             else: token=uuid4()
 
         query = "SELECT * FROM user WHERE username=%s;"
@@ -57,10 +57,10 @@ def logout():
         ptr.execute(query, values)
         info = ptr.fetchall()
 
-        username = info[0]["username"]
+        dbusername = info[0]["username"]
 
         query = "UPDATE user SET token=NULL WHERE username=%s"
-        values = (username, )
+        values = (dbusername, )
         ptr.execute(query, values)
         mysql.connection.commit()
 

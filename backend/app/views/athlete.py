@@ -13,7 +13,7 @@ def registAthlete():
         name = str(data["name"])
         surname = str(data["surname"])
         password = str(data["password"])
-        category = str(data["class"])
+        category = str(data["category"])
         username = name + "_" + surname
         role = "atleta"
 
@@ -24,7 +24,7 @@ def registAthlete():
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "INSERT INTO user (username, name, surname, password, role, class) VALUES (%s, %s, %s, %s, %s, %s);"
+        query = "INSERT INTO user (username, name, surname, password, role, category) VALUES (%s, %s, %s, %s, %s, %s);"
         values = (username, name, surname, password, role, category)
         ptr.execute(query, values)
         mysql.connection.commit()
@@ -38,7 +38,7 @@ def getAthleteList():
 
         ptr = mysql.connection.cursor()
 
-        query = "SELECT name, surname, class FROM user;"
+        query = "SELECT name, surname, category FROM user;"
         ptr.execute(query)
         list = ptr.fetchall()
 
