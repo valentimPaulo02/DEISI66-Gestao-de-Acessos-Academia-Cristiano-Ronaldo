@@ -4,3 +4,4 @@ Lib/*
 .vscode/
 .idea/
 __pycache__/
+todo.txt
