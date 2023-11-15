@@ -29,9 +29,9 @@ def login():
         ptr.execute(query, values)
         info = ptr.fetchall()
 
-        dbpassword = info[0]["password"]
-
         if len(info)==0: return {"success":False,"error":"invalid_username"}
+
+        dbpassword = info[0]["password"]
 
         if password!=dbpassword: return {"success":False,"error":"invalid_password"}
 
