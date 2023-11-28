@@ -15,7 +15,7 @@ def registAthlete():
         password = str(data["password"])
         category = str(data["category"])
         username = name + "_" + surname
-        role = "atleta"
+        role = "athlete"
 
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
