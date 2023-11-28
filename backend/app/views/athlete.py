@@ -38,7 +38,7 @@ def getAthleteList():
 
         ptr = mysql.connection.cursor()
 
-        query = "SELECT name, surname, category FROM user;"
+        query = "SELECT name, surname, category FROM user WHERE role='athlete';"
         ptr.execute(query)
         list = ptr.fetchall()
 
