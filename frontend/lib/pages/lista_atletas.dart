@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:deisi66/componentes/textfield.dart';
 import 'package:flutter/material.dart';
 import '../componentes/app_bar_with_back.dart';
-import '../componentes/inputfield.dart';
 import '../main.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
@@ -9,15 +9,25 @@ import '../componentes/navigation_manager.dart';
 import 'package:http/http.dart' as http;
 
 class Atleta {
-  final String name;
-  final String surname;
-  final String category;
+  String name;
+  String surname;
+  String category;
 
   Atleta({
     required this.name,
     required this.surname,
     required this.category,
   });
+
+  void update({
+    String? name,
+    String? surname,
+    String? category,
+  }) {
+    this.name = name ?? this.name;
+    this.surname = surname ?? this.surname;
+    this.category = category ?? this.category;
+  }
 }
 
 class ListaAtletasPage extends StatefulWidget {
@@ -37,17 +47,15 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     super.initState();
     navigationManager = NavigationManager(context, currentPage);
 
-    // atletas = [
-    //   Atleta(name: 'João', surname: 'Anacleto', category: 'under15'),
-    //   Atleta(name: 'Valentim', surname: 'Paulo', category: 'under16'),
-    //   Atleta(name: 'test', surname: 'aaa', category: 'under19')
-    // ];
+    atletas = [
+      Atleta(name: 'João', surname: 'Anacleto', category: 'under15'),
+      Atleta(name: 'Valentim', surname: 'Paulo', category: 'under16'),
+      Atleta(name: 'test', surname: 'aaa', category: 'under19')
+    ];
 
-    // função que vai buscar a lista initstate
     _getAthleteList();
   }
 
-  // ir buscar a lista de atletas no backend
   Future<void> _getAthleteList() async {
     final url = await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
 
@@ -63,15 +71,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           )).toList();
         });
       } else {
-        // Tratar erro ao buscar a lista
         print('Erro ao buscar a lista de atletas: ${data['error']}');
       }
     } else {
-      // Tratar erro de conexão
       print('Erro de conexão ao buscar a lista de atletas');
     }
   }
-
 
   void _navigateToPage(int index) {
     setState(() {
@@ -82,7 +87,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   }
 
   void _editAtleta(Atleta atleta) {
-    // fazer a parte de edição aqui
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditAtletaPage(atleta: atleta),
@@ -177,24 +181,56 @@ class EditAtletaPage extends StatefulWidget {
 }
 
 class _EditAtletaPageState extends State<EditAtletaPage> {
-  String nameController = "";
-  String surnameController = "";
-  String categoryController = "";
+  final nameController = TextEditingController();
+  final surnameController = TextEditingController();
+  final categoryController = TextEditingController();
 
   @override
   void initState() {
+    nameController.text = widget.atleta.name;
+    surnameController.text = widget.atleta.surname;
+    categoryController.text = widget.atleta.category;
     super.initState();
-    nameController = widget.atleta.name;
-    surnameController = widget.atleta.surname;
-    categoryController = widget.atleta.category;
-  }
-
-  void _updateAtleta() {
-    //funcionalidade para dar update do atleta
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    surnameController.dispose();
+    categoryController.dispose();
+    super.dispose();
+  }
+
+  //dar update no backend da atualização de qq elemento da lista
+  Future<void> _updateAtleta() async {
+    final updatedName = nameController.text;
+    final updatedSurname = surnameController.text;
+    final updatedCategory = categoryController.text;
+
+    final Map<String, dynamic> updatedData = {
+      'name': updatedName,
+      'surname': updatedSurname,
+      'category': updatedCategory,
+    };
+
+    final response = await http.put(
+      Uri.parse('http://localhost:5000/updateAthlete'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(updatedData),
+    );
+
+    if (response.statusCode == 200) {
+    } else {
+      print('Erro na atualização do atleta: ${response.reasonPhrase}');
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
       appBar: PreferredSize(
@@ -217,24 +253,27 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
               ),
             ),
             const SizedBox(height: 10),
-            InputField(
+            CustomTextField(
               labelText: 'Name',
+              controller: nameController,
               onChanged: (value) {
-                nameController = value;
+                widget.atleta.update(name: value);
               },
             ),
             const SizedBox(height: 10),
-            InputField(
+            CustomTextField(
               labelText: 'Surname',
+              controller: surnameController,
               onChanged: (value) {
-                surnameController = value;
+                widget.atleta.update(surname: value);
               },
             ),
             const SizedBox(height: 10),
-            InputField(
+            CustomTextField(
               labelText: 'Category',
+              controller: categoryController,
               onChanged: (value) {
-                categoryController = value;
+                widget.atleta.update(category: value);
               },
             ),
             const SizedBox(height: 10),
