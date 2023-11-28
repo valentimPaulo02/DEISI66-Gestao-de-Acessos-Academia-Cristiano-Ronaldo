@@ -213,7 +213,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
       'category': updatedCategory,
     };
 
-    final response = await http.put(
+    final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
