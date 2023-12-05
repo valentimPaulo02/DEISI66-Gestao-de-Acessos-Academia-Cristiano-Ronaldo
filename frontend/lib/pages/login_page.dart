@@ -31,19 +31,16 @@ class LoginPage extends StatelessWidget {
       if (data['success'] == true) {
         // ignore: use_build_context_synchronously
         setToken(data['token']);
-        fetchUserRole().then((role) {
-          Navigator.pushNamed(context, '/home');
-        }).catchError((error){
-          print("Erro ao buscar role do utilizador: $error");
-        });
-            // <-------------------------------------------------------------------------------------------
-            } else {
-            // login malsucedido (mostrar mensagem de erro, etc.)
-            }
-            } else {
-            // erro de rede ou erro do servidor
-            }
-        }
+        fetchUserRole();
+        Navigator.pushNamed(context, '/home');
+        // <-------------------------------------------------------------------------------------------
+      } else {
+        // login malsucedido (mostrar mensagem de erro, etc.)
+      }
+    } else {
+      // erro de rede ou erro do servidor
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

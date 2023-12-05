@@ -1,3 +1,4 @@
+import 'package:deisi66/componentes/get_role.dart';
 import 'package:deisi66/pages/consultar_pedido.dart';
 import 'package:deisi66/pages/fazer_pedido.dart';
 import 'package:deisi66/pages/lista_atletas.dart';
@@ -37,6 +38,18 @@ String getToken() {
 
 void setToken(String value) {
   token = value;
+}
+// ------------------------------------
+
+// Role Related Stuff ----------------
+String role = "";
+
+String getRole() {
+  return role;
+} // <-------------------------------------------------------------------------------------------
+
+void setRole(String value) {
+  role = value;
 }
 // ------------------------------------
 
