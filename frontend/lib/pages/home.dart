@@ -1,3 +1,4 @@
+import 'package:deisi66/componentes/get_role.dart';
 import 'package:flutter/material.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
@@ -20,6 +21,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     navigationManager = NavigationManager(context, currentPage);
   }
+
+
 
   void _navigateToPage(int index) {
     setState(() {
@@ -46,6 +49,7 @@ class _HomePageState extends State<HomePage> {
           currentPageIndex: currentPage,
           onMenuItemSelected: _navigateToPage,
           pageIcons: pageIcons,
+          userRole: role,
         ),
         body: Align(
           alignment: Alignment.topCenter,

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:deisi66/main.dart';
 
-void fetchUserRole() async {
+Future<String> fetchUserRole() async {
   final url = Uri.parse('http://localhost:5000/getRole');
   final token = getToken();
 
@@ -16,10 +16,11 @@ void fetchUserRole() async {
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
-    if(data['sucess'] == true){
+    if (data['success'] == true) {
       setRole(data['role']);
+      return data['role'] as String;
     }
-  } else {
-    throw Exception('Failed to load user role');
   }
+
+  throw Exception('Failed to load user role');
 }

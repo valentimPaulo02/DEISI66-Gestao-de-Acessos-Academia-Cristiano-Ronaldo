@@ -111,6 +111,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         currentPageIndex: currentPage,
         onMenuItemSelected: _navigateToPage,
         pageIcons: pageIcons,
+        userRole: role,
       ),
       body: Column(
         children: [

@@ -6,6 +6,7 @@ class AppPages extends StatelessWidget {
   final int currentPageIndex;
   final ValueChanged<int> onMenuItemSelected;
   final List<IconData> pageIcons;
+  final String userRole;
 
   const AppPages({
     Key? key,
@@ -14,10 +15,25 @@ class AppPages extends StatelessWidget {
     required this.currentPageIndex,
     required this.onMenuItemSelected,
     required this.pageIcons,
+    required this.userRole,
   }) : super(key: key);
+
+  List<String> getFilteredMenuItems() {
+    switch (userRole) {
+      case 'admin':
+        return menuItems;
+      case 'supervisor':
+        return menuItems.sublist(0, 3);
+      case 'atleta':
+        return menuItems.sublist(1, 3);
+      default:
+        return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final filteredMenuItens = getFilteredMenuItems();
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -38,7 +54,7 @@ class AppPages extends StatelessWidget {
               ),
             ),
           ),
-          ...menuItems.asMap().entries.map((entry) {
+          ...filteredMenuItens.asMap().entries.map((entry) {
             final index = entry.key + 1;
             final item = entry.value;
             return ListTile(

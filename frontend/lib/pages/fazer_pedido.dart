@@ -46,6 +46,7 @@ class _FazerPedidoPageState extends State<FazerPedidoPage> {
           currentPageIndex: currentPage,
           onMenuItemSelected: _navigateToPage,
           pageIcons: pageIcons,
+          userRole: role,
         ),
         body: Align(
           alignment: Alignment.topCenter,

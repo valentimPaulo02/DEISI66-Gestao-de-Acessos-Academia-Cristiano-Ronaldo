@@ -9,8 +9,10 @@ import 'pages/login_page.dart';
 import 'pages/home.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
+
 void main() {
   runApp(const MyApp());
+  fetchUserRole();
 }
 
 final menuItems = [
@@ -43,6 +45,16 @@ void setToken(String value) {
 
 // Role Related Stuff ----------------
 String role = "";
+
+Future<void> fetchAndSetUserRole() async {
+  try {
+    final role = await fetchUserRole();
+    setRole(role);
+  } catch (e) {
+    print('Erro ao buscar a função do usuário: $e');
+  }
+}
+
 
 String getRole() {
   return role;
