@@ -72,9 +72,8 @@ def getRole():
     if request.method=="GET":
 
         ptr = mysql.connection.cursor()
-        data = request.get_json()
 
-        token = str(data["token"])
+        token = request.headers.get("token")
 
         query = "SELECT * FROM user WHERE token=%s;"
         values = (token,)
