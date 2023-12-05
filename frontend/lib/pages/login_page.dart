@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../componentes/get_role.dart';
 import '../componentes/inputfield.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,8 +12,8 @@ String passwordController = "";
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  void signUserIn(
-      BuildContext context, String username, String password) async {
+  void signUserIn(BuildContext context, String username,
+      String password) async {
     // URL do seu servidor Flask
     final url = Uri.parse('http://localhost:5000/login');
 
@@ -29,15 +30,20 @@ class LoginPage extends StatelessWidget {
 
       if (data['success'] == true) {
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, '/home');
-        setToken(data['token']);                                                // <-------------------------------------------------------------------------------------------
-      } else {
-        // login malsucedido (mostrar mensagem de erro, etc.)
-      }
-    } else {
-      // erro de rede ou erro do servidor
-    }
-  }
+        setToken(data['token']);
+        fetchUserRole().then((role) {
+          Navigator.pushNamed(context, '/home');
+        }).catchError((error){
+          print("Erro ao buscar role do utilizador: $error");
+        });
+            // <-------------------------------------------------------------------------------------------
+            } else {
+            // login malsucedido (mostrar mensagem de erro, etc.)
+            }
+            } else {
+            // erro de rede ou erro do servidor
+            }
+        }
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +165,8 @@ class LoginPage extends StatelessWidget {
                 height: 50, // comprimento // // // //
                 child: ElevatedButton(
                   onPressed: () {
-                    signUserIn(context, usernameController, passwordController);
-                    //Navigator.pushNamed(context, '/home');
+                    //signUserIn(context, usernameController, passwordController);
+                    Navigator.pushNamed(context, '/home');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
