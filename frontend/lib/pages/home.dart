@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           currentPageIndex: currentPage,
           onMenuItemSelected: _navigateToPage,
           pageIcons: pageIcons,
-          userRole: role,
+          userRole: "supervisor",
         ),
         body: Align(
           alignment: Alignment.topCenter,

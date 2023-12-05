@@ -23,9 +23,9 @@ class AppPages extends StatelessWidget {
       case 'admin':
         return menuItems;
       case 'supervisor':
+        return menuItems.sublist(0, 4);
+      case 'athlete':
         return menuItems.sublist(0, 3);
-      case 'atleta':
-        return menuItems.sublist(1, 3);
       default:
         return [];
     }
