@@ -5,11 +5,11 @@ import 'package:deisi66/main.dart';
 void fetchUserRole() async {
   final url = Uri.parse('http://localhost:5000/getRole');
 
-  final response = await http.post(url,
-      body: json.encode({
-        'token': getToken()
-      }),
-      headers: {"Content-Type": "application/json"}
+  final response = await http.get(url,
+      headers: {
+        "Content-Type": "application/json",
+        "token":getToken()
+      }
   );
 
   if (response.statusCode == 200) {
@@ -18,6 +18,7 @@ void fetchUserRole() async {
       setRole(data['role']);
     }
   }
-
-  throw Exception('Failed to load user role');
+  else{
+    throw Exception('Failed to load user role');
+  }
 }

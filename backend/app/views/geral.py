@@ -67,14 +67,13 @@ def logout():
         return {"success":True}
     
 
-@geral_bp.route('/getRole', methods=["POST"])
+@geral_bp.route('/getRole', methods=["GET"])
 def getRole():
-    if request.method=="POST":
+    if request.method=="GET":
 
         ptr = mysql.connection.cursor()
-        data = request.get_json()
 
-        token = str(data["token"])
+        token = request.headers.get("token")
 
         query = "SELECT * FROM user WHERE token=%s;"
         values = (token,)
