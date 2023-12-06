@@ -1,5 +1,6 @@
 import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class AppPages extends StatelessWidget {
   final List<String> menuItems;
@@ -17,22 +18,9 @@ class AppPages extends StatelessWidget {
     required this.pageIcons,
   }) : super(key: key);
 
-  List<String> getFilteredMenuItems() {
-    switch (getRole()) {
-      case 'admin':
-        return menuItems;
-      case 'supervisor':
-        return menuItems.sublist(0, 4);
-      case 'athlete':
-        return menuItems.sublist(0, 3);
-      default:
-        return [];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    final filteredMenuItens = getFilteredMenuItems();
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -53,8 +41,8 @@ class AppPages extends StatelessWidget {
               ),
             ),
           ),
-          ...filteredMenuItens.asMap().entries.map((entry) {
-            final index = entry.key + 1;
+          ...menuItems.asMap().entries.map((entry) {
+            int index = entry.key + 1;
             final item = entry.value;
             return ListTile(
               selectedTileColor: const Color.fromRGBO(4, 180, 107, 0.2),
@@ -62,8 +50,7 @@ class AppPages extends StatelessWidget {
               leading: Icon(pageIcons[index - 1]),
               title: Text(item),
               onTap: () {
-                Navigator.pop(
-                    context); // Após seleção da página, o drawer fecha
+                Navigator.pop(context); // Fecha o drawer após a seleção
                 final route =
                     '/${menuItems[index - 1].toLowerCase().replaceAll(' ', '_')}';
                 Navigator.of(context).pushReplacementNamed(route);
@@ -76,3 +63,4 @@ class AppPages extends StatelessWidget {
     );
   }
 }
+

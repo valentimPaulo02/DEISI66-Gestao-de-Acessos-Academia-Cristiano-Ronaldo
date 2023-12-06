@@ -14,7 +14,8 @@ void main() {
   runApp(const MyApp());
 }
 
-final menuItems = [
+// Menu Items ----------------------------
+final menuItemsAdmin = [
   'Home',
   'Fazer Pedido',
   'Consultar Pedido',
@@ -22,12 +23,38 @@ final menuItems = [
   'Lista de Supervisores',
 ];
 
-final List<IconData> pageIcons = [
+final menuItemsAthlete = [
+  'Home',
+  'Fazer Pedido',
+  'Consultar Pedido',
+];
+
+final menuItemsSupervisor = [
+  'Home',
+  'Consultar Pedido',
+  'Lista de Atletas',
+];
+
+// Page Icons ----------------------------
+
+final List<IconData> pageIconsAdmin = [
   Icons.home,
   Icons.list_alt,
   Icons.remove_red_eye,
   Icons.group,
   Icons.supervisor_account,
+];
+
+final List<IconData> pageIconsAthlete = [
+  Icons.home,
+  Icons.list_alt,
+  Icons.remove_red_eye,
+];
+
+final List<IconData> pageIconsSupervisor = [
+  Icons.home,
+  Icons.remove_red_eye,
+  Icons.group,
 ];
 
 // Token Related Stuff ----------------

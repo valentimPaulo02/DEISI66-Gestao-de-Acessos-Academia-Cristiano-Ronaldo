@@ -45,7 +45,11 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   @override
   void initState() {
     super.initState();
-    navigationManager = NavigationManager(context, currentPage);
+
+    if(getRole()=='supervisor'){
+      currentPage = 3;
+    }
+    navigationManager = NavigationManager(context, currentPage: currentPage);
 
     atletas = [
       Atleta(name: 'João', surname: 'Anacleto', category: 'under15'),
@@ -94,6 +98,32 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     );
   }
 
+  static List<String> getMenuItems() {
+    switch (getRole()) {
+      case 'admin':
+        return menuItemsAdmin;
+      case 'supervisor':
+        return menuItemsSupervisor;
+      case 'athlete':
+        return menuItemsAthlete;
+      default:
+        return [];
+    }
+  }
+
+  static List<IconData> getPageIcons() {
+    switch (role) {
+      case 'admin':
+        return pageIconsAdmin;
+      case 'supervisor':
+        return pageIconsSupervisor;
+      case 'athlete':
+        return pageIconsAthlete;
+      default:
+        return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,11 +136,11 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         ),
       ),
       drawer: AppPages(
-        menuItems: menuItems,
-        currentPageTitle: menuItems[currentPage - 1],
+        menuItems: getMenuItems(),
+        currentPageTitle: getMenuItems()[currentPage - 1],
         currentPageIndex: currentPage,
         onMenuItemSelected: _navigateToPage,
-        pageIcons: pageIcons,
+        pageIcons: getPageIcons(),
       ),
       body: Column(
         children: [
