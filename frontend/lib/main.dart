@@ -15,6 +15,7 @@ void main() {
 }
 
 // Menu Items ----------------------------
+
 final menuItemsAdmin = [
   'Home',
   'Fazer Pedido',
@@ -56,6 +57,8 @@ final List<IconData> pageIconsSupervisor = [
   Icons.remove_red_eye,
   Icons.group,
 ];
+
+
 
 // Token Related Stuff ----------------
 String token = "";

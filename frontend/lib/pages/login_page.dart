@@ -32,6 +32,7 @@ class LoginPage extends StatelessWidget {
         // ignore: use_build_context_synchronously
         setToken(data['token']);
         fetchUserRole();
+        await Future.delayed(Duration(milliseconds: 500));
         Navigator.pushNamed(context, '/home');
         // <-------------------------------------------------------------------------------------------
       } else {

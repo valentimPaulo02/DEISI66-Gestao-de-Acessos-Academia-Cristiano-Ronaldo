@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       currentPage = index;
     });
-
     navigationManager.navigateToPage(index);
   }
 
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   static List<IconData> getPageIcons() {
-    switch (role) {
+    switch (getRole()) {
       case 'admin':
         return pageIconsAdmin;
       case 'supervisor':
@@ -57,6 +56,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
