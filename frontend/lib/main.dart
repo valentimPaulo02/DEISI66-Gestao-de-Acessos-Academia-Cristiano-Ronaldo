@@ -12,7 +12,6 @@ import 'pages/home.dart';
 
 void main() {
   runApp(const MyApp());
-  fetchUserRole();
 }
 
 final menuItems = [
@@ -36,8 +35,7 @@ String token = "";
 
 String getToken() {
   return token;
-} // <-------------------------------------------------------------------------------------------
-
+} 
 void setToken(String value) {
   token = value;
 }
@@ -46,20 +44,9 @@ void setToken(String value) {
 // Role Related Stuff ----------------
 String role = "";
 
-Future<void> fetchAndSetUserRole() async {
-  try {
-    final role = await fetchUserRole();
-    setRole(role);
-  } catch (e) {
-    print('Erro ao buscar a função do usuário: $e');
-  }
-}
-
-
 String getRole() {
   return role;
-} // <-------------------------------------------------------------------------------------------
-
+} 
 void setRole(String value) {
   role = value;
 }

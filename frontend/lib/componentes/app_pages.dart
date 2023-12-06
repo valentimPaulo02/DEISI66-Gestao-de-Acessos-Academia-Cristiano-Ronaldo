@@ -1,3 +1,4 @@
+import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
 
 class AppPages extends StatelessWidget {
@@ -6,7 +7,6 @@ class AppPages extends StatelessWidget {
   final int currentPageIndex;
   final ValueChanged<int> onMenuItemSelected;
   final List<IconData> pageIcons;
-  final String userRole;
 
   const AppPages({
     Key? key,
@@ -15,11 +15,10 @@ class AppPages extends StatelessWidget {
     required this.currentPageIndex,
     required this.onMenuItemSelected,
     required this.pageIcons,
-    required this.userRole,
   }) : super(key: key);
 
   List<String> getFilteredMenuItems() {
-    switch (userRole) {
+    switch (getRole()) {
       case 'admin':
         return menuItems;
       case 'supervisor':

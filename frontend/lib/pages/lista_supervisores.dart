@@ -46,7 +46,6 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
         currentPageIndex: currentPage,
         onMenuItemSelected: _navigateToPage,
         pageIcons: pageIcons,
-        userRole: role,
       ),
         body: Align(
           alignment: Alignment.topCenter,
