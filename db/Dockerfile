@@ -8,4 +8,4 @@ ENV MYSQL_DATABASE=academiasporting
 EXPOSE 3306
 
 # Copy SQL dump file
-COPY db_container.sql /docker-entrypoint-initdb.d/
+COPY db_dump.sql /docker-entrypoint-initdb.d/
