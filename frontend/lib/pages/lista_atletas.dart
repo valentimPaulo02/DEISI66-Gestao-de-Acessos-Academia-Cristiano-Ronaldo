@@ -38,7 +38,7 @@ class ListaAtletasPage extends StatefulWidget {
 }
 
 class _ListaAtletasPageState extends State<ListaAtletasPage> {
-  int currentPage = 4;
+  int currentPage = 5;
   late NavigationManager navigationManager;
   List<Atleta> atletas = [];
 

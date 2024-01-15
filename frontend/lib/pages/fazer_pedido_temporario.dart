@@ -4,14 +4,14 @@ import '../componentes/custom_app_bar.dart';
 import '../componentes/navigation_manager.dart';
 import '../main.dart';
 
-class FazerPedidoPage extends StatefulWidget {
-  const FazerPedidoPage({Key? key}) : super(key: key);
+class FazerPedidoTPage extends StatefulWidget {
+  const FazerPedidoTPage({Key? key}) : super(key: key);
 
   @override
-  _FazerPedidoPageState createState() => _FazerPedidoPageState();
+  _FazerPedidoTPageState createState() => _FazerPedidoTPageState();
 }
 
-class _FazerPedidoPageState extends State<FazerPedidoPage> {
+class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
   int currentPage = 2;
   late NavigationManager navigationManager;
 

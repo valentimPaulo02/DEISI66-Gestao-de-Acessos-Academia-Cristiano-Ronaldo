@@ -15,15 +15,18 @@ class NavigationManager {
         routeName = '/home';
         break;
       case 2:
-        routeName = '/fazer_pedido';
+        routeName = '/fazer_pedido_temporario';
         break;
       case 3:
-        routeName = '/consultar_pedido';
+        routeName = '/fazer_pedido_fim_de_semana';
         break;
       case 4:
-        routeName = '/lista_de_atletas';
+        routeName = '/consultar_pedido';
         break;
       case 5:
+        routeName = '/lista_de_atletas';
+        break;
+      case 6:
         routeName = '/lista_de_supervisores';
         break;
       default:

@@ -12,7 +12,7 @@ class ListaSupervisoresPage extends StatefulWidget {
 }
 
 class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
-  int currentPage = 5;
+  int currentPage = 6;
   late NavigationManager navigationManager;
 
   @override

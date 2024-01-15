@@ -4,24 +4,20 @@ import '../componentes/custom_app_bar.dart';
 import '../componentes/navigation_manager.dart';
 import '../main.dart';
 
-class ConsultarPedidoPage extends StatefulWidget {
-  const ConsultarPedidoPage({Key? key}) : super(key: key);
+class FazerPedidoFSPage extends StatefulWidget {
+  const FazerPedidoFSPage({Key? key}) : super(key: key);
 
   @override
-  _ConsultarPedidoPageState createState() => _ConsultarPedidoPageState();
+  _FazerPedidoFSPageState createState() => _FazerPedidoFSPageState();
 }
 
-class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
-  int currentPage = 4;
+class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
+  int currentPage = 3;
   late NavigationManager navigationManager;
 
   @override
   void initState() {
     super.initState();
-
-    if(getRole() == "supervisor"){
-      currentPage = 2;
-    }
     navigationManager = NavigationManager(context, currentPage: currentPage);
   }
 
