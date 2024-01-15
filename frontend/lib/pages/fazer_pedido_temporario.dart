@@ -221,7 +221,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: supervisor,
-                  items: ["", "pai/mae", "tutor", "empresario"]
+                  items: ["pai/mae", "tutor", "empresario"]
                       .map((String option) {
                     return DropdownMenuItem<String>(
                       value: option,
