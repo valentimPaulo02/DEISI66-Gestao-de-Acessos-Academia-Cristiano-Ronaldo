@@ -21,8 +21,8 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
   DateTime? leaveDate;
   TimeOfDay? leaveTime;
   String destiny = "";
-  String transport = "transporte público"; // valor padrão
-  String supervisor = "pai/mãe"; // valor padrão
+  String transport = "transporte publico"; // valor padrão
+  String supervisor = "pai/mae"; // valor padrão
   DateTime? arrivalDate;
   TimeOfDay? arrivalTime;
 
@@ -84,7 +84,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
       String formattedReturnTime = formatTime(
           TimeOfDay(hour: arrivalTime!.hour, minute: arrivalTime!.minute));
 
-      final url = Uri.parse('http://localhost:5000/enviarPedidoSaida');
+      final url = Uri.parse('http://localhost:5000/makeTemporaryRequest');
 
       final response = await http.post(
         url,
@@ -105,7 +105,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
         final data = json.decode(response.body);
 
         if (data['success'] == true) {
-          Navigator.pushNamed(context, 'consultar_pedido');
+          Navigator.pushNamed(context, '/consultar_pedido');
         }
       }
 
@@ -202,7 +202,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: transport,
-                  items: ["transporte público", "tvde", "carro privado"]
+                  items: ["transporte publico", "tvde", "carro privado"]
                       .map((String option) {
                     return DropdownMenuItem<String>(
                       value: option,
@@ -221,7 +221,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: supervisor,
-                  items: ["", "pai/mãe", "tutor", "empresário"]
+                  items: ["", "pai/mae", "tutor", "empresario"]
                       .map((String option) {
                     return DropdownMenuItem<String>(
                       value: option,
