@@ -1,7 +1,7 @@
 import 'package:deisi66/componentes/get_role.dart';
 import 'package:deisi66/pages/consultar_pedido.dart';
-import 'package:deisi66/pages/fazer_pedido_fim_de_semana.dart';
-import 'package:deisi66/pages/fazer_pedido_temporario.dart';
+import 'package:deisi66/pages/fazer_pedido_saida_fim_de_semana.dart';
+import 'package:deisi66/pages/fazer_pedido_saida_temporaria.dart';
 import 'package:deisi66/pages/lista_atletas.dart';
 import 'package:deisi66/pages/lista_supervisores.dart';
 import 'package:deisi66/pages/registar_utilizador.dart';
@@ -18,8 +18,8 @@ void main() {
 
 final menuItemsAdmin = [
   'Home',
-  'Fazer Pedido Temporario',
-  'Fazer Pedido Fim de Semana',
+  'Fazer Pedido Saida Temporaria',
+  'Fazer Pedido Saida Fim de Semana',
   'Consultar Pedido',
   'Lista de Atletas',
   'Lista de Supervisores',
@@ -27,8 +27,8 @@ final menuItemsAdmin = [
 
 final menuItemsAthlete = [
   'Home',
-  'Fazer Pedido Temporario',
-  'Fazer Pedido Fim de Semana',
+  'Fazer Pedido Saida Temporaria',
+  'Fazer Pedido Saida Fim de Semana',
   'Consultar Pedido',
 ];
 
@@ -75,7 +75,7 @@ void setToken(String value) {
 // ------------------------------------
 
 // Role Related Stuff ----------------
-String role = "";
+String role = "admin";
 
 String getRole() {
   return role;
@@ -101,8 +101,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
-        '/fazer_pedido_temporario': (context) => const FazerPedidoTPage(),
-        '/fazer_pedido_fim_de_semana': (context) => const FazerPedidoFSPage(),
+        '/fazer_pedido_saida_temporaria': (context) => const FazerPedidoTPage(),
+        '/fazer_pedido_saida_fim_de_semana': (context) => const FazerPedidoFSPage(),
         '/consultar_pedido': (context) => const ConsultarPedidoPage(),
         '/lista_de_atletas': (context) => const ListaAtletasPage(),
         '/register_user': (context) => const AddPlayerPage(),
