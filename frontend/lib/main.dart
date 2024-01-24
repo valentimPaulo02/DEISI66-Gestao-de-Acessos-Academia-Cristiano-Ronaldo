@@ -75,7 +75,7 @@ void setToken(String value) {
 // ------------------------------------
 
 // Role Related Stuff ----------------
-String role = "admin";
+String role = "";
 
 String getRole() {
   return role;
