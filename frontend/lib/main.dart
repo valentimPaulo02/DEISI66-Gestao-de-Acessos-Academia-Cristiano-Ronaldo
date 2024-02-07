@@ -4,6 +4,7 @@ import 'package:deisi66/pages/fazer_pedido_saida_fim_de_semana.dart';
 import 'package:deisi66/pages/fazer_pedido_saida_temporaria.dart';
 import 'package:deisi66/pages/lista_atletas.dart';
 import 'package:deisi66/pages/lista_supervisores.dart';
+import 'package:deisi66/pages/registar_supervisor.dart';
 import 'package:deisi66/pages/registar_utilizador.dart';
 import 'package:flutter/material.dart';
 import 'pages/login.dart';
@@ -75,7 +76,7 @@ void setToken(String value) {
 // ------------------------------------
 
 // Role Related Stuff ----------------
-String role = "";
+String role = "admin";
 
 String getRole() {
   return role;
@@ -107,6 +108,7 @@ class MyApp extends StatelessWidget {
         '/lista_de_atletas': (context) => const ListaAtletasPage(),
         '/register_user': (context) => const AddPlayerPage(),
         '/lista_de_supervisores': (context) => const ListaSupervisoresPage(),
+        '/registar_supervisores': (context) => const AddSupervisorPage(),
       },
     );
   }
