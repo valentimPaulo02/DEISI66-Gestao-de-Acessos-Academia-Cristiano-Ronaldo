@@ -50,24 +50,26 @@ def getAllTemporaryRequest():
 
         query = "SELECT * FROM temporaryrequest;"
         ptr.execute(query)
-        result = ptr.fetchall()
+        list = ptr.fetchall()
 
-        if len(result)==0: return {"success":False,"error":"no_requests_found"}
+        if len(list)==0: return {"success":False,"error":"no_requests_found"}
 
         formatted_list = []
-        for row in result:
+        for row in list:
+
+            query = "SELECT username FROM user WHERE user_id=%s;"
+            values = (row['user_id'],)
+            ptr.execute(query, values)
+            info = ptr.fetchall()
+
+            username = info[0]['username']
+
             formatted_row = {
                 "request_id": row['request_id'],
                 "user_id": row['user_id'],
+                "username": username,
                 "state": row['state'],
-                "validated": bool(row['validated']),
-                "supervisor": row['supervisor'],
-                "transport_out": row['transport_out'],
-                "destiny": row['destiny'],
-                "leave_time": str(row['leave_time']),
-                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
-                "arrival_time": str(row['arrival_time']),
-                "arrival_date": row['arrival_date'].strftime("%Y-%m-%d")
+                "date": row['date'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
@@ -88,28 +90,24 @@ def getUserTemporaryRequest():
         info = ptr.fetchall()
 
         id = info[0]['user_id']
+        username = info[0]['username']
 
         query = "SELECT * FROM temporaryrequest WHERE user_id=%s;"
         values = (id,)
         ptr.execute(query, values)
-        result = ptr.fetchall()
+        list = ptr.fetchall()
 
-        if len(result)==0: return {"success":False,"error":"no_requests_found"}
+        if len(list)==0: return {"success":False,"error":"no_requests_found"}
 
         formatted_list = []
-        for row in result:
+        for row in list:
+            
             formatted_row = {
                 "request_id": row['request_id'],
-                "user_id": row['user_id'],
+                "user_id": id,
+                "username": username,
                 "state": row['state'],
-                "validated": bool(row['validated']),
-                "supervisor": row['supervisor'],
-                "transport_out": row['transport_out'],
-                "destiny": row['destiny'],
-                "leave_time": str(row['leave_time']),
-                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
-                "arrival_time": str(row['arrival_time']),
-                "arrival_date": row['arrival_date'].strftime("%Y-%m-%d")
+                "date": row['date'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
