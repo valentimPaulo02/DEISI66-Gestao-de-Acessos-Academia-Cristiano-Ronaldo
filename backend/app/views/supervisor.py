@@ -30,6 +30,7 @@ def registSupervisor():
         
         return {"success":True}
 
+
 @supervisor_bp.route('/getSupervisorList', methods=["GET"])
 def getSupervisorList():
     if request.method=="GET":

@@ -3,7 +3,8 @@ from flask_cors import CORS
 from database import mysql
 from views.geral import geral_bp
 from views.athlete import athlete_bp
-from views.request import request_bp
+from views.temporaryrequest import temporaryrequest_bp
+from views.weekendrequest import weekendrequest_bp
 from views.supervisor import supervisor_bp
 
 
@@ -20,7 +21,8 @@ mysql.init_app(app)
 
 app.register_blueprint(geral_bp)
 app.register_blueprint(athlete_bp)
-app.register_blueprint(request_bp)
+app.register_blueprint(temporaryrequest_bp)
+app.register_blueprint(weekendrequest_bp)
 app.register_blueprint(supervisor_bp)
 
 
