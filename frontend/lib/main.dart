@@ -64,7 +64,7 @@ final List<IconData> pageIconsSupervisor = [
 ];
 
 // Token Related Stuff ----------------
-String token = "";
+String token = "admin";
 
 String getToken() {
   return token;

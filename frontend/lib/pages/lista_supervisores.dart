@@ -48,12 +48,12 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
+
     supervisores = [
       Supervisor(name: 'João', surname: 'Anacleto'),
       Supervisor(name: 'Valentim', surname: 'Paulo')
     ];
-     */
+
 
 
     _getSupervisorList();
