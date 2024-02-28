@@ -46,6 +46,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
+    pedidosAll.clear();
+    pedidosUser.clear();
 
     if (getRole() == 'athlete') {
       if (tipoPedido == 'Weekend') {
