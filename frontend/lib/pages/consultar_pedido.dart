@@ -39,6 +39,10 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   @override
   void initState() {
+
+    if (getRole() == 'supervisor') {
+      currentPage = 2;
+    }
     super.initState();
     _getPedidosFromBackend();
    // _testPedidos();
