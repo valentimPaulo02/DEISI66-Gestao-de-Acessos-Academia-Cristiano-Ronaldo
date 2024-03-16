@@ -9,7 +9,7 @@ import '../componentes/textfield.dart';
 import '../main.dart';
 
 class Atleta {
-  String id;
+  int id;
   String name;
   String surname;
   String category;
@@ -43,13 +43,11 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
     atletas = [
-      Atleta(id: '1', name: 'João', surname: 'Anacleto', category: 'under15'),
-      Atleta(id: '2', name: 'Valentim', surname: 'Paulo', category: 'under16'),
-      Atleta(id: '3', name: 'test', surname: 'aaa', category: 'under19')
+      Atleta(id: 1, name: 'João', surname: 'Anacleto', category: 'under15'),
+      Atleta(id: 2, name: 'Valentim', surname: 'Paulo', category: 'under16'),
+      Atleta(id: 3, name: 'test', surname: 'aaa', category: 'under19')
     ];
-     */
 
     _getAthleteList();
   }
@@ -99,12 +97,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
 
   Future<void> _deleteAtleta(Atleta atleta) async {
     if (getRole() == 'admin') {
-      final String atletaId = atleta.id;
+      final int atletaId = atleta.id;
 
       final response = await http.post(
         Uri.parse('http://localhost:5000/deleteAthlete'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+        headers:{
+          'Content-Type': 'application/json',
         },
         body: jsonEncode({'id': atletaId}),
       );
