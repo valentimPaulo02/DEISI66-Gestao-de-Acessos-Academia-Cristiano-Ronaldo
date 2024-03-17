@@ -13,7 +13,7 @@ CORS(app)
 
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "sporting_database_connection_GUGf983YDR34535Dtdt"
-app.config['MYSQL_HOST'] = "127.0.0.1"
+app.config['MYSQL_HOST'] = "database_container"
 app.config['MYSQL_DB'] = "academiasporting"
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
