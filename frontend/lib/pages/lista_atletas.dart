@@ -43,11 +43,13 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     atletas = [
       Atleta(id: 1, name: 'João', surname: 'Anacleto', category: 'under15'),
       Atleta(id: 2, name: 'Valentim', surname: 'Paulo', category: 'under16'),
       Atleta(id: 3, name: 'test', surname: 'aaa', category: 'under19')
     ];
+    */
 
     _getAthleteList();
   }

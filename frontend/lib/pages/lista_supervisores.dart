@@ -39,11 +39,13 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     supervisores = [
       Supervisor(id: 1, name: 'João', surname: 'Anacleto'),
       Supervisor(id: 2, name: 'Valentim', surname: 'Paulo'),
       Supervisor(id: 3, name: 'test', surname: 'aaa')
     ];
+    */
 
     _getSupervisorList();
   }
@@ -63,6 +65,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
             surname: supervisor['surname'],
           )).toList();
         });
+        print(supervisores);
       } else {
         print('Erro ao procurar a lista de supervisores: ${data['error']}');
       }
