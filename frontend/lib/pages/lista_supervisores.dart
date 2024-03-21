@@ -60,7 +60,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
       if (data['success']) {
         setState(() {
           supervisores = (data['list'] as List).map((supervisor) => Supervisor(
-            id: supervisor['id'],
+            id: supervisor['user_id'],
             name: supervisor['name'],
             surname: supervisor['surname'],
           )).toList();

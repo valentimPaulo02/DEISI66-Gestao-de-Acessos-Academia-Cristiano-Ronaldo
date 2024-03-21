@@ -65,7 +65,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         setState(() {
           atletas = (data['list'] as List)
               .map((atleta) => Atleta(
-            id: atleta['id'],
+            id: atleta['user_id'],
             name: atleta['name'],
             surname: atleta['surname'],
             category: atleta['category'],

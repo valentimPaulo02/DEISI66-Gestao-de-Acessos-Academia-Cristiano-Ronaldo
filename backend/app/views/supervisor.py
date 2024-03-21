@@ -37,7 +37,7 @@ def getSupervisorList():
 
         ptr = mysql.connection.cursor()
 
-        query = "SELECT id, name, surname FROM user WHERE role='supervisor';"
+        query = "SELECT user_id, name, surname FROM user WHERE role='supervisor';"
         ptr.execute(query)
         list = ptr.fetchall()
 
