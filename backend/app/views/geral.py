@@ -83,3 +83,20 @@ def getRole():
         role = info[0]["role"]
 
         return {"success":True, "role":role}
+    
+
+@geral_bp.route('/deleteUser', methods=["POST"])
+def deleteUser():
+    if request.method=="POST":
+
+        ptr = mysql.connection.cursor()
+        data = request.get_json()
+
+        id = data["user_id"]
+
+        query = "DELETE FROM user WHERE user_id=%s;"
+        values = (id,)
+        ptr.execute(query, values)
+        mysql.connection.commit()
+
+        return {"success":True}

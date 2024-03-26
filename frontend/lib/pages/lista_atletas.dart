@@ -102,11 +102,11 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
       final int atletaId = atleta.id;
 
       final response = await http.post(
-        Uri.parse('http://localhost:5000/deleteAthlete'),
+        Uri.parse('http://localhost:5000/deleteUser'),
         headers:{
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'id': atletaId}),
+        body: jsonEncode({'user_id': atletaId}),
       );
 
       if (response.statusCode == 200) {

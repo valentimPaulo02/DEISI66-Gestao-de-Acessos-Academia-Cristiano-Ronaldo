@@ -96,11 +96,11 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
     if (getRole() == 'admin') {
       final int supervisorID = supervisor.id;
       final response = await http.post(
-        Uri.parse('http://localhost:5000/deleteSupervisor'),
+        Uri.parse('http://localhost:5000/deleteUser'),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'id': supervisorID}),
+        body: jsonEncode({'user_id': supervisorID}),
       );
 
       if (response.statusCode == 200) {
