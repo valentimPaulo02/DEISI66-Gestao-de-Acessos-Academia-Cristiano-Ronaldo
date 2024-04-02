@@ -12,11 +12,13 @@ class Supervisor {
   int id;
   String name;
   String surname;
+  String password;
 
   Supervisor({
     required this.id,
     required this.name,
     required this.surname,
+    required this.password,
   });
 }
 
@@ -39,31 +41,33 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
     supervisores = [
-      Supervisor(id: 1, name: 'João', surname: 'Anacleto'),
-      Supervisor(id: 2, name: 'Valentim', surname: 'Paulo'),
-      Supervisor(id: 3, name: 'test', surname: 'aaa')
+      Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123"),
+      Supervisor(
+          id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123"),
+      Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024")
     ];
-    */
 
     _getSupervisorList();
   }
 
   Future<void> _getSupervisorList() async {
     final url =
-    await http.get(Uri.parse('http://localhost:5000/getSupervisorList'));
+        await http.get(Uri.parse('http://localhost:5000/getSupervisorList'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);
 
       if (data['success']) {
         setState(() {
-          supervisores = (data['list'] as List).map((supervisor) => Supervisor(
-            id: supervisor['user_id'],
-            name: supervisor['name'],
-            surname: supervisor['surname'],
-          )).toList();
+          supervisores = (data['list'] as List)
+              .map((supervisor) => Supervisor(
+                    id: supervisor['user_id'],
+                    name: supervisor['name'],
+                    surname: supervisor['surname'],
+                    password: supervisor['password'],
+                  ))
+              .toList();
         });
         print(supervisores);
       } else {
@@ -182,8 +186,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed('/registar_supervisores');
+                    Navigator.of(context).pushNamed('/registar_supervisores');
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -205,22 +208,22 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                   ),
                   trailing: getRole() == 'admin'
                       ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          _editSupervisor(supervisor);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          _deleteSupervisor(supervisor);
-                        },
-                      ),
-                    ],
-                  )
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                _editSupervisor(supervisor);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteSupervisor(supervisor);
+                              },
+                            ),
+                          ],
+                        )
                       : null,
                   onTap: () {
                     if (getRole() == 'admin') {
@@ -296,11 +299,13 @@ class EditSupervisorPage extends StatefulWidget {
 class _EditSupervisorPageState extends State<EditSupervisorPage> {
   final nameController = TextEditingController();
   final surnameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void initState() {
     nameController.text = widget.supervisor.name;
     surnameController.text = widget.supervisor.surname;
+    passwordController.text = widget.supervisor.password;
     super.initState();
   }
 
@@ -308,6 +313,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
   void dispose() {
     nameController.dispose();
     surnameController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -315,10 +321,12 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
   Future<void> _updateSupervisor() async {
     final updatedName = nameController.text;
     final updatedSurname = surnameController.text;
+    final updatedPassword = passwordController.text;
 
     final Map<String, dynamic> updatedData = {
       'name': updatedName,
       'surname': updatedSurname,
+      'password': updatedPassword,
     };
 
     final response = await http.post(
@@ -368,6 +376,11 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
             customTextField.CustomTextField(
               labelText: 'Surname',
               controller: surnameController,
+            ),
+            const SizedBox(height: 10),
+            customTextField.CustomTextField(
+              labelText: 'Password',
+              controller: passwordController,
             ),
             const SizedBox(height: 10),
             ElevatedButton(

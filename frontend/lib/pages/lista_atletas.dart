@@ -12,17 +12,18 @@ class Atleta {
   int id;
   String name;
   String surname;
+  String password;
   String category;
 
   Atleta({
     required this.id,
     required this.name,
     required this.surname,
+    required this.password,
     required this.category,
   });
 }
 
-//Página Lista de Atletas
 class ListaAtletasPage extends StatefulWidget {
   const ListaAtletasPage({Key? key}) : super(key: key);
 
@@ -34,6 +35,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   int currentPage = 5;
   late NavigationManager navigationManager;
   List<Atleta> atletas = [];
+  List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
 
   @override
   void initState() {
@@ -43,20 +45,33 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
     atletas = [
-      Atleta(id: 1, name: 'João', surname: 'Anacleto', category: 'under15'),
-      Atleta(id: 2, name: 'Valentim', surname: 'Paulo', category: 'under16'),
-      Atleta(id: 3, name: 'test', surname: 'aaa', category: 'under19')
+      Atleta(
+          id: 1,
+          name: 'João',
+          surname: 'Anacleto',
+          password: "abc",
+          category: 'under15'),
+      Atleta(
+          id: 2,
+          name: 'Valentim',
+          surname: 'Paulo',
+          password: "abcd",
+          category: 'under16'),
+      Atleta(
+          id: 3,
+          name: 'test',
+          surname: 'aaa',
+          password: "abcde",
+          category: 'under19')
     ];
-    */
 
     _getAthleteList();
   }
 
   Future<void> _getAthleteList() async {
     final url =
-    await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
+        await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);
@@ -65,11 +80,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         setState(() {
           atletas = (data['list'] as List)
               .map((atleta) => Atleta(
-            id: atleta['user_id'],
-            name: atleta['name'],
-            surname: atleta['surname'],
-            category: atleta['category'],
-          ))
+                    id: atleta['user_id'],
+                    name: atleta['name'],
+                    surname: atleta['surname'],
+                    password: atleta['password'],
+                    category: atleta['category'],
+                  ))
               .toList();
         });
       } else {
@@ -103,14 +119,13 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
 
       final response = await http.post(
         Uri.parse('http://localhost:5000/deleteUser'),
-        headers:{
+        headers: {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({'user_id': atletaId}),
       );
 
       if (response.statusCode == 200) {
-        // sendo excluido com sucesso da api, agr removo-o localmente da lista
         setState(() {
           atletas.removeWhere((element) => element.id == atletaId);
         });
@@ -118,6 +133,10 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         print('Erro ao excluir o atleta: ${response.reasonPhrase}');
       }
     }
+  }
+
+  static List<String> getUnderOptions() {
+    return ['under15', 'under16', 'under17', 'under19'];
   }
 
   static List<String> getMenuItems() {
@@ -146,7 +165,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
   }
 
-  // Construção da lista de atletas na interface
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,22 +228,22 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                   ),
                   trailing: getRole() == 'admin'
                       ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          _editAtleta(atleta);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          _deleteAtleta(atleta);
-                        },
-                      ),
-                    ],
-                  )
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                _editAtleta(atleta);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteAtleta(atleta);
+                              },
+                            ),
+                          ],
+                        )
                       : null,
                   onTap: () {
                     if (getRole() == 'admin' || getRole() == 'supervisor') {
@@ -292,11 +310,10 @@ class DetalhesAtletaDialog extends StatelessWidget {
   }
 }
 
-// Página para editar um atleta
 class EditAtletaPage extends StatefulWidget {
   final Atleta atleta;
 
-  const EditAtletaPage({super.key, required this.atleta});
+  const EditAtletaPage({required this.atleta});
 
   @override
   _EditAtletaPageState createState() => _EditAtletaPageState();
@@ -305,6 +322,7 @@ class EditAtletaPage extends StatefulWidget {
 class _EditAtletaPageState extends State<EditAtletaPage> {
   late TextEditingController nameController;
   late TextEditingController surnameController;
+  late TextEditingController passwordController;
   late TextEditingController categoryController;
 
   @override
@@ -312,6 +330,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     super.initState();
     nameController = TextEditingController(text: widget.atleta.name);
     surnameController = TextEditingController(text: widget.atleta.surname);
+    passwordController = TextEditingController(text: widget.atleta.password);
     categoryController = TextEditingController(text: widget.atleta.category);
   }
 
@@ -319,16 +338,17 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
   void dispose() {
     nameController.dispose();
     surnameController.dispose();
+    passwordController.dispose();
     categoryController.dispose();
     super.dispose();
   }
 
-  // Função para atualizar os dados de um atleta
   Future<void> _updateAtleta(
-      String name, String surname, String category) async {
+      String name, String surname, String password, String category) async {
     final Map<String, dynamic> updatedData = {
       'name': name,
       'surname': surname,
+      'password' : password,
       'category': category,
     };
 
@@ -382,8 +402,53 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
             ),
             const SizedBox(height: 10),
             CustomTextField(
-              labelText: 'Category',
-              controller: categoryController,
+              labelText: 'Password',
+              controller: passwordController,
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
+              decoration: const InputDecoration(
+                labelText: 'Category',
+                labelStyle: TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Color.fromRGBO(150, 150, 150, 0.5),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color.fromRGBO(150, 150, 150, 1),
+                    width: 2,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color.fromRGBO(50, 190, 100, 1),
+                    width: 2,
+                  ),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              // Reduz o espaço horizontal
+              icon: const Icon(Icons.arrow_drop_down),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    categoryController.text = newValue;
+                  });
+                }
+              },
+              value: categoryController.text,
+              items:
+                  _ListaAtletasPageState.getUnderOptions().map((String option) {
+                return DropdownMenuItem<String>(
+                  value: option,
+                  child: Text(
+                    option,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -391,6 +456,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                 _updateAtleta(
                   nameController.text,
                   surnameController.text,
+                  passwordController.text,
                   categoryController.text,
                 );
               },
