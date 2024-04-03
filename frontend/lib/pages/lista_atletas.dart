@@ -45,6 +45,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     atletas = [
       Atleta(
           id: 1,
@@ -65,6 +66,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           password: "abcde",
           category: 'under19')
     ];
+    */
 
     _getAthleteList();
   }
