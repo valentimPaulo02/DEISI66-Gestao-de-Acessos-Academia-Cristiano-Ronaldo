@@ -340,6 +340,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     );
 
     if (response.statusCode == 200) {
+      Navigator.pushNamed(context, '/lista_de_supervisores');
       // Atualização bem-sucedida
     } else {
       print('Erro na atualização do supervisor: ${response.reasonPhrase}');
