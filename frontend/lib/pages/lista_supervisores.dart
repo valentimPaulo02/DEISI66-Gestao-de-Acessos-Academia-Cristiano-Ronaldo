@@ -324,19 +324,19 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     final updatedName = nameController.text;
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
-
-    final Map<String, dynamic> updatedData = {
-      'name': updatedName,
-      'surname': updatedSurname,
-      'password': updatedPassword,
-    };
+    final id = widget.supervisor.id;
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateSupervisor'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
-      body: jsonEncode(updatedData),
+      body: json.encode({
+        'user_id': id,
+        'name': updatedName,
+        'surname': updatedSurname,
+        'password': updatedPassword,
+      }),
     );
 
     if (response.statusCode == 200) {

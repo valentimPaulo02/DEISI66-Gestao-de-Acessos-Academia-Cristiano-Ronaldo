@@ -347,10 +347,15 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
 
   Future<void> _updateAtleta(
       String name, String surname, String password, String category) async {
+    
+    final updatedName = nameController.text;
+    final updatedSurname = surnameController.text;
+    final updatedPassword = passwordController.text;
+    
     final Map<String, dynamic> updatedData = {
-      'name': name,
-      'surname': surname,
-      'password' : password,
+      'name': updatedName,
+      'surname': updatedSurname,
+      'password' : updatedPassword,
       'category': category,
     };
 
