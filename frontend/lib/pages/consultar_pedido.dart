@@ -4,15 +4,25 @@ import 'package:http/http.dart' as http;
 
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
+import '../componentes/textfield.dart';
 import '../main.dart';
 
-// Definição da classe Pedido
 class Pedido {
   int requestId;
   int userId;
   String username;
   String state;
   String date;
+  String type;
+  String dataSaida;
+  String horaSaida;
+  String destino;
+  String transporte;
+  String comQuemSai;
+  String dataRetorno;
+  String horaRetorno;
+  bool canEdit;
+  bool canReview;
 
   Pedido({
     required this.requestId,
@@ -20,10 +30,19 @@ class Pedido {
     required this.username,
     required this.state,
     required this.date,
+    required this.type,
+    required this.dataSaida,
+    required this.horaSaida,
+    required this.destino,
+    required this.transporte,
+    required this.comQuemSai,
+    required this.dataRetorno,
+    required this.horaRetorno,
+    required this.canEdit,
+    required this.canReview,
   });
 }
 
-// Definição da classe ConsultarPedidoPage
 class ConsultarPedidoPage extends StatefulWidget {
   const ConsultarPedidoPage({Key? key}) : super(key: key);
 
@@ -39,14 +58,72 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   @override
   void initState() {
-
     if (getRole() == 'supervisor') {
       currentPage = 2;
     }
     super.initState();
     _getPedidosFromBackend();
-   // _testPedidos();
+    //_loadFakeTemporaryPedidos();
+    //_loadFakeWeekendPedidos();
   }
+
+  /*
+  //lista forcada para testes dos pedidos temporários
+  Future<void> _loadFakeTemporaryPedidos() async {
+    setState(() {
+      pedidosAll = [];
+      pedidosUser = [];
+      for (int i = 0; i < 5; i++) {
+        pedidosAll.add(Pedido(
+          requestId: i + 1,
+          userId: 100 + i,
+            username: 'GYOKERES ${i + 1}',
+          state: 'GOLOS : ${i + 1}',
+          date: 'Data ${i + 1}',
+          type: 'Temporary',
+          dataSaida: 'Data Saída ${i + 1}',
+          horaSaida: 'Hora Saída ${i + 1}',
+          destino: 'Destino ${i + 1}',
+          transporte: 'Transporte ${i + 1}',
+          comQuemSai: 'Com Quem Sai ${i + 1}',
+          dataRetorno: 'Data Retorno ${i + 1}',
+          horaRetorno: 'Hora Retorno ${i + 1}',
+          canEdit: true,
+          canReview: true,
+        ));
+      }
+    });
+  }
+   */
+
+  /*
+  //lista forcada para testes dos pedidos de fim de semana
+  Future<void> _loadFakeWeekendPedidos() async {
+    setState(() {
+      pedidosAll = [];
+      pedidosUser = [];
+      for (int i = 0; i < 5; i++) {
+        pedidosAll.add(Pedido(
+          requestId: i + 1,
+          userId: 200 + i,
+          username: 'ESGAIO ${i + 1}',
+          state: 'AUTOGOLOS : ${i + 1}',
+          date: 'Data ${i + 1}',
+          type: 'Weekend',
+          dataSaida: 'Data Saída ${i + 1}',
+          horaSaida: 'Hora Saída ${i + 1}',
+          destino: 'Destino ${i + 1}',
+          transporte: 'Transporte ${i + 1}',
+          comQuemSai: 'Com Quem Sai ${i + 1}',
+          dataRetorno: 'Data Retorno ${i + 1}',
+          horaRetorno: 'Hora Retorno ${i + 1}',
+          canEdit: true,
+          canReview: true,
+        ));
+      }
+    });
+  }
+   */
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
@@ -85,6 +162,16 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       username: pedido['username'],
                       state: pedido['state'],
                       date: pedido['date'],
+                      type: pedido['type'],
+                      dataSaida: pedido['dataSaida'],
+                      horaSaida: pedido['horaSaida'],
+                      destino: pedido['destino'],
+                      transporte: pedido['transporte'],
+                      comQuemSai: pedido['comQuemSai'],
+                      dataRetorno: pedido['dataRetorno'],
+                      horaRetorno: pedido['horaRetorno'],
+                      canEdit: pedido['can_edit'],
+                      canReview: pedido['can_review'],
                     ))
                 .toList();
           } else {
@@ -95,6 +182,16 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       username: pedido['username'],
                       state: pedido['state'],
                       date: pedido['date'],
+                      type: pedido['type'],
+                      dataSaida: pedido['dataSaida'],
+                      horaSaida: pedido['horaSaida'],
+                      destino: pedido['destino'],
+                      transporte: pedido['transporte'],
+                      comQuemSai: pedido['comQuemSai'],
+                      dataRetorno: pedido['dataRetorno'],
+                      horaRetorno: pedido['horaRetorno'],
+                      canEdit: pedido['can_edit'],
+                      canReview: pedido['can_review'],
                     ))
                 .toList();
           }
@@ -106,40 +203,91 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       print('Erro de Net ao procurar lista de pedidos');
     }
   }
-/*
-  Future<void> _testPedidos() async {
-    setState(() {
-      pedidosAll.clear();
 
-      if (tipoPedido == "Temporary") {
-        pedidosAll.add(Pedido(
-          requestId: 1,
-          userId: 101,
-          username: "ESGAIO",
-          state: "REPROVADO",
-          date: "2022-02-28",
-        ));
+  void _acceptRejectPedido(int requestId, bool accepted) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/acceptRejectPedido'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'request_id': requestId,
+        'accepted': accepted ? 1 : 0,
+      }),
+    );
 
-        pedidosAll.add(Pedido(
-          requestId: 2,
-          userId: 102,
-          username: "ADAN",
-          state: "REPROVADO",
-          date: "2022-03-01",
-        ));
-      }else{
-        pedidosAll.add(Pedido(
-          requestId: 3,
-          userId: 103,
-          username: "VIKTOR GYOKERES",
-          state: "APROVADO",
-          date: "2022-03-05",
-        ));
-      }
-    });
+    if (response.statusCode == 200) {
+      _getPedidosFromBackend();
+    } else {
+      print('Erro na atualização do pedido: ${response.reasonPhrase}');
+    }
   }
 
- */
+  void _showPedidoDetailsDialog(BuildContext context, Pedido pedido) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Detalhes do Pedido'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Data: ${pedido.dataSaida}'),
+              Text('Hora Saída: ${pedido.horaSaida}'),
+              Text('Destino: ${pedido.destino}'),
+              Text('Transporte: ${pedido.transporte}'),
+              Text('Com quem sai: ${pedido.comQuemSai}'),
+              Text('Data Retorno: ${pedido.dataRetorno}'),
+              Text('Hora Retorno: ${pedido.horaRetorno}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Fechar'),
+            ),
+            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
+                pedido.canReview)
+              TextButton(
+                onPressed: () {
+                  _acceptRejectPedido(pedido.requestId, true);
+                },
+                child: const Text('Aceitar'),
+              ),
+            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
+                pedido.canReview)
+              TextButton(
+                onPressed: () {
+                  _acceptRejectPedido(pedido.requestId, false);
+                },
+                child: const Text('Recusar'),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editPedido(BuildContext context, Pedido pedido) {
+    if (pedido.type == 'Temporary' && pedido.canEdit) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditarPedidoTemporarioPage(pedido: pedido),
+        ),
+      );
+    } else if (pedido.type == 'Weekend' && pedido.canEdit) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditarPedidoFimDeSemanaPage(pedido: pedido),
+        ),
+      );
+    }
+  }
 
   void _navigateToPage(int index) {
     setState(() {
@@ -148,11 +296,13 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
     if (index == 4) {
       tipoPedido = "Weekend";
+      //_loadFakeWeekendPedidos();
+      _getPedidosFromBackend();
     } else if (index == 5) {
       tipoPedido = "Temporary";
+      //_loadFakeTemporaryPedidos();
+      _getPedidosFromBackend();
     }
-
-    _getPedidosFromBackend();
   }
 
   List<Pedido> getFilteredPedidos() {
@@ -234,6 +384,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       tipoPedido = "Temporary";
                     });
                     _getPedidosFromBackend();
+                    //_loadFakeTemporaryPedidos();
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -249,6 +400,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       tipoPedido = "Weekend";
                     });
                     _getPedidosFromBackend();
+                    //_loadFakeWeekendPedidos();
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -271,11 +423,269 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                     '${pedido.date} - ${pedido.username} (ID: ${pedido.userId})',
                   ),
                   subtitle: Text('Estado: ${pedido.state}'),
+                  onTap: () {
+                    _showPedidoDetailsDialog(context, pedido);
+                  },
+                  trailing: getRole() == 'athlete'
+                      ? IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            _editPedido(context, pedido);
+                          },
+                        )
+                      : null,
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class EditarPedidoTemporarioPage extends StatefulWidget {
+  final Pedido pedido;
+
+  const EditarPedidoTemporarioPage({Key? key, required this.pedido})
+      : super(key: key);
+
+  @override
+  _EditarPedidoTemporarioPageState createState() =>
+      _EditarPedidoTemporarioPageState();
+}
+
+class _EditarPedidoTemporarioPageState
+    extends State<EditarPedidoTemporarioPage> {
+  late TextEditingController dataSaidaController;
+  late TextEditingController horaSaidaController;
+  late TextEditingController destinoController;
+  late TextEditingController transporteController;
+  late TextEditingController comQuemSaiController;
+  late TextEditingController dataRetornoController;
+  late TextEditingController horaRetornoController;
+
+  @override
+  void initState() {
+    super.initState();
+    dataSaidaController = TextEditingController(text: widget.pedido.dataSaida);
+    horaSaidaController = TextEditingController(text: widget.pedido.horaSaida);
+    destinoController = TextEditingController(text: widget.pedido.destino);
+    transporteController =
+        TextEditingController(text: widget.pedido.transporte);
+    comQuemSaiController =
+        TextEditingController(text: widget.pedido.comQuemSai);
+    dataRetornoController =
+        TextEditingController(text: widget.pedido.dataRetorno);
+    horaRetornoController =
+        TextEditingController(text: widget.pedido.horaRetorno);
+  }
+
+  @override
+  void dispose() {
+    dataSaidaController.dispose();
+    horaSaidaController.dispose();
+    destinoController.dispose();
+    transporteController.dispose();
+    comQuemSaiController.dispose();
+    dataRetornoController.dispose();
+    horaRetornoController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updatePedidoTemporario() async {
+    final updatedDataSaida = dataSaidaController.text;
+    final updatedHoraSaida = horaSaidaController.text;
+    final updatedDestino = destinoController.text;
+    final updatedTransporte = transporteController.text;
+    final updatedComQuemSai = comQuemSaiController.text;
+    final updatedDataRetorno = dataRetornoController.text;
+    final updatedHoraRetorno = horaRetornoController.text;
+
+    final Map<String, dynamic> updatedData = {
+      'date': updatedDataSaida,
+      'horaSaida': updatedHoraSaida,
+      'destino': updatedDestino,
+      'transporte': updatedTransporte,
+      'comQuemSai': updatedComQuemSai,
+      'dataRetorno': updatedDataRetorno,
+      'horaRetorno': updatedHoraRetorno,
+    };
+
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/updateTemporaryRequest'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(updatedData),
+    );
+
+    if (response.statusCode == 200) {
+      // Atualização bem-sucedida
+    } else {
+      print(
+          'Erro na atualização do pedido temporario: ${response.reasonPhrase}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Editar Pedido Temporário'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextField(
+              labelText: 'Data Saída:',
+              controller: dataSaidaController,
+            ),
+            CustomTextField(
+              labelText: 'Hora Saída:',
+              controller: horaSaidaController,
+            ),
+            CustomTextField(
+              labelText: 'Destino:',
+              controller: destinoController,
+            ),
+            CustomTextField(
+              labelText: 'Transporte:',
+              controller: transporteController,
+            ),
+            CustomTextField(
+              labelText: 'Com quem sai:',
+              controller: comQuemSaiController,
+            ),
+            CustomTextField(
+              labelText: 'Data Retorno:',
+              controller: dataRetornoController,
+            ),
+            CustomTextField(
+              labelText: 'Hora Retorno:',
+              controller: horaRetornoController,
+            ),
+            ElevatedButton(
+              onPressed: _updatePedidoTemporario,
+              child: const Text('Atualizar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EditarPedidoFimDeSemanaPage extends StatefulWidget {
+  final Pedido pedido;
+
+  const EditarPedidoFimDeSemanaPage({Key? key, required this.pedido})
+      : super(key: key);
+
+  @override
+  _EditarPedidoFimDeSemanaPageState createState() =>
+      _EditarPedidoFimDeSemanaPageState();
+}
+
+class _EditarPedidoFimDeSemanaPageState
+    extends State<EditarPedidoFimDeSemanaPage> {
+  late TextEditingController dataSaidaController;
+  late TextEditingController horaSaidaController;
+  late TextEditingController destinoController;
+  late TextEditingController transporteController;
+  late TextEditingController comQuemSaiController;
+
+  @override
+  void initState() {
+    super.initState();
+    dataSaidaController = TextEditingController(text: widget.pedido.date);
+    horaSaidaController = TextEditingController(text: widget.pedido.horaSaida);
+    destinoController = TextEditingController(text: widget.pedido.destino);
+    transporteController =
+        TextEditingController(text: widget.pedido.transporte);
+    comQuemSaiController =
+        TextEditingController(text: widget.pedido.comQuemSai);
+  }
+
+  @override
+  void dispose() {
+    dataSaidaController.dispose();
+    horaSaidaController.dispose();
+    destinoController.dispose();
+    transporteController.dispose();
+    comQuemSaiController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updatePedidoFimDeSemana() async {
+    final updatedDataSaida = dataSaidaController.text;
+    final updatedHoraSaida = horaSaidaController.text;
+    final updatedDestino = destinoController.text;
+    final updatedTransporte = transporteController.text;
+    final updatedComQuemSai = comQuemSaiController.text;
+
+    final Map<String, dynamic> updatedData = {
+      'date': updatedDataSaida,
+      'horaSaida': updatedHoraSaida,
+      'destino': updatedDestino,
+      'transporte': updatedTransporte,
+      'comQuemSai': updatedComQuemSai,
+    };
+
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/updateWeekendRequest'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(updatedData),
+    );
+
+    if (response.statusCode == 200) {
+      // Atualização bem-sucedida
+    } else {
+      print('Erro na atualização do pedido weekend: ${response.reasonPhrase}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Editar Pedido de Fim-de-Semana'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextField(
+              labelText: 'Data Saída:',
+              controller: dataSaidaController,
+            ),
+            CustomTextField(
+              labelText: 'Hora Saída:',
+              controller: horaSaidaController,
+            ),
+            CustomTextField(
+              labelText: 'Destino:',
+              controller: destinoController,
+            ),
+            CustomTextField(
+              labelText: 'Transporte:',
+              controller: transporteController,
+            ),
+            CustomTextField(
+              labelText: 'Com quem sai:',
+              controller: comQuemSaiController,
+            ),
+            ElevatedButton(
+              onPressed: _updatePedidoFimDeSemana,
+              child: const Text('Atualizar'),
+            ),
+          ],
+        ),
       ),
     );
   }
