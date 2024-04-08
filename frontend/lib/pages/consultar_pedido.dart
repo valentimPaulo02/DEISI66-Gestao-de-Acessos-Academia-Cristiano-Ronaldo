@@ -21,8 +21,6 @@ class Pedido {
   String comQuemSai;
   String dataRetorno;
   String horaRetorno;
-  bool canEdit;
-  bool canReview;
 
   Pedido({
     required this.requestId,
@@ -38,8 +36,6 @@ class Pedido {
     required this.comQuemSai,
     required this.dataRetorno,
     required this.horaRetorno,
-    required this.canEdit,
-    required this.canReview,
   });
 }
 
@@ -54,6 +50,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   int currentPage = 4;
   List<Pedido> pedidosAll = [];
   List<Pedido> pedidosUser = [];
+  List<Pedido> pedidos = [];
   String tipoPedido = "Temporary";
 
   @override
@@ -67,7 +64,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     //_loadFakeWeekendPedidos();
   }
 
-  /*
+/*
   //lista forcada para testes dos pedidos temporários
   Future<void> _loadFakeTemporaryPedidos() async {
     setState(() {
@@ -77,8 +74,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         pedidosAll.add(Pedido(
           requestId: i + 1,
           userId: 100 + i,
-            username: 'GYOKERES ${i + 1}',
-          state: 'GOLOS : ${i + 1}',
+          username: 'GYOKERES ${i + 1}',
+          state: 'pending',
           date: 'Data ${i + 1}',
           type: 'Temporary',
           dataSaida: 'Data Saída ${i + 1}',
@@ -88,13 +85,12 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           comQuemSai: 'Com Quem Sai ${i + 1}',
           dataRetorno: 'Data Retorno ${i + 1}',
           horaRetorno: 'Hora Retorno ${i + 1}',
-          canEdit: true,
-          canReview: true,
         ));
       }
     });
   }
-   */
+
+ */
 
   /*
   //lista forcada para testes dos pedidos de fim de semana
@@ -107,7 +103,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           requestId: i + 1,
           userId: 200 + i,
           username: 'ESGAIO ${i + 1}',
-          state: 'AUTOGOLOS : ${i + 1}',
+          state: 'pending',
           date: 'Data ${i + 1}',
           type: 'Weekend',
           dataSaida: 'Data Saída ${i + 1}',
@@ -115,10 +111,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           destino: 'Destino ${i + 1}',
           transporte: 'Transporte ${i + 1}',
           comQuemSai: 'Com Quem Sai ${i + 1}',
-          dataRetorno: 'Data Retorno ${i + 1}',
-          horaRetorno: 'Hora Retorno ${i + 1}',
-          canEdit: true,
-          canReview: true,
+          dataRetorno: '',
+          horaRetorno: '',
         ));
       }
     });
@@ -127,19 +121,25 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
+    String type = "";
     pedidosAll.clear();
     pedidosUser.clear();
+    pedidos.clear();
 
     if (getRole() == 'athlete') {
       if (tipoPedido == 'Weekend') {
+        type = "Weekend";
         url = 'http://localhost:5000/getUserWeekendRequest';
       } else if (tipoPedido == 'Temporary') {
+        type = "Temporary";
         url = 'http://localhost:5000/getUserTemporaryRequest';
       }
     } else {
       if (tipoPedido == 'Weekend') {
+        type = "Weekend";
         url = 'http://localhost:5000/getAllWeekendRequest';
       } else if (tipoPedido == 'Temporary') {
+        type = "Temporary";
         url = 'http://localhost:5000/getAllTemporaryRequest';
       }
     }
@@ -154,15 +154,15 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
       if (data['success']) {
         setState(() {
-          if (getRole() == 'athlete') {
-            pedidosUser = (data['list'] as List)
+          if (type == "Temporary") {
+            pedidos = (data['list'] as List)
                 .map((pedido) => Pedido(
                       requestId: pedido['request_id'],
                       userId: pedido['user_id'],
                       username: pedido['username'],
                       state: pedido['state'],
                       date: pedido['date'],
-                      type: pedido['type'],
+                      type: type,
                       dataSaida: pedido['dataSaida'],
                       horaSaida: pedido['horaSaida'],
                       destino: pedido['destino'],
@@ -170,30 +170,31 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       comQuemSai: pedido['comQuemSai'],
                       dataRetorno: pedido['dataRetorno'],
                       horaRetorno: pedido['horaRetorno'],
-                      canEdit: pedido['can_edit'],
-                      canReview: pedido['can_review'],
                     ))
                 .toList();
           } else {
-            pedidosAll = (data['list'] as List)
+            pedidos = (data['list'] as List)
                 .map((pedido) => Pedido(
                       requestId: pedido['request_id'],
                       userId: pedido['user_id'],
                       username: pedido['username'],
                       state: pedido['state'],
                       date: pedido['date'],
-                      type: pedido['type'],
+                      type: type,
                       dataSaida: pedido['dataSaida'],
                       horaSaida: pedido['horaSaida'],
                       destino: pedido['destino'],
                       transporte: pedido['transporte'],
                       comQuemSai: pedido['comQuemSai'],
-                      dataRetorno: pedido['dataRetorno'],
-                      horaRetorno: pedido['horaRetorno'],
-                      canEdit: pedido['can_edit'],
-                      canReview: pedido['can_review'],
+                      dataRetorno: "",
+                      horaRetorno: "",
                     ))
                 .toList();
+          }
+          if (getRole() == "athlete") {
+            pedidosUser = pedidos;
+          } else {
+            pedidosAll = pedidos;
           }
         });
       } else {
@@ -223,6 +224,23 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     }
   }
 
+  Widget _outputPedidoDetails(Pedido pedido) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Data: ${pedido.dataSaida}'),
+        Text('Hora Saída: ${pedido.horaSaida}'),
+        Text('Destino: ${pedido.destino}'),
+        Text('Transporte: ${pedido.transporte}'),
+        Text('Com quem sai: ${pedido.comQuemSai}'),
+        if (tipoPedido == "Temporary") ...[
+          Text('Data Retorno: ${pedido.dataRetorno}'),
+          Text('Hora Retorno: ${pedido.horaRetorno}'),
+        ],
+      ],
+    );
+  }
+
   void _showPedidoDetailsDialog(BuildContext context, Pedido pedido) {
     showDialog(
       context: context,
@@ -233,13 +251,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Data: ${pedido.dataSaida}'),
-              Text('Hora Saída: ${pedido.horaSaida}'),
-              Text('Destino: ${pedido.destino}'),
-              Text('Transporte: ${pedido.transporte}'),
-              Text('Com quem sai: ${pedido.comQuemSai}'),
-              Text('Data Retorno: ${pedido.dataRetorno}'),
-              Text('Hora Retorno: ${pedido.horaRetorno}'),
+              _outputPedidoDetails(pedido),
             ],
           ),
           actions: <Widget>[
@@ -250,7 +262,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
               child: const Text('Fechar'),
             ),
             if ((getRole() == 'supervisor' || getRole() == 'admin') &&
-                pedido.canReview)
+                pedido.state == "pending")
               TextButton(
                 onPressed: () {
                   _acceptRejectPedido(pedido.requestId, true);
@@ -258,7 +270,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                 child: const Text('Aceitar'),
               ),
             if ((getRole() == 'supervisor' || getRole() == 'admin') &&
-                pedido.canReview)
+                pedido.state == "pending")
               TextButton(
                 onPressed: () {
                   _acceptRejectPedido(pedido.requestId, false);
@@ -272,14 +284,14 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   }
 
   void _editPedido(BuildContext context, Pedido pedido) {
-    if (pedido.type == 'Temporary' && pedido.canEdit) {
+    if (pedido.type == 'Temporary' && pedido.state == "pending") {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => EditarPedidoTemporarioPage(pedido: pedido),
         ),
       );
-    } else if (pedido.type == 'Weekend' && pedido.canEdit) {
+    } else if (pedido.type == 'Weekend' && pedido.state == "pending") {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -307,7 +319,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   List<Pedido> getFilteredPedidos() {
     if (getRole() == 'athlete') {
-      return pedidosUser;
+      return pedidosAll;
     } else {
       return pedidosAll;
     }
