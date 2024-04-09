@@ -163,13 +163,13 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       state: pedido['state'],
                       date: pedido['date'],
                       type: type,
-                      dataSaida: pedido['dataSaida'],
-                      horaSaida: pedido['horaSaida'],
-                      destino: pedido['destino'],
-                      transporte: pedido['transporte'],
-                      comQuemSai: pedido['comQuemSai'],
-                      dataRetorno: pedido['dataRetorno'],
-                      horaRetorno: pedido['horaRetorno'],
+                      dataSaida: pedido['leave_date'],
+                      horaSaida: pedido['leave_time'],
+                      destino: pedido['destiny'],
+                      transporte: pedido['transport'],
+                      comQuemSai: pedido['supervisor'],
+                      dataRetorno: pedido['arrival_date'],
+                      horaRetorno: pedido['arrival_time'],
                     ))
                 .toList();
           } else {
@@ -181,11 +181,11 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       state: pedido['state'],
                       date: pedido['date'],
                       type: type,
-                      dataSaida: pedido['dataSaida'],
-                      horaSaida: pedido['horaSaida'],
-                      destino: pedido['destino'],
-                      transporte: pedido['transporte'],
-                      comQuemSai: pedido['comQuemSai'],
+                      dataSaida: pedido['leave_date'],
+                      horaSaida: pedido['leave_time'],
+                      destino: pedido['destiny'],
+                      transporte: pedido['transport'],
+                      comQuemSai: pedido['supervisor'],
                       dataRetorno: "",
                       horaRetorno: "",
                     ))
@@ -207,13 +207,14 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   void _acceptRejectPedido(int requestId, bool accepted) async {
     final response = await http.post(
-      Uri.parse('http://localhost:5000/acceptRejectPedido'),
+      Uri.parse('http://localhost:5000/checkRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
         'request_id': requestId,
         'accepted': accepted ? 1 : 0,
+        'type': tipoPedido,
       }),
     );
 
@@ -319,7 +320,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   List<Pedido> getFilteredPedidos() {
     if (getRole() == 'athlete') {
-      return pedidosAll;
+      return pedidosUser;
     } else {
       return pedidosAll;
     }
@@ -515,13 +516,13 @@ class _EditarPedidoTemporarioPageState
     final updatedHoraRetorno = horaRetornoController.text;
 
     final Map<String, dynamic> updatedData = {
-      'date': updatedDataSaida,
-      'horaSaida': updatedHoraSaida,
-      'destino': updatedDestino,
-      'transporte': updatedTransporte,
-      'comQuemSai': updatedComQuemSai,
-      'dataRetorno': updatedDataRetorno,
-      'horaRetorno': updatedHoraRetorno,
+      'leave_date': updatedDataSaida,
+      'leave_time': updatedHoraSaida,
+      'destiny': updatedDestino,
+      'transport': updatedTransporte,
+      'supervisor': updatedComQuemSai,
+      'arrival_date': updatedDataRetorno,
+      'arrival_time': updatedHoraRetorno,
     };
 
     final response = await http.post(
@@ -639,11 +640,11 @@ class _EditarPedidoFimDeSemanaPageState
     final updatedComQuemSai = comQuemSaiController.text;
 
     final Map<String, dynamic> updatedData = {
-      'date': updatedDataSaida,
-      'horaSaida': updatedHoraSaida,
-      'destino': updatedDestino,
-      'transporte': updatedTransporte,
-      'comQuemSai': updatedComQuemSai,
+      'leave_date': updatedDataSaida,
+      'leave_time': updatedHoraSaida,
+      'destiny': updatedDestino,
+      'transport': updatedTransporte,
+      'supervisor': updatedComQuemSai,
     };
 
     final response = await http.post(

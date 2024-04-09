@@ -1,11 +1,11 @@
 from flask import request, Blueprint
 from database import mysql
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 
-temporaryrequest_bp = Blueprint("temporaryrequest", __name__)
+weekendrequest_bp = Blueprint("weekendrequest", __name__)
 
-@temporaryrequest_bp.route('/makeTemporaryRequest', methods=["POST"])
-def makeTemporaryRequest():
+@weekendrequest_bp.route('/makeWeekendRequest', methods=["POST"])
+def makeWeekendRequest():
     if request.method=="POST":
 
         ptr = mysql.connection.cursor()
@@ -17,8 +17,6 @@ def makeTemporaryRequest():
         supervisor = str(data["supervisor"])
         transport = str(data["transport"])
         destiny = str(data["destiny"])
-        arrival_date = str(data["arrival_date"])
-        arrival_time = str(data["arrival_time"])
         state = "pending"
         validated = False
         date = datetime.today().date()
@@ -30,25 +28,23 @@ def makeTemporaryRequest():
 
         user_id = info[0]["user_id"]
         leave_date = datetime.fromisoformat(leave_date).date()
-        arrival_date = datetime.fromisoformat(arrival_date).date()
         leave_time = datetime.strptime(leave_time, "%H:%M").time()
-        arrival_time = datetime.strptime(arrival_time, "%H:%M").time()
 
-        query = "INSERT INTO temporaryrequest (user_id, state, validated, date, leave_date, leave_time, supervisor, transport_out, destiny, arrival_date, arrival_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        values = (user_id, state, validated, date, leave_date, leave_time, supervisor, transport, destiny, arrival_date, arrival_time)
+        query = "INSERT INTO weekendrequest (user_id, state, validated, date, leave_date, leave_time, supervisor, transport_out, destiny) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        values = (user_id, state, validated, date, leave_date, leave_time, supervisor, transport, destiny)
         ptr.execute(query, values)
         mysql.connection.commit()
         
         return {"success":True}
-
-
-@temporaryrequest_bp.route('/getAllTemporaryRequest', methods=["GET"])
-def getAllTemporaryRequest():
+    
+    
+@weekendrequest_bp.route('/getAllWeekendRequest', methods=["GET"])
+def getAllWeekendRequest():
     if request.method=="GET":
 
         ptr = mysql.connection.cursor()
 
-        query = "SELECT * FROM temporaryrequest;"
+        query = "SELECT * FROM weekendrequest;"
         ptr.execute(query)
         list = ptr.fetchall()
 
@@ -69,15 +65,20 @@ def getAllTemporaryRequest():
                 "user_id": row['user_id'],
                 "username": username,
                 "state": row['state'],
-                "date": row['date'].strftime("%Y-%m-%d")
+                "date": row['date'].strftime("%Y-%m-%d"),
+                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
+                "leave_time": str(row['leave_time']),
+                "destiny": row['destiny'],
+                "transport": row['transport_out'],
+                "supervisor": row['supervisor']
             }
             formatted_list.append(formatted_row)
 
         return {"success":True, "list":formatted_list}
     
 
-@temporaryrequest_bp.route('/getUserTemporaryRequest', methods=["GET"])
-def getUserTemporaryRequest():
+@weekendrequest_bp.route('/getUserWeekendRequest', methods=["GET"])
+def getUserWeekendRequest():
     if request.method=="GET":
 
         ptr = mysql.connection.cursor()
@@ -92,7 +93,7 @@ def getUserTemporaryRequest():
         id = info[0]['user_id']
         username = info[0]['username']
 
-        query = "SELECT * FROM temporaryrequest WHERE user_id=%s;"
+        query = "SELECT * FROM weekendrequest WHERE user_id=%s;"
         values = (id,)
         ptr.execute(query, values)
         list = ptr.fetchall()
@@ -107,7 +108,12 @@ def getUserTemporaryRequest():
                 "user_id": id,
                 "username": username,
                 "state": row['state'],
-                "date": row['date'].strftime("%Y-%m-%d")
+                "date": row['date'].strftime("%Y-%m-%d"),
+                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
+                "leave_time": str(row['leave_time']),
+                "destiny": row['destiny'],
+                "transport": row['transport_out'],
+                "supervisor": row['supervisor']
             }
             formatted_list.append(formatted_row)
 
