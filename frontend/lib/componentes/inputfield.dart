@@ -24,17 +24,19 @@ class InputField extends StatelessWidget {
           labelStyle: const TextStyle(color: Colors.white70),
           filled: true,
           fillColor: const Color.fromRGBO(150, 150, 150, 0.5),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
               color: Color.fromRGBO(150, 150, 150, 1),
               width: 2,
             ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
               color: Color.fromRGBO(50, 190, 100, 1),
               width: 2,
             ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         style: const TextStyle(

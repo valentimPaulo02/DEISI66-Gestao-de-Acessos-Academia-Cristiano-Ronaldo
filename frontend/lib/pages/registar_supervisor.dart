@@ -1,13 +1,16 @@
-import 'package:deisi66/main.dart';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../componentes/app_bar_with_back.dart';
+import '../componentes/image_picker.dart';
 import '../componentes/inputfield.dart';
 
 String nameController = "";
 String surnameController = "";
 String passwordController = "";
+List<int>? profileImageBytes; //bytes das imagens armazenados
+const String defaultImagePath = "lib/images/defaultProfile.png"; //img default
 
 class AddSupervisorPage extends StatefulWidget {
   const AddSupervisorPage({Key? key}) : super(key: key);
@@ -17,16 +20,31 @@ class AddSupervisorPage extends StatefulWidget {
 }
 
 class _AddSupervisorPageState extends State<AddSupervisorPage> {
+  TextEditingController photoController = TextEditingController();
 
   void addSupervisor(BuildContext context, String name, String surname,
-      String password) async {
-    final url = Uri.parse('http://localhost:5000/registSupervisor');
+      String password, List<int>? profileImageBytes) async {
+    //ve se os campos obrigatorios estao preenchidos ou n
+    if (name.isEmpty || surname.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Por favor, preencha todos os campos obrigatórios.'),
+        ),
+      );
+      return;
+    }
+
+    final url = Uri.parse('http://localhost:5000/registerSupervisor');
 
     final response = await http.post(url,
         body: json.encode({
           'name': name,
           'surname': surname,
           'password': password,
+          'profileImage': profileImageBytes != null
+              ? base64Encode(profileImageBytes)
+              : null,
         }),
         headers: {"Content-Type": "application/json"});
 
@@ -43,66 +61,6 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
     } else {
       // showNetworkError(context);
     }
-  }
-
-  void showSuccess(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Sucesso'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showError(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Erro'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showNetworkError(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Erro de Rede'),
-          content: const Text('Não foi possível conectar-se ao servidor.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -129,20 +87,25 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
               ),
             ),
             const SizedBox(height: 20),
+            ImagePickerField(
+              labelText: 'Fotografia',
+              controller: photoController,
+            ),
+            const SizedBox(height: 20),
             InputField(
               labelText: 'Name',
               onChanged: (value) {
                 nameController = value;
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             InputField(
               labelText: 'Surname',
               onChanged: (value) {
                 surnameController = value;
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             InputField(
               labelText: 'Password',
               onChanged: (value) {
@@ -153,7 +116,7 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
             ElevatedButton(
               onPressed: () {
                 addSupervisor(context, nameController, surnameController,
-                    passwordController);
+                    passwordController, profileImageBytes);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

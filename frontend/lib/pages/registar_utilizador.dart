@@ -1,14 +1,19 @@
-import 'package:deisi66/main.dart';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../componentes/app_bar_with_back.dart';
+import '../componentes/image_picker.dart';
 import '../componentes/inputfield.dart';
 
 String nameController = "";
 String surnameController = "";
 String passwordController = "";
-String categoryController = "sub15"; // Valor padrão
+String categoryController = ""; // Valor padrão
+List<int>? profileImageBytes; //bytes da imagem
+const String defaultImagePath = "lib/images/defaultProfile.png"; // img default
+
+const List<String> underOptions = ["under15", "under16", "under17", "under19"];
 
 class AddPlayerPage extends StatefulWidget {
   const AddPlayerPage({Key? key}) : super(key: key);
@@ -18,25 +23,35 @@ class AddPlayerPage extends StatefulWidget {
 }
 
 class _AddPlayerPageState extends State<AddPlayerPage> {
-  final List<String> underOptions = const [
-    "under15",
-    "under16",
-    "under17",
-    "under19"
-  ];
+  TextEditingController photoController = TextEditingController();
 
   void addPlayer(BuildContext context, String name, String surname,
-      String password, String category) async {
+      String password, String category, List<int>? profileImageBytes) async {
+    //verifica se os campos obrigatórios estão preenchidos
+    if (name.isEmpty || surname.isEmpty || password.isEmpty || category == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Por favor, preencha todos os campos obrigatórios.'),
+        ),
+      );
+      return;
+    }
+
     final url = Uri.parse('http://localhost:5000/registAthlete');
 
-    final response = await http.post(url,
-        body: json.encode({
-          'name': name,
-          'surname': surname,
-          'password': password,
-          'category': category,
-        }),
-        headers: {"Content-Type": "application/json"});
+    final response = await http.post(
+      url,
+      body: json.encode({
+        'name': name,
+        'surname': surname,
+        'password': password,
+        'category': category,
+        'profileImage':
+            profileImageBytes != null ? base64Encode(profileImageBytes) : null,
+      }),
+      headers: {"Content-Type": "application/json"},
+    );
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -53,66 +68,6 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
     }
   }
 
-  void showSuccess(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Sucesso'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showError(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Erro'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showNetworkError(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Erro de Rede'),
-          content: const Text('Não foi possível conectar-se ao servidor.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,98 +81,116 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Adicionar Atleta',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            InputField(
-              labelText: 'Name',
-              onChanged: (value) {
-                nameController = value;
-              },
-            ),
-            const SizedBox(height: 10),
-            InputField(
-              labelText: 'Surname',
-              onChanged: (value) {
-                surnameController = value;
-              },
-            ),
-            const SizedBox(height: 10),
-            InputField(
-              labelText: 'Password',
-              onChanged: (value) {
-                passwordController = value;
-              },
-            ),
-            const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: SizedBox(
-                width: 200,
-                child: DropdownButtonFormField<String>(
-                  dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  decoration: const InputDecoration(
-                    labelText: 'Category',
-                    labelStyle: TextStyle(color: Colors.white70),
-                    filled: true,
-                    fillColor: Color.fromRGBO(150, 150, 150, 0.5),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(150, 150, 150, 1),
-                        width: 2,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(50, 190, 100, 1),
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        categoryController = newValue;
-                      });
-                    }
-                  },
-                  items: underOptions.map((String option) {
-                    return DropdownMenuItem<String>(
-                      value: option,
-                      child: Text(
-                        option,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Adicionar Atleta',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                addPlayer(context, nameController, surnameController,
-                    passwordController, categoryController);
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+              const SizedBox(height: 20),
+              ImagePickerField(
+                labelText: 'Fotografia',
+                controller: photoController,
               ),
-              child: const Text('Adicionar Atleta'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              InputField(
+                labelText: 'Name',
+                onChanged: (value) {
+                  setState(() {
+                    nameController = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              InputField(
+                labelText: 'Surname',
+                onChanged: (value) {
+                  setState(() {
+                    surnameController = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              InputField(
+                labelText: 'Password',
+                onChanged: (value) {
+                  setState(() {
+                    passwordController = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: SizedBox(
+                  width: 200,
+                  child: DropdownButtonFormField<String>(
+                    dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      labelStyle: TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Color.fromRGBO(150, 150, 150, 0.5),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(150, 150, 150, 1),
+                          width: 2,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(50, 190, 100, 1),
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          categoryController = newValue;
+                        });
+                      }
+                    },
+                    items: underOptions.map((String option) {
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        child: Text(
+                          option,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  addPlayer(
+                      context,
+                      nameController,
+                      surnameController,
+                      passwordController,
+                      categoryController,
+                      profileImageBytes);
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                ),
+                child: const Text('Adicionar Atleta'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
+import '../componentes/image_picker.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/textfield.dart';
 import '../main.dart';
@@ -14,6 +18,7 @@ class Atleta {
   String surname;
   String password;
   String category;
+  List<int>? profileImageBytes;
 
   Atleta({
     required this.id,
@@ -21,6 +26,7 @@ class Atleta {
     required this.surname,
     required this.password,
     required this.category,
+    this.profileImageBytes,
   });
 }
 
@@ -45,7 +51,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
     atletas = [
       Atleta(
           id: 1,
@@ -66,7 +71,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           password: "abcde",
           category: 'under19')
     ];
-    */
 
     _getAthleteList();
   }
@@ -277,34 +281,53 @@ class DetalhesAtletaDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Detalhes do Atleta'),
-      content: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: atleta.profileImageBytes != null
+                ? Image.memory(
+                    Uint8List.fromList(atleta.profileImageBytes!),
+                    width: 50,
+                    height: 50,
+                  )
+                : Image.asset(
+                    'lib/images/defaultProfile.png',
+                    width: 70,
+                    height: 70,
+                  ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
               'Nome: ${atleta.name}',
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 8),
-            Text(
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
               'Sobrenome: ${atleta.surname}',
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Categoria: ${atleta.category}',
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              'Sobrenome: ${atleta.category}',
               style: const TextStyle(fontSize: 16),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromRGBO(4, 180, 107, 0.2),
+          ),
           child: const Text('Fechar'),
         ),
       ],
@@ -322,53 +345,71 @@ class EditAtletaPage extends StatefulWidget {
 }
 
 class _EditAtletaPageState extends State<EditAtletaPage> {
-  late TextEditingController nameController;
-  late TextEditingController surnameController;
-  late TextEditingController passwordController;
+  final nameController = TextEditingController();
+  final surnameController = TextEditingController();
+  final passwordController = TextEditingController();
   late TextEditingController categoryController;
+  late Uint8List _currentImageBytes;
+  XFile? _pickedImage;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.atleta.name);
-    surnameController = TextEditingController(text: widget.atleta.surname);
-    passwordController = TextEditingController(text: widget.atleta.password);
+    nameController.text = widget.atleta.name;
+    surnameController.text = widget.atleta.surname;
+    passwordController.text = widget.atleta.password;
     categoryController = TextEditingController(text: widget.atleta.category);
+    _currentImageBytes = Uint8List(0);
+    _loadProfileImage();
   }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    surnameController.dispose();
-    passwordController.dispose();
-    categoryController.dispose();
-    super.dispose();
+  Future<void> _loadProfileImage() async {
+    print('Carregando imagem do perfil...');
+    if (widget.atleta.profileImageBytes != null) {
+      setState(() {
+        _currentImageBytes =
+            Uint8List.fromList(widget.atleta.profileImageBytes!);
+      });
+    } else {
+      try {
+        final ByteData imageData =
+            await rootBundle.load('lib/images/defaultProfile.png');
+        final Uint8List defaultImageBytes = imageData.buffer.asUint8List();
+        setState(() {
+          _currentImageBytes = defaultImageBytes;
+        });
+      } catch (error) {
+        print('Erro ao carregar a imagem default: $error');
+      }
+    }
   }
 
-  Future<void> _updateAtleta(
-      String name, String surname, String password, String category) async {
-    
+  Future<void> _updateAtleta() async {
     final updatedName = nameController.text;
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
-    
-    final Map<String, dynamic> updatedData = {
-      'name': updatedName,
-      'surname': updatedSurname,
-      'password' : updatedPassword,
-      'category': category,
-    };
+    final id = widget.atleta.id;
+
+    final profileImageBytes =
+        _pickedImage != null ? await _pickedImage!.readAsBytes() : null;
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
-      body: jsonEncode(updatedData),
+      body: json.encode({
+        'user_id': id,
+        'name': updatedName,
+        'surname': updatedSurname,
+        'password': updatedPassword,
+        'profileImage':
+            profileImageBytes != null ? base64Encode(profileImageBytes) : null,
+      }),
     );
 
     if (response.statusCode == 200) {
-      // Atualização bem-sucedida
+      Navigator.pushNamed(context, '/lista_de_atletas');
     } else {
       print('Erro na atualização do atleta: ${response.reasonPhrase}');
     }
@@ -397,75 +438,95 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 20),
+            if (_currentImageBytes.isNotEmpty)
+              Image.memory(
+                _currentImageBytes,
+                width: 100,
+                height: 100,
+              ),
+            if (_currentImageBytes.isEmpty)
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromRGBO(4, 180, 107, 1)),
+              ),
             const SizedBox(height: 10),
+            ImagePickerField(
+              labelText: 'Fotografia',
+              controller: TextEditingController(
+                  text: _pickedImage != null ? _pickedImage!.name : ''),
+              onImagePicked: (pickedImage) {
+                setState(() {
+                  _pickedImage = pickedImage;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Name',
               controller: nameController,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Surname',
               controller: surnameController,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Password',
               controller: passwordController,
             ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                labelStyle: TextStyle(color: Colors.white70),
-                filled: true,
-                fillColor: Color.fromRGBO(150, 150, 150, 0.5),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(150, 150, 150, 1),
-                    width: 2,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(50, 190, 100, 1),
-                    width: 2,
-                  ),
-                ),
-              ),
+            const SizedBox(height: 20),
+            Container(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              // Reduz o espaço horizontal
-              icon: const Icon(Icons.arrow_drop_down),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    categoryController.text = newValue;
-                  });
-                }
-              },
-              value: categoryController.text,
-              items:
-                  _ListaAtletasPageState.getUnderOptions().map((String option) {
-                return DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(
-                    option,
-                    style: const TextStyle(
-                      color: Colors.white70,
+              child: DropdownButtonFormField<String>(
+                dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
+                decoration: InputDecoration(
+                  labelText: 'Category',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(150, 150, 150, 0.5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color.fromRGBO(150, 150, 150, 1),
+                      width: 2,
                     ),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                );
-              }).toList(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color.fromRGBO(50, 190, 100, 1),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                value: categoryController.text,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      categoryController.text = newValue;
+                    });
+                  }
+                },
+                items: _ListaAtletasPageState.getUnderOptions()
+                    .map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(
+                      option,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                _updateAtleta(
-                  nameController.text,
-                  surnameController.text,
-                  passwordController.text,
-                  categoryController.text,
-                );
+                _updateAtleta();
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
