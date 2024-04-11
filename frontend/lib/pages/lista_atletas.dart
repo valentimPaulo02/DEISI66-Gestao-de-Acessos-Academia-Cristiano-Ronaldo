@@ -42,6 +42,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   late NavigationManager navigationManager;
   List<Atleta> atletas = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
+  String selectedCategory = 'under15';
 
   @override
   void initState() {
@@ -141,10 +142,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
   }
 
-  static List<String> getUnderOptions() {
-    return ['under15', 'under16', 'under17', 'under19'];
-  }
-
   static List<String> getMenuItems() {
     switch (getRole()) {
       case 'admin':
@@ -169,6 +166,10 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
       default:
         return [];
     }
+  }
+
+  List<String> getUnderOptions() {
+    return ['under15', 'under16', 'under17', 'under19'];
   }
 
   @override
@@ -220,6 +221,21 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                   ),
                   child: const Text('Adicionar Atleta'),
                 ),
+                const SizedBox(width: 20),
+                DropdownButton<String>(
+                  value: selectedCategory,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCategory = newValue!;
+                    });
+                  },
+                  items: underOptions.map((String category) {
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                ),
               ],
             ),
           ),
@@ -228,6 +244,9 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
               itemCount: atletas.length,
               itemBuilder: (context, index) {
                 final atleta = atletas[index];
+                if (atleta.category != selectedCategory) {
+                  return SizedBox.shrink();
+                }
                 return ListTile(
                   title: Text(
                     '${atleta.name} ${atleta.surname} | ${atleta.category}',
@@ -314,7 +333,7 @@ class DetalhesAtletaDialog extends StatelessWidget {
           const SizedBox(height: 8),
           Center(
             child: Text(
-              'Sobrenome: ${atleta.category}',
+              'Categoria: ${atleta.category}',
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -364,7 +383,6 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
   }
 
   Future<void> _loadProfileImage() async {
-    print('Carregando imagem do perfil...');
     if (widget.atleta.profileImageBytes != null) {
       setState(() {
         _currentImageBytes =
@@ -509,7 +527,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                     });
                   }
                 },
-                items: _ListaAtletasPageState.getUnderOptions()
+                items: ['under15', 'under16', 'under17', 'under19']
                     .map((String option) {
                   return DropdownMenuItem<String>(
                     value: option,

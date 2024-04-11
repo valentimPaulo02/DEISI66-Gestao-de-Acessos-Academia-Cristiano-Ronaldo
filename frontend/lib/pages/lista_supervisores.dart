@@ -337,7 +337,6 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
   }
 
   Future<void> _loadProfileImage() async {
-    print('Carregando imagem do perfil...');
     if (widget.supervisor.profileImageBytes != null) {
       setState(() {
         _currentImageBytes =
