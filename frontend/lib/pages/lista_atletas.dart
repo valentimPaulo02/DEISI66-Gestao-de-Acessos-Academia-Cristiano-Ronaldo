@@ -42,7 +42,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   late NavigationManager navigationManager;
   List<Atleta> atletas = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
-  String selectedCategory = 'under15';
+  String? selectedCategory;
 
   @override
   void initState() {
@@ -94,6 +94,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     category: atleta['category'],
                   ))
               .toList();
+          selectedCategory = null; //limpa a categoria que está selecionada
         });
       } else {
         print('Erro ao procurar a lista de atletas: ${data['error']}');
@@ -191,9 +192,10 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         pageIcons: getPageIcons(),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(top: 30.0),
             child: Align(
               alignment: Alignment.topCenter,
               child: Text(
@@ -206,45 +208,49 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/register_user');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
-                  ),
-                  child: const Text('Adicionar Atleta'),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/register_user');
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
                 ),
-                const SizedBox(width: 20),
-                DropdownButton<String>(
-                  value: selectedCategory,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue!;
-                    });
-                  },
-                  items: underOptions.map((String category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+                child: const Text('Adicionar Atleta'),
+              ),
+              DropdownButton<String>(
+                value: selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    if (newValue == selectedCategory) {
+                      selectedCategory = null; //limpa a categoria selecionada
+                    } else {
+                      selectedCategory = newValue;
+                    }
+                  });
+                },
+                items: underOptions.map((String category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+              ),
+            ],
           ),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: atletas.length,
               itemBuilder: (context, index) {
                 final atleta = atletas[index];
-                if (atleta.category != selectedCategory) {
+                if (selectedCategory != null &&
+                    atleta.category != selectedCategory) {
                   return SizedBox.shrink();
                 }
                 return ListTile(
