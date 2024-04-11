@@ -51,7 +51,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
       currentPage = 3;
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
-
+/*
     atletas = [
       Atleta(
           id: 1,
@@ -72,6 +72,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           password: "abcde",
           category: 'under19')
     ];
+ */
 
     _getAthleteList();
   }
@@ -414,8 +415,9 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     final updatedPassword = passwordController.text;
     final id = widget.atleta.id;
 
-    final profileImageBytes =
+    /*final profileImageBytes =
         _pickedImage != null ? await _pickedImage!.readAsBytes() : null;
+     */
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),
@@ -427,8 +429,9 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
         'name': updatedName,
         'surname': updatedSurname,
         'password': updatedPassword,
-        'profileImage':
+        /*'profileImage':
             profileImageBytes != null ? base64Encode(profileImageBytes) : null,
+         */
       }),
     );
 
@@ -474,6 +477,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                 valueColor: AlwaysStoppedAnimation<Color>(
                     Color.fromRGBO(4, 180, 107, 1)),
               ),
+            /*
             const SizedBox(height: 10),
             ImagePickerField(
               labelText: 'Fotografia',
@@ -485,6 +489,8 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                 });
               },
             ),
+
+             */
             const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Name',

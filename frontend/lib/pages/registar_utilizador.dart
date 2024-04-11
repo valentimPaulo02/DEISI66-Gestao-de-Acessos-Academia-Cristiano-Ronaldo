@@ -47,8 +47,9 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
         'surname': surname,
         'password': password,
         'category': category,
-        'profileImage':
+        /*'profileImage':
             profileImageBytes != null ? base64Encode(profileImageBytes) : null,
+         */
       }),
       headers: {"Content-Type": "application/json"},
     );

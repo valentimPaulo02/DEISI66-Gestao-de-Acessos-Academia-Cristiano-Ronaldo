@@ -9,7 +9,7 @@ import '../componentes/inputfield.dart';
 String nameController = "";
 String surnameController = "";
 String passwordController = "";
-List<int>? profileImageBytes; //bytes das imagens armazenados
+List<int>? profileImageBytes; //bytes das imagens armazenadas
 const String defaultImagePath = "lib/images/defaultProfile.png"; //img default
 
 class AddSupervisorPage extends StatefulWidget {
@@ -42,9 +42,10 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
           'name': name,
           'surname': surname,
           'password': password,
-          'profileImage': profileImageBytes != null
+          /*'profileImage': profileImageBytes != null
               ? base64Encode(profileImageBytes)
               : null,
+           */
         }),
         headers: {"Content-Type": "application/json"});
 

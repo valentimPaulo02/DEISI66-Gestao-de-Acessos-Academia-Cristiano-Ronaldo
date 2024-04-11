@@ -47,12 +47,15 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     supervisores = [
       Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123"),
       Supervisor(
           id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123"),
       Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024")
     ];
+
+     */
 
     _getSupervisorList();
   }
@@ -362,8 +365,10 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     final updatedPassword = passwordController.text;
     final id = widget.supervisor.id;
 
+    /*
     final profileImageBytes =
         _pickedImage != null ? await _pickedImage!.readAsBytes() : null;
+     */
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateSupervisor'),
@@ -375,8 +380,9 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
         'name': updatedName,
         'surname': updatedSurname,
         'password': updatedPassword,
-        'profileImage':
+        /*'profileImage':
             profileImageBytes != null ? base64Encode(profileImageBytes) : null,
+         */
       }),
     );
 
@@ -422,7 +428,8 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
                 valueColor: AlwaysStoppedAnimation<Color>(
                     Color.fromRGBO(4, 180, 107, 1)),
               ),
-            const SizedBox(height: 10),
+            //const SizedBox(height: 10),
+            /*
             ImagePickerField(
               labelText: 'Fotografia',
               controller: TextEditingController(
@@ -433,6 +440,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
                 });
               },
             ),
+             */
             const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Name',
