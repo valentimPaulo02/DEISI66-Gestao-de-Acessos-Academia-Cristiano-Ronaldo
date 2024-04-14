@@ -35,7 +35,7 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:5000/registerSupervisor');
+    final url = Uri.parse('http://localhost:5000/registSupervisor');
 
     final response = await http.post(url,
         body: json.encode({

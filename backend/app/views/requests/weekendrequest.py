@@ -118,3 +118,28 @@ def getUserWeekendRequest():
             formatted_list.append(formatted_row)
 
         return {"success":True, "list":formatted_list}
+    
+
+@weekendrequest_bp.route('/updateWeekendRequest', methods=["POST"])
+def updateWeekendRequest():
+    if request.method=="POST":
+
+        ptr = mysql.connection.cursor()
+        data = request.get_json()
+
+        request_id = data["request_id"]
+        leave_date = str(data["leave_date"])
+        leave_time = str(data["leave_time"])
+        supervisor = str(data["supervisor"])
+        transport = str(data["transport"])
+        destiny = str(data["destiny"])
+
+        leave_date = datetime.fromisoformat(leave_date).date()
+        leave_time = datetime.strptime(leave_time, "%H:%M").time()
+
+        query = "UPDATE weekendrequest SET leave_date=%s, leave_time=%s, supervisor=%s, transport_out=%s, destiny=%s WHERE request_id=%s;"
+        values = (leave_date, leave_time, supervisor, transport, destiny, request_id)
+        ptr.execute(query, values)
+        mysql.connection.commit()
+        
+        return {"success":True}

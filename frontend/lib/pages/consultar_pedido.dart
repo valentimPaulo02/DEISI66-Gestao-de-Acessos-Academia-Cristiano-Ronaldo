@@ -516,6 +516,7 @@ class _EditarPedidoTemporarioPageState
     final updatedHoraRetorno = horaRetornoController.text;
 
     final Map<String, dynamic> updatedData = {
+      'request_id': widget.pedido.requestId,
       'leave_date': updatedDataSaida,
       'leave_time': updatedHoraSaida,
       'destiny': updatedDestino,
@@ -534,7 +535,7 @@ class _EditarPedidoTemporarioPageState
     );
 
     if (response.statusCode == 200) {
-      // Atualização bem-sucedida
+      Navigator.pushNamed(context, '/consultar_pedido');
     } else {
       print(
           'Erro na atualização do pedido temporario: ${response.reasonPhrase}');
@@ -640,6 +641,7 @@ class _EditarPedidoFimDeSemanaPageState
     final updatedComQuemSai = comQuemSaiController.text;
 
     final Map<String, dynamic> updatedData = {
+      'request_id': widget.pedido.requestId,
       'leave_date': updatedDataSaida,
       'leave_time': updatedHoraSaida,
       'destiny': updatedDestino,
@@ -656,7 +658,7 @@ class _EditarPedidoFimDeSemanaPageState
     );
 
     if (response.statusCode == 200) {
-      // Atualização bem-sucedida
+      Navigator.pushNamed(context, '/consultar_pedido');
     } else {
       print('Erro na atualização do pedido weekend: ${response.reasonPhrase}');
     }

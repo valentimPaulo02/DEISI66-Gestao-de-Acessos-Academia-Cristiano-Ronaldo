@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../componentes/get_role.dart';
 import '../componentes/inputfield.dart';
 import 'package:http/http.dart' as http;
@@ -77,15 +76,14 @@ class LoginPage extends StatelessWidget {
 
           //"Login message"(...)
 
-          Positioned(
+          const Positioned(
             top: 200, // Ajuste de posição vertical
             left: 0,
             right: 0,
             child: Center(
               child: Text(
                 "Login",
-                style: GoogleFonts.roboto(
-                  textStyle: const TextStyle(
+                style: TextStyle(
                     fontSize: 40,
                     color: Color.fromRGBO(160, 160, 160, 0.9),
                     fontWeight: FontWeight.bold,
@@ -93,7 +91,7 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          
 
           // Username step
 
@@ -130,24 +128,22 @@ class LoginPage extends StatelessWidget {
 
           // Forgot Password?
 
-          Positioned(
+          const Positioned(
             top: 415,
             left: 0,
             right: 0,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
                     'Forgot Password?',
-                    style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
+                    style: TextStyle(
                         fontSize: 12,
                         color: Color.fromRGBO(4, 180, 107, 1),
                       ),
-                    ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -176,15 +172,13 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign In',
-                    style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
+                    style: TextStyle(
                         color: Colors.white70,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
                   ),
                 ),
               ),

@@ -58,17 +58,10 @@ def updateSupervisor():
         surname = data["surname"]
         password = data["password"]
 
-        print(id)
-        print(name)
-        print(surname)
-        print(password)
-
         query = "SELECT * FROM user WHERE user_id=%s;"
         values = (id,)
         ptr.execute(query, values)
         info = ptr.fetchall()
-
-        print(info)
 
         user_name = info[0]["name"]
         user_surname = info[0]["surname"]

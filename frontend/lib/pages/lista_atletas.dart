@@ -374,7 +374,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
   final nameController = TextEditingController();
   final surnameController = TextEditingController();
   final passwordController = TextEditingController();
-  late TextEditingController categoryController;
+  String categoryController = "";
   late Uint8List _currentImageBytes;
   XFile? _pickedImage;
 
@@ -384,7 +384,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     nameController.text = widget.atleta.name;
     surnameController.text = widget.atleta.surname;
     passwordController.text = widget.atleta.password;
-    categoryController = TextEditingController(text: widget.atleta.category);
+    categoryController = widget.atleta.category;
     _currentImageBytes = Uint8List(0);
     _loadProfileImage();
   }
@@ -429,6 +429,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
         'name': updatedName,
         'surname': updatedSurname,
         'password': updatedPassword,
+        'category': categoryController,
         /*'profileImage':
             profileImageBytes != null ? base64Encode(profileImageBytes) : null,
          */
@@ -531,15 +532,15 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                value: categoryController.text,
+                value: categoryController,
                 onChanged: (String? newValue) {
                   if (newValue != null) {
                     setState(() {
-                      categoryController.text = newValue;
+                      categoryController = newValue;
                     });
                   }
                 },
-                items: ['under15', 'under16', 'under17', 'under19']
+                items: ["under15", "under16", "under17", "under19"]
                     .map((String option) {
                   return DropdownMenuItem<String>(
                     value: option,
