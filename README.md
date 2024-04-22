@@ -8,7 +8,6 @@ git clone https://github.com/valentimPaulo02/DEISI66-Gestao-de-Acessos-Academia-
 ```
 
 ## Frontend
-r
 Para a instalação do frontend, é necessário ter o Flutter SDK instalado na máquina. Para tal, utilize este link:
 - https://docs.flutter.dev/release/archive?tab=windows
 
