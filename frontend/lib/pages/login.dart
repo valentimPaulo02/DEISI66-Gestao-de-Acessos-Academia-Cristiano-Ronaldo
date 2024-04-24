@@ -28,12 +28,8 @@ class LoginPage extends StatelessWidget {
       final data = json.decode(response.body);
 
       if (data['success'] == true) {
-        // ignore: use_build_context_synchronously
-        setToken(data['token']);
-        fetchUserRole();
-        await Future.delayed(Duration(milliseconds: 500));
+        await fetchUserRole(data['token']);
         Navigator.pushNamed(context, '/home');
-        // <-------------------------------------------------------------------------------------------
       } else {
         // login malsucedido (mostrar mensagem de erro, etc.)
       }
