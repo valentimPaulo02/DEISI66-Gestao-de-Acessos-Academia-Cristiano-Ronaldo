@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/textfield.dart';
@@ -59,12 +60,12 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       currentPage = 2;
     }
     super.initState();
-    _getPedidosFromBackend();
-    //_loadFakeTemporaryPedidos();
-    //_loadFakeWeekendPedidos();
+    //_getPedidosFromBackend();
+    _loadFakeTemporaryPedidos();
+    _loadFakeWeekendPedidos();
   }
 
-/*
+
   //lista forcada para testes dos pedidos temporários
   Future<void> _loadFakeTemporaryPedidos() async {
     setState(() {
@@ -90,9 +91,9 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     });
   }
 
- */
 
-  /*
+
+
   //lista forcada para testes dos pedidos de fim de semana
   Future<void> _loadFakeWeekendPedidos() async {
     setState(() {
@@ -117,7 +118,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       }
     });
   }
-   */
+
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
@@ -309,18 +310,18 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
     if (index == 4) {
       tipoPedido = "Weekend";
-      //_loadFakeWeekendPedidos();
-      _getPedidosFromBackend();
+      _loadFakeWeekendPedidos();
+     // _getPedidosFromBackend();
     } else if (index == 5) {
       tipoPedido = "Temporary";
-      //_loadFakeTemporaryPedidos();
-      _getPedidosFromBackend();
+      _loadFakeTemporaryPedidos();
+     // _getPedidosFromBackend();
     }
   }
 
   List<Pedido> getFilteredPedidos() {
     if (getRole() == 'athlete') {
-      return pedidosUser;
+      return pedidosAll; //TROCAR AQUI PARA PEDIDOS USER
     } else {
       return pedidosAll;
     }
@@ -396,8 +397,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                     setState(() {
                       tipoPedido = "Temporary";
                     });
-                    _getPedidosFromBackend();
-                    //_loadFakeTemporaryPedidos();
+                    //_getPedidosFromBackend();
+                    _loadFakeTemporaryPedidos();
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -412,8 +413,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                     setState(() {
                       tipoPedido = "Weekend";
                     });
-                    _getPedidosFromBackend();
-                    //_loadFakeWeekendPedidos();
+                    //_getPedidosFromBackend();
+                    _loadFakeWeekendPedidos();
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -545,8 +546,14 @@ class _EditarPedidoTemporarioPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Pedido Temporário'),
+      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50.0),
+        child: CustomAppBarWithBack(
+          onBackButtonPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -667,8 +674,14 @@ class _EditarPedidoFimDeSemanaPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Pedido de Fim-de-Semana'),
+      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50.0),
+        child: CustomAppBarWithBack(
+          onBackButtonPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
