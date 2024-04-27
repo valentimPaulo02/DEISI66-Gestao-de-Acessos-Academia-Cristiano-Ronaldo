@@ -65,7 +65,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     _loadFakeWeekendPedidos();
   }
 
-
   //lista forcada para testes dos pedidos temporários
   Future<void> _loadFakeTemporaryPedidos() async {
     setState(() {
@@ -91,9 +90,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     });
   }
 
-
-
-
   //lista forcada para testes dos pedidos de fim de semana
   Future<void> _loadFakeWeekendPedidos() async {
     setState(() {
@@ -118,7 +114,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       }
     });
   }
-
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
@@ -311,11 +306,11 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     if (index == 4) {
       tipoPedido = "Weekend";
       _loadFakeWeekendPedidos();
-     // _getPedidosFromBackend();
+      // _getPedidosFromBackend();
     } else if (index == 5) {
       tipoPedido = "Temporary";
       _loadFakeTemporaryPedidos();
-     // _getPedidosFromBackend();
+      // _getPedidosFromBackend();
     }
   }
 
@@ -648,15 +643,14 @@ class _EditarPedidoFimDeSemanaPageState
     final updatedComQuemSai = comQuemSaiController.text;
 
     final Map<String, dynamic> updatedData = {
-      'request_id': widget.pedido.requestId,
-      'leave_date': updatedDataSaida,
-      'leave_time': updatedHoraSaida,
-      'destiny': updatedDestino,
-      'transport': updatedTransporte,
-      'supervisor': updatedComQuemSai,
+      'date': updatedDataSaida,
+      'horaSaida': updatedHoraSaida,
+      'destino': updatedDestino,
+      'transporte': updatedTransporte,
+      'comQuemSai': updatedComQuemSai,
     };
 
-    final response = await http.post(
+    final response = await http.patch(
       Uri.parse('http://localhost:5000/updateWeekendRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -665,7 +659,7 @@ class _EditarPedidoFimDeSemanaPageState
     );
 
     if (response.statusCode == 200) {
-      Navigator.pushNamed(context, '/consultar_pedido');
+      // Atualização bem-sucedida
     } else {
       print('Erro na atualização do pedido weekend: ${response.reasonPhrase}');
     }
