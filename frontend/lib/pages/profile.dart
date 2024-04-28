@@ -100,9 +100,16 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.grey,
+            Container(
+              width: 130,
+              height: 130,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('lib/images/defaultProfile.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             InputField(
