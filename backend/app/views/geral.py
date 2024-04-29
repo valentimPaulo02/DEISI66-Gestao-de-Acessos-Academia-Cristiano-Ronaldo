@@ -100,3 +100,50 @@ def deleteUser():
         mysql.connection.commit()
 
         return {"success":True}
+    
+
+@geral_bp.route('/getUserData', methods=["GET"])
+def getUserData():
+    if request.method=="GET":
+
+        ptr = mysql.connection.cursor()
+
+        token = request.headers.get("token")
+
+        query = "SELECT * FROM user WHERE token=%s;"
+        values = (token,)
+        ptr.execute(query, values)
+        info = ptr.fetchall()
+
+        name = info[0]["name"]
+        surname = info[0]["surname"]
+        password = info[0]["password"]
+
+        return {"success":True, "name":name, "surname":surname, "password":password}
+    
+
+@geral_bp.route('/updatePassword', methods=["POST"])
+def updatePassword():
+    if request.method=="POST":
+
+        ptr = mysql.connection.cursor()
+        data = request.get_json()
+
+        token = data["token"]
+        password = data["password"]
+
+        query = "SELECT * FROM user WHERE token=%s;"
+        values = (token,)
+        ptr.execute(query, values)
+        info = ptr.fetchall()
+
+        dbpassword = info[0]["password"]
+
+        if(dbpassword == password): return {"success":False}
+
+        query = "UPDATE user SET password=%s WHERE token=%s"
+        values = (password, token)
+        ptr.execute(query, values)
+        mysql.connection.commit()
+
+        return {"success":True}

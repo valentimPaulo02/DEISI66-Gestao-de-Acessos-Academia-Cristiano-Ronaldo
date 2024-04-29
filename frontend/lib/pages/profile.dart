@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:deisi66/main.dart';
 import 'package:flutter/material.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/inputfield.dart';
@@ -28,15 +29,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> fetchData() async {
     try {
-      var response =
-          await http.get(Uri.parse('http://localhost:5000/fetchData'));
+      var response = await http.get(
+            Uri.parse('http://localhost:5000/getUserData'),
+            headers: {"Content-Type": "application/json", "token": getToken()}
+            );
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
 
         setState(() {
           nome = data['name'];
-          apelido = data['nickname'];
+          apelido = data['surname'];
           password = data['password'];
           passwordController.text = password;
         });
@@ -51,8 +54,12 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> updatePassword(String newPassword) async {
     try {
       var response = await http.post(
-        Uri.parse('http://localhost:5000/updatePassword'),
-        body: {'password': newPassword},
+      Uri.parse('http://localhost:5000/updatePassword'),
+      body: json.encode({
+          'token': getToken(),
+          'password': newPassword,
+      }),
+      headers: {"Content-Type": "application/json"}
       );
 
       if (response.statusCode == 200) {
@@ -68,6 +75,23 @@ class _ProfilePageState extends State<ProfilePage> {
         const SnackBar(content: Text('Error updating password')),
       );
       print('Error: $error');
+    }
+  }
+
+  Future<void> logout() async {
+
+    var response = await http.post(
+      Uri.parse('http://localhost:5000/logout'),
+      body: json.encode({
+          'token': getToken(),
+      }),
+      headers: {"Content-Type": "application/json"}
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.pushNamed(context, '/');
+    } else {
+      throw Exception('Failed to load user profile data');
     }
   }
 
@@ -144,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/');
+                logout();
               },
               child: const Text('Terminar Sessão'),
             ),
