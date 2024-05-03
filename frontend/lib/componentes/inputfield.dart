@@ -7,7 +7,7 @@ class InputField extends StatelessWidget {
   final String? initialValue;
   final bool enabled;
   final TextEditingController? controller;
-  final Widget? suffixIcon; // Adicionando a propriedade de ícone de sufixo
+  final Widget? suffixIcon;
 
   const InputField({
     Key? key,
@@ -17,17 +17,25 @@ class InputField extends StatelessWidget {
     this.initialValue,
     this.enabled = true,
     this.controller,
-    this.suffixIcon, // Adicionando a propriedade de ícone de sufixo
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _controller =
+        controller ?? TextEditingController();
+
+    //se o initialValue estiver definido, definimos o texto no controlador
+    if (initialValue != null) {
+      _controller.text = initialValue!;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         obscureText: isPassword,
         onChanged: onChanged,
-        controller: controller,
+        controller: _controller,
         readOnly: !enabled,
         decoration: InputDecoration(
           labelText: labelText,
@@ -48,7 +56,7 @@ class InputField extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          suffixIcon: suffixIcon, // Adicionando o ícone de sufixo
+          suffixIcon: suffixIcon,
         ),
         style: const TextStyle(
           color: Colors.white70,
