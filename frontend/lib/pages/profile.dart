@@ -25,16 +25,14 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     fetchData();
-    //simulateUserData();
-    //print(nome);
-    //print(apelido);
   }
 
   Future<void> fetchData() async {
     try {
       var response = await http.get(
-          Uri.parse('http://localhost:5000/getUserData'),
-          headers: {"Content-Type": "application/json", "token": getToken()});
+            Uri.parse('http://localhost:5000/getUserData'),
+            headers: {"Content-Type": "application/json", "token": getToken()}
+            );
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
@@ -53,24 +51,16 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> simulateUserData() async {
-    setState(() {
-      nome = 'Victor';
-      apelido = 'Gyokeres';
-      password = 'sporting123';
-      passwordController.text = password;
-    });
-  }
-
   Future<void> updatePassword(String newPassword) async {
     try {
-      var response =
-          await http.post(Uri.parse('http://localhost:5000/updatePassword'),
-              body: json.encode({
-                'token': getToken(),
-                'password': newPassword,
-              }),
-              headers: {"Content-Type": "application/json"});
+      var response = await http.post(
+      Uri.parse('http://localhost:5000/updatePassword'),
+      body: json.encode({
+          'token': getToken(),
+          'password': newPassword,
+      }),
+      headers: {"Content-Type": "application/json"}
+      );
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,11 +79,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> logout() async {
-    var response = await http.post(Uri.parse('http://localhost:5000/logout'),
-        body: json.encode({
+
+    var response = await http.post(
+      Uri.parse('http://localhost:5000/logout'),
+      body: json.encode({
           'token': getToken(),
-        }),
-        headers: {"Content-Type": "application/json"});
+      }),
+      headers: {"Content-Type": "application/json"}
+    );
 
     if (response.statusCode == 200) {
       Navigator.pushNamed(context, '/');
