@@ -42,6 +42,7 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
           'name': name,
           'surname': surname,
           'password': password,
+          'image': '',
           /*'profileImage': profileImageBytes != null
               ? base64Encode(profileImageBytes)
               : null,

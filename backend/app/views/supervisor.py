@@ -3,7 +3,7 @@ from database import mysql
 
 supervisor_bp = Blueprint("supervisor", __name__)
 
-@supervisor_bp.route('/registSupervisor', methods=["POST"])
+@supervisor_bp.route('/registSupervisor', methods=["POST"]) #TODO - UPDATE
 def registSupervisor():
     if request.method=="POST":
 
@@ -13,6 +13,7 @@ def registSupervisor():
         name = str(data["name"])
         surname = str(data["surname"])
         password = str(data["password"])
+        image = str(data["image"])
         username = name + "_" + surname
         role = "supervisor"
 
@@ -23,8 +24,8 @@ def registSupervisor():
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "INSERT INTO user (username, name, surname, password, role) VALUES (%s, %s, %s, %s, %s);"
-        values = (username, name, surname, password, role)
+        query = "INSERT INTO user (username, name, surname, password, role, image_path) VALUES (%s, %s, %s, %s, %s, %s);"
+        values = (username, name, surname, password, role, image)
         ptr.execute(query, values)
         mysql.connection.commit()
         

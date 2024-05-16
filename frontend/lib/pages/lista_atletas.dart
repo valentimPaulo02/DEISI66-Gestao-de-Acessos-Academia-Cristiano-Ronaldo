@@ -18,7 +18,7 @@ class Atleta {
   String surname;
   String password;
   String category;
-  List<int>? profileImageBytes;
+  String image;
 
   Atleta({
     required this.id,
@@ -26,7 +26,7 @@ class Atleta {
     required this.surname,
     required this.password,
     required this.category,
-    this.profileImageBytes,
+    required this.image,
   });
 }
 
@@ -52,6 +52,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     atletas = [
       Atleta(
           id: 1,
@@ -72,7 +73,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           password: "abcde",
           category: 'under19')
     ];
-
+    */
 
     _getAthleteList();
   }
@@ -88,11 +89,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         setState(() {
           atletas = (data['list'] as List)
               .map((atleta) => Atleta(
-                    id: atleta['user_id'],
-                    name: atleta['name'],
-                    surname: atleta['surname'],
-                    password: atleta['password'],
-                    category: atleta['category'],
+                  id: atleta['user_id'],
+                  name: atleta['name'],
+                  surname: atleta['surname'],
+                  password: atleta['password'],
+                  category: atleta['category'],
+                  image: atleta['image_path'],
                   ))
               .toList();
           selectedCategory = null; //limpa a categoria que está selecionada
@@ -311,14 +313,14 @@ class DetalhesAtletaDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Center(
-            child: atleta.profileImageBytes != null
-                ? Image.memory(
-                    Uint8List.fromList(atleta.profileImageBytes!),
-                    width: 50,
-                    height: 50,
+            child: atleta.image.isEmpty
+                ? Image.asset(
+                    'lib/images/defaultProfile.png',
+                    width: 70,
+                    height: 70,
                   )
                 : Image.asset(
-                    'lib/images/defaultProfile.png',
+                    'lib/images/arrowBack.png',
                     width: 70,
                     height: 70,
                   ),
@@ -375,8 +377,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
   final surnameController = TextEditingController();
   final passwordController = TextEditingController();
   String categoryController = "";
-  late Uint8List _currentImageBytes;
-  XFile? _pickedImage;
+  final imageController = TextEditingController();
 
   @override
   void initState() {
@@ -385,28 +386,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     surnameController.text = widget.atleta.surname;
     passwordController.text = widget.atleta.password;
     categoryController = widget.atleta.category;
-    _currentImageBytes = Uint8List(0);
-    _loadProfileImage();
-  }
-
-  Future<void> _loadProfileImage() async {
-    if (widget.atleta.profileImageBytes != null) {
-      setState(() {
-        _currentImageBytes =
-            Uint8List.fromList(widget.atleta.profileImageBytes!);
-      });
-    } else {
-      try {
-        final ByteData imageData =
-            await rootBundle.load('lib/images/defaultProfile.png');
-        final Uint8List defaultImageBytes = imageData.buffer.asUint8List();
-        setState(() {
-          _currentImageBytes = defaultImageBytes;
-        });
-      } catch (error) {
-        print('Erro ao carregar a imagem default: $error');
-      }
-    }
+    imageController.text = widget.atleta.image;
   }
 
   Future<void> _updateAtleta() async {
@@ -414,10 +394,6 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
     final id = widget.atleta.id;
-
-    /*final profileImageBytes =
-        _pickedImage != null ? await _pickedImage!.readAsBytes() : null;
-     */
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),
@@ -430,9 +406,6 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
         'surname': updatedSurname,
         'password': updatedPassword,
         'category': categoryController,
-        /*'profileImage':
-            profileImageBytes != null ? base64Encode(profileImageBytes) : null,
-         */
       }),
     );
 
@@ -467,31 +440,19 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
               ),
             ),
             const SizedBox(height: 20),
-            if (_currentImageBytes.isNotEmpty)
-              Image.memory(
-                _currentImageBytes,
-                width: 100,
-                height: 100,
-              ),
-            if (_currentImageBytes.isEmpty)
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.fromRGBO(4, 180, 107, 1)),
-              ),
-            /*
-            const SizedBox(height: 10),
-            ImagePickerField(
-              labelText: 'Fotografia',
-              controller: TextEditingController(
-                  text: _pickedImage != null ? _pickedImage!.name : ''),
-              onImagePicked: (pickedImage) {
-                setState(() {
-                  _pickedImage = pickedImage;
-                });
-              },
+            Center(
+              child: imageController.text.isEmpty
+                  ? Image.asset(
+                      'lib/images/defaultProfile.png',
+                      width: 100,
+                      height: 100,
+                    )
+                  : Image.asset(
+                      'lib/images/arrowBack.png',
+                      width: 100,
+                      height: 100,
+                    ),
             ),
-
-             */
             const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Name',

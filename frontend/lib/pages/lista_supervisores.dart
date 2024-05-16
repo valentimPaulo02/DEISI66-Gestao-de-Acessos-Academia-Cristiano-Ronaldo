@@ -18,14 +18,14 @@ class Supervisor {
   String name;
   String surname;
   String password;
-  List<int>? profileImageBytes; //bytes da imagem de perfil
+  String image;
 
   Supervisor({
     required this.id,
     required this.name,
     required this.surname,
     required this.password,
-    this.profileImageBytes,
+    required this.image,
   });
 }
 
@@ -47,15 +47,14 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-
+    /*
     supervisores = [
       Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123"),
       Supervisor(
           id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123"),
       Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024")
     ];
-
-
+    */
 
     _getSupervisorList();
   }
@@ -75,6 +74,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                     name: supervisor['name'],
                     surname: supervisor['surname'],
                     password: supervisor['password'],
+                    image: supervisor['image_path'],
                   ))
               .toList();
         });
@@ -269,14 +269,14 @@ class DetalhesSupervisorDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Center(
-            child: supervisor.profileImageBytes != null
-                ? Image.memory(
-                    Uint8List.fromList(supervisor.profileImageBytes!),
-                    width: 50,
-                    height: 50,
+            child: supervisor.image.isEmpty
+                ? Image.asset(
+                    'lib/images/defaultProfile.png',
+                    width: 70,
+                    height: 70,
                   )
                 : Image.asset(
-                    'lib/images/defaultProfile.png',
+                    'lib/images/arrowBack.png',
                     width: 70,
                     height: 70,
                   ),
@@ -326,8 +326,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
   final nameController = TextEditingController();
   final surnameController = TextEditingController();
   final passwordController = TextEditingController();
-  late Uint8List _currentImageBytes;
-  XFile? _pickedImage;
+  final imageController = TextEditingController();
 
   @override
   void initState() {
@@ -335,28 +334,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     nameController.text = widget.supervisor.name;
     surnameController.text = widget.supervisor.surname;
     passwordController.text = widget.supervisor.password;
-    _currentImageBytes = Uint8List(0);
-    _loadProfileImage();
-  }
-
-  Future<void> _loadProfileImage() async {
-    if (widget.supervisor.profileImageBytes != null) {
-      setState(() {
-        _currentImageBytes =
-            Uint8List.fromList(widget.supervisor.profileImageBytes!);
-      });
-    } else {
-      try {
-        final ByteData imageData =
-            await rootBundle.load('lib/images/defaultProfile.png');
-        final Uint8List defaultImageBytes = imageData.buffer.asUint8List();
-        setState(() {
-          _currentImageBytes = defaultImageBytes;
-        });
-      } catch (error) {
-        print('Erro ao carregar a imagem default: $error');
-      }
-    }
+    imageController.text = widget.supervisor.image;
   }
 
   Future<void> _updateSupervisor() async {
@@ -364,11 +342,6 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
     final id = widget.supervisor.id;
-
-    /*
-    final profileImageBytes =
-        _pickedImage != null ? await _pickedImage!.readAsBytes() : null;
-     */
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateSupervisor'),
@@ -380,9 +353,6 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
         'name': updatedName,
         'surname': updatedSurname,
         'password': updatedPassword,
-        /*'profileImage':
-            profileImageBytes != null ? base64Encode(profileImageBytes) : null,
-         */
       }),
     );
 
@@ -417,30 +387,19 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
               ),
             ),
             const SizedBox(height: 20),
-            if (_currentImageBytes.isNotEmpty)
-              Image.memory(
-                _currentImageBytes,
-                width: 100,
-                height: 100,
-              ),
-            if (_currentImageBytes.isEmpty)
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.fromRGBO(4, 180, 107, 1)),
-              ),
-            //const SizedBox(height: 10),
-            /*
-            ImagePickerField(
-              labelText: 'Fotografia',
-              controller: TextEditingController(
-                  text: _pickedImage != null ? _pickedImage!.name : ''),
-              onImagePicked: (pickedImage) {
-                setState(() {
-                  _pickedImage = pickedImage;
-                });
-              },
+            Center(
+              child: imageController.text.isEmpty
+                  ? Image.asset(
+                      'lib/images/defaultProfile.png',
+                      width: 100,
+                      height: 100,
+                    )
+                  : Image.asset(
+                      'lib/images/arrowBack.png',
+                      width: 100,
+                      height: 100,
+                    ),
             ),
-             */
             const SizedBox(height: 20),
             CustomTextField(
               labelText: 'Name',

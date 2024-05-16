@@ -47,6 +47,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
         'surname': surname,
         'password': password,
         'category': category,
+        'image': '',
         /*'profileImage':
             profileImageBytes != null ? base64Encode(profileImageBytes) : null,
          */
@@ -102,27 +103,21 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
               InputField(
                 labelText: 'Name',
                 onChanged: (value) {
-                  setState(() {
-                    nameController = value;
-                  });
+                  nameController = value;
                 },
               ),
               const SizedBox(height: 20),
               InputField(
                 labelText: 'Surname',
                 onChanged: (value) {
-                  setState(() {
-                    surnameController = value;
-                  });
+                  surnameController = value;
                 },
               ),
               const SizedBox(height: 20),
               InputField(
                 labelText: 'Password',
                 onChanged: (value) {
-                  setState(() {
-                    passwordController = value;
-                  });
+                  passwordController = value;
                 },
               ),
               const SizedBox(height: 20),
@@ -154,9 +149,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                     icon: const Icon(Icons.arrow_drop_down),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
-                        setState(() {
                           categoryController = newValue;
-                        });
                       }
                     },
                     items: underOptions.map((String option) {

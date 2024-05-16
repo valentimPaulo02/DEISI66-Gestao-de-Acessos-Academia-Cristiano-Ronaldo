@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
-
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -16,31 +15,31 @@ class _ProfilePageState extends State<ProfilePage> {
   late String nome = '';
   late String apelido = '';
   late String password = '';
-
+  late String image = '';
   TextEditingController passwordController = TextEditingController();
-
   bool isEditingPassword = false;
-
   @override
   void initState() {
     super.initState();
     fetchData();
+    //simulateUserData();
+    //print(nome);
+    //print(apelido);
   }
 
   Future<void> fetchData() async {
     try {
       var response = await http.get(
-            Uri.parse('http://localhost:5000/getUserData'),
-            headers: {"Content-Type": "application/json", "token": getToken()}
-            );
+          Uri.parse('http://localhost:5000/getUserData'),
+          headers: {"Content-Type": "application/json", "token": getToken()});
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-
         setState(() {
           nome = data['name'];
           apelido = data['surname'];
           password = data['password'];
+          image = data['image'];
           passwordController.text = password;
         });
       } else {
@@ -51,16 +50,24 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> simulateUserData() async {
+    setState(() {
+      nome = 'Victor';
+      apelido = 'Gyokeres';
+      password = 'sporting123';
+      passwordController.text = password;
+    });
+  }
+
   Future<void> updatePassword(String newPassword) async {
     try {
-      var response = await http.post(
-      Uri.parse('http://localhost:5000/updatePassword'),
-      body: json.encode({
-          'token': getToken(),
-          'password': newPassword,
-      }),
-      headers: {"Content-Type": "application/json"}
-      );
+      var response =
+          await http.post(Uri.parse('http://localhost:5000/updatePassword'),
+              body: json.encode({
+                'token': getToken(),
+                'password': newPassword,
+              }),
+              headers: {"Content-Type": "application/json"});
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -79,14 +86,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> logout() async {
-
-    var response = await http.post(
-      Uri.parse('http://localhost:5000/logout'),
-      body: json.encode({
+    var response = await http.post(Uri.parse('http://localhost:5000/logout'),
+        body: json.encode({
           'token': getToken(),
-      }),
-      headers: {"Content-Type": "application/json"}
-    );
+        }),
+        headers: {"Content-Type": "application/json"});
 
     if (response.statusCode == 200) {
       Navigator.pushNamed(context, '/');
@@ -124,13 +128,25 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            Container(
+            image.isEmpty 
+            ? Container(
               width: 130,
               height: 130,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: AssetImage('lib/images/defaultProfile.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            )
+            : Container(
+              width: 130,
+              height: 130,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('lib/images/arrowBack.png'),
                   fit: BoxFit.fill,
                 ),
               ),

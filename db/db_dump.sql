@@ -68,6 +68,7 @@ CREATE TABLE `user` (
   `role` enum('athlete','supervisor','admin') DEFAULT NULL,
   `token` text,
   `category` enum('under15','under16','under17','under19') DEFAULT NULL,
+  `image_path` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -79,9 +80,9 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1, 'admin', 'user', 'admin_user', 'admin123', 'admin', NULL, NULL);
-INSERT INTO `user` VALUES (2, 'supervisor', 'user', 'supervisor_user', 'supervisor123', 'supervisor', NULL, NULL); 
-INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15'); 
+INSERT INTO `user` VALUES (1, 'admin', 'user', 'admin_user', 'admin123', 'admin', NULL, NULL, '');
+INSERT INTO `user` VALUES (2, 'supervisor', 'user', 'supervisor_user', 'supervisor123', 'supervisor', NULL, NULL, ''); 
+INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15', ''); 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

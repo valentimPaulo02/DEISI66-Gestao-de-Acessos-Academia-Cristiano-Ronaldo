@@ -12,7 +12,7 @@ services:
     depends_on:
       - acr-database
     volumes:
-      - ./backend:/app
+      - backend-volume:/app/images 
 
   acr-database:
     container_name: database_container
@@ -33,6 +33,7 @@ services:
 
 volumes:
   mysql-data:
+  backend-volume:
 
 networks:
   default:
