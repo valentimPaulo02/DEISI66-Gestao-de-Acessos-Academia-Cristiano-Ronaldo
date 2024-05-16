@@ -89,12 +89,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         setState(() {
           atletas = (data['list'] as List)
               .map((atleta) => Atleta(
-                  id: atleta['user_id'],
-                  name: atleta['name'],
-                  surname: atleta['surname'],
-                  password: atleta['password'],
-                  category: atleta['category'],
-                  image: atleta['image_path'],
+                    id: atleta['user_id'],
+                    name: atleta['name'],
+                    surname: atleta['surname'],
+                    password: atleta['password'],
+                    category: atleta['category'],
+                    image: atleta['image_path'],
                   ))
               .toList();
           selectedCategory = null; //limpa a categoria que está selecionada
@@ -394,6 +394,9 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
     final id = widget.atleta.id;
+
+    print(updatedPassword);
+    print(categoryController);
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),

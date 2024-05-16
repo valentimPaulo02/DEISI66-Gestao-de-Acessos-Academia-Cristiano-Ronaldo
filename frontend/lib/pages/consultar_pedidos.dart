@@ -316,7 +316,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   List<Pedido> getFilteredPedidos() {
     if (getRole() == 'athlete') {
-      return pedidosAll; //TROCAR AQUI PARA PEDIDOS USER
+      return pedidosUser; //TROCAR AQUI PARA PEDIDOS USER
     } else {
       return pedidosAll;
     }
@@ -436,12 +436,13 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                     _showPedidoDetailsDialog(context, pedido);
                   },
                   trailing: getRole() == 'athlete'
-                      ? IconButton(
+                      ? null
+                      /*IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
                             _editPedido(context, pedido);
                           },
-                        )
+                        )*/
                       : null,
                 );
               },

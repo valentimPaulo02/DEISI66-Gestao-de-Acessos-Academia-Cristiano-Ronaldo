@@ -13,6 +13,8 @@ services:
       - acr-database
     volumes:
       - backend-volume:/app/images 
+    env_file:
+      - backend.env
 
   acr-database:
     container_name: database_container
@@ -22,10 +24,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./db:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_ROOT_PASSWORD: sporting_database_connection_GUGf983YDR34535Dtdt
-      MYSQL_DATABASE: academiasporting
-      MYSQL_PASSWORD: sporting_database_connection_GUGf983YDR34535Dtdt
+    env_file:
+      - db.env
     image: mysql:latest
     ports:
       - "3306:3306"

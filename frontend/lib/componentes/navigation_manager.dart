@@ -15,13 +15,13 @@ class NavigationManager {
         routeName = '/home';
         break;
       case 2:
-        routeName = '/fazer_pedido_saida_temporaria';
+        routeName = '/pedido_saida_temporaria';
         break;
       case 3:
-        routeName = '/fazer_pedido_saida_fim_de_semana';
+        routeName = '/pedido_saida_fim_de_semana';
         break;
       case 4:
-        routeName = '/consultar_pedido';
+        routeName = '/consultar_pedidos';
         break;
       case 5:
         routeName = '/lista_de_atletas';

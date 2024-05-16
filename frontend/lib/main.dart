@@ -1,7 +1,7 @@
 import 'package:deisi66/componentes/get_role.dart';
-import 'package:deisi66/pages/consultar_pedido.dart';
-import 'package:deisi66/pages/fazer_pedido_saida_fim_de_semana.dart';
-import 'package:deisi66/pages/fazer_pedido_saida_temporaria.dart';
+import 'package:deisi66/pages/consultar_pedidos.dart';
+import 'package:deisi66/pages/pedido_saida_fim_de_semana.dart';
+import 'package:deisi66/pages/pedido_saida_temporaria.dart';
 import 'package:deisi66/pages/lista_atletas.dart';
 import 'package:deisi66/pages/lista_supervisores.dart';
 import 'package:deisi66/pages/profile.dart';
@@ -20,23 +20,23 @@ void main() {
 
 final menuItemsAdmin = [
   'Home',
-  'Fazer Pedido Saida Temporaria',
-  'Fazer Pedido Saida Fim de Semana',
-  'Consultar Pedido',
+  'Pedido Saida Temporaria',
+  'Pedido Saida Fim de Semana',
+  'Consultar Pedidos',
   'Lista de Atletas',
   'Lista de Supervisores',
 ];
 
 final menuItemsAthlete = [
   'Home',
-  'Fazer Pedido Saida Temporaria',
-  'Fazer Pedido Saida Fim de Semana',
-  'Consultar Pedido',
+  'Pedido Saida Temporaria',
+  'Pedido Saida Fim de Semana',
+  'Consultar Pedidos',
 ];
 
 final menuItemsSupervisor = [
   'Home',
-  'Consultar Pedido',
+  'Consultar Pedidos',
   'Lista de Atletas',
 ];
 
@@ -103,9 +103,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
-        '/fazer_pedido_saida_temporaria': (context) => const FazerPedidoTPage(),
-        '/fazer_pedido_saida_fim_de_semana': (context) => const FazerPedidoFSPage(),
-        '/consultar_pedido': (context) => const ConsultarPedidoPage(),
+        '/pedido_saida_temporaria': (context) => const FazerPedidoTPage(),
+        '/pedido_saida_fim_de_semana': (context) => const FazerPedidoFSPage(),
+        '/consultar_pedidos': (context) => const ConsultarPedidoPage(),
         '/lista_de_atletas': (context) => const ListaAtletasPage(),
         '/register_user': (context) => const AddPlayerPage(),
         '/lista_de_supervisores': (context) => const ListaSupervisoresPage(),

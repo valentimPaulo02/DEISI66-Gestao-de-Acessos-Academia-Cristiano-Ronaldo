@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from database import mysql
@@ -12,10 +13,10 @@ from views.requests.weekendrequest import weekendrequest_bp
 app = Flask(__name__)
 CORS(app)
 
-app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "sporting_database_connection_GUGf983YDR34535Dtdt"
-app.config['MYSQL_HOST'] = "database_container"
-app.config['MYSQL_DB'] = "academiasporting"
+app.config['MYSQL_USER'] = os.environ['MYSQL_USER']
+app.config['MYSQL_PASSWORD'] = os.environ['MYSQL_PASSWORD']
+app.config['MYSQL_HOST'] = os.environ['MYSQL_HOST']
+app.config['MYSQL_DB'] = os.environ['MYSQL_DB']
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql.init_app(app)

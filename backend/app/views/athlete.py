@@ -84,7 +84,7 @@ def updateAthlete():
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
         query = "UPDATE user SET name=%s, surname=%s, username=%s, password=%s, category=%s WHERE user_id=%s"
-        values = (user_name, user_surname, user_username, user_password, category, id)
+        values = (user_name, user_surname, user_username, password, category, id)
         ptr.execute(query, values)
         mysql.connection.commit()
 

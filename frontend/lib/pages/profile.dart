@@ -182,7 +182,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.redAccent,
+              ),
               onPressed: () {
                 logout();
               },
