@@ -47,7 +47,7 @@ final List<IconData> pageIconsAdmin = [
   Icons.list_alt,
   Icons.list_alt,
   Icons.remove_red_eye,
-  Icons.group,
+  Icons.group_outlined,
   Icons.supervisor_account,
 ];
 
@@ -77,7 +77,7 @@ void setToken(String value) {
 // ------------------------------------
 
 // Role Related Stuff ----------------
-String role = "";
+String role = "admin";
 
 String getRole() {
   return role;

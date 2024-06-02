@@ -373,7 +373,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
             child: Align(
               alignment: Alignment.topCenter,
               child: Text(
-                'Lista de Pedidos',
+                'Consultar Pedidos',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   int currentPage = 1;
   late NavigationManager navigationManager;
 
-
   @override
   void initState() {
     super.initState();
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     navigationManager.navigateToPage(index);
   }
 
-  static List<String> getMenuItems() {
+  List<String> getMenuItems() {
     switch (getRole()) {
       case 'admin':
         return menuItemsAdmin;
@@ -43,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  static List<IconData> getPageIcons() {
+  List<IconData> getPageIcons() {
     switch (getRole()) {
       case 'admin':
         return pageIconsAdmin;
@@ -56,11 +55,113 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
+    List<Widget> buttonsToShow = [];
+    if (getRole() == 'athlete') {
+      buttonsToShow = [
+        SizedBox(
+          width: 191,
+          height: 71,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/pedido_saida_temporaria');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(0, 128, 87, 0.7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Pedido de saída temporária',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: 191,
+          height: 71,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/pedido_saida_fim_de_semana');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(0, 128, 87, 0.7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Pedido de saída de fim de semana',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ];
+    } else {
+      buttonsToShow = [
+        SizedBox(
+          width: 191,
+          height: 71,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/consultar_pedidos');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(0, 128, 87, 0.7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Consultar Pedidos',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: 191,
+          height: 71,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/lista_de_atletas');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(0, 128, 87, 0.7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Lista de atletas',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ];
+    }
+
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(191, 191, 191, 0.8),
+      backgroundColor: Colors.transparent,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
         child: CustomAppBar(
@@ -75,16 +176,20 @@ class _HomePageState extends State<HomePage> {
         onMenuItemSelected: _navigateToPage,
         pageIcons: getPageIcons(),
       ),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(
-            getMenuItems()[currentPage - 1],
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/hp.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 230.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: buttonsToShow,
             ),
           ),
         ),
