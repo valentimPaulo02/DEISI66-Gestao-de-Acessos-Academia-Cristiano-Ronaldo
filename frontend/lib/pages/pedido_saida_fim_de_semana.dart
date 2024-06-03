@@ -179,7 +179,7 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Color.fromRGBO(79, 79, 79, 1),
                     ),
                   ),
                 ),

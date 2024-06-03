@@ -19,7 +19,7 @@ class SendButton extends StatelessWidget {
         child: Container(
           height: 51,
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(4, 180, 107, 0.6),
+            color: const Color.fromRGBO(0, 128, 87, 0.9),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(

@@ -52,7 +52,7 @@ class InputField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: Color.fromRGBO(50, 190, 100, 1),
+              color: Color.fromRGBO(0, 128, 87, 0.4),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10.0),

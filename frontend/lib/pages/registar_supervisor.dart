@@ -122,7 +122,7 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
               ),
               child: const Text('Adicionar Supervisor'),
             ),

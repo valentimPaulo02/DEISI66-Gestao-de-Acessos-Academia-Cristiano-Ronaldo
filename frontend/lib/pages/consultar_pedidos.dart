@@ -256,24 +256,33 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: TextButton.styleFrom(
+                foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
+              ),
               child: const Text('Fechar'),
             ),
-            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
-                pedido.state == "pending")
+            if ((getRole() == 'supervisor' || getRole() == 'admin') && pedido.state == "pending") ...[
               TextButton(
                 onPressed: () {
                   _acceptRejectPedido(pedido.requestId, true);
+                  Navigator.of(context).pop();
                 },
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
+                ),
                 child: const Text('Aceitar'),
               ),
-            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
-                pedido.state == "pending")
               TextButton(
                 onPressed: () {
                   _acceptRejectPedido(pedido.requestId, false);
+                  Navigator.of(context).pop();
                 },
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
+                ),
                 child: const Text('Recusar'),
               ),
+            ],
           ],
         );
       },
@@ -377,7 +386,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color.fromRGBO(79, 79, 79, 1),
                 ),
               ),
             ),
@@ -398,7 +407,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: tipoPedido == "Temporary"
-                        ? const Color.fromRGBO(3, 110, 73, 1)
+                        ? const Color.fromRGBO(0, 128, 87, 1)
                         : Colors.grey,
                   ),
                   child: const Text('Saída Temporária'),
@@ -414,7 +423,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: tipoPedido == "Weekend"
-                        ? const Color.fromRGBO(3, 110, 73, 1)
+                        ? const Color.fromRGBO(0, 128, 87, 1)
                         : Colors.grey,
                   ),
                   child: const Text('Saída Fim-de-Semana'),

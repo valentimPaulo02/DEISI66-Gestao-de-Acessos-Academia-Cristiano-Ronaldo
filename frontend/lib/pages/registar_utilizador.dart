@@ -141,7 +141,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromRGBO(50, 190, 100, 1),
+                          color: Color.fromRGBO(0, 128, 87, 1),
                           width: 2,
                         ),
                       ),
@@ -179,7 +179,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                  backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
                 ),
                 child: const Text('Adicionar Atleta'),
               ),

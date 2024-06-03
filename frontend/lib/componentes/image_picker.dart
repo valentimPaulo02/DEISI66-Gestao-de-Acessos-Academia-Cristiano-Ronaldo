@@ -82,7 +82,7 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Color.fromRGBO(50, 190, 100, 1),
+                        color: Color.fromRGBO(0, 128, 87, 0.4),
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(10.0),
@@ -101,7 +101,7 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
                     onPressed: _pickImage,
                     icon: const Icon(
                       Icons.camera_alt,
-                      color: Color.fromRGBO(79, 79, 79, 0.8),
+                      color: Color.fromRGBO(255, 255, 255, 0.8),
                       size: 18.0,
                     ),
                   ),

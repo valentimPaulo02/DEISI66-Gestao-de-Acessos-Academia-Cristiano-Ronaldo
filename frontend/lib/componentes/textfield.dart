@@ -38,14 +38,14 @@ class CustomTextField extends StatelessWidget {
             decoration: InputDecoration(
               labelText: '',
               filled: true,
-              fillColor: const Color.fromRGBO(4, 180, 107, 0.3),
+              fillColor: const Color.fromRGBO(0, 128, 87, 0.4),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10.0),
               ),
             ),
             style: const TextStyle(
-              color: Color.fromRGBO(79, 79, 79, 0.8),
+              color: Color.fromRGBO(255, 255, 255, 0.8),
               fontSize: 16,
             ),
           ),

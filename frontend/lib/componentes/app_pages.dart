@@ -26,7 +26,7 @@ class AppPages extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Color.fromRGBO(4, 180, 107, 1),
+              color: Color.fromRGBO(0, 128, 87, 0.9),
             ),
             child: Center(
               child: Column(
@@ -45,8 +45,8 @@ class AppPages extends StatelessWidget {
             int index = entry.key + 1;
             final item = entry.value;
             return ListTile(
-              selectedTileColor: const Color.fromRGBO(4, 180, 107, 0.2),
-              selectedColor: const Color.fromRGBO(4, 180, 107, 1),
+              selectedTileColor: const Color.fromRGBO(0, 128, 87, 0.2),
+              selectedColor: const Color.fromRGBO(0, 128, 87, 0.9),
               leading: Icon(pageIcons[index - 1]),
               title: Text(item),
               onTap: () {

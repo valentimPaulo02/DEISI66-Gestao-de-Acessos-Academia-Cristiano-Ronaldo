@@ -11,7 +11,7 @@ class CustomAppBarWithBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromRGBO(4, 180, 107, 1),
+      backgroundColor: const Color.fromRGBO(0, 128, 87, 0.9),
       leading: GestureDetector(
         onTap: onBackButtonPressed,
         child: Opacity(
@@ -33,7 +33,7 @@ class CustomAppBarWithBack extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Opacity(
-            opacity: 0.2,
+            opacity: 0.8,
             child: Image.asset(
               'lib/images/leaoPages.png',
               width: 35,

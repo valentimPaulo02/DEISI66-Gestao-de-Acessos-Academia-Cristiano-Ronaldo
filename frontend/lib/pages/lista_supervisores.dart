@@ -47,14 +47,15 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
+/*
     supervisores = [
-      Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123"),
+      Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123", image: ''),
       Supervisor(
-          id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123"),
-      Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024")
+          id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123", image: ''),
+      Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024", image: '')
     ];
-    */
+
+ */
 
     _getSupervisorList();
   }
@@ -182,7 +183,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color.fromRGBO(79, 79, 79, 1),
                 ),
               ),
             ),
@@ -198,7 +199,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                    backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
                   ),
                   child: const Text('Adicionar Supervisor'),
                 ),
@@ -303,7 +304,7 @@ class DetalhesSupervisorDialog extends StatelessWidget {
             Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromRGBO(4, 180, 107, 0.2),
+            backgroundColor: const Color.fromRGBO(0, 128, 87, 0.2),
           ),
           child: const Text('Fechar'),
         ),
@@ -422,7 +423,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
               ),
               child: const Text('Atualizar Supervisor'),
             ),

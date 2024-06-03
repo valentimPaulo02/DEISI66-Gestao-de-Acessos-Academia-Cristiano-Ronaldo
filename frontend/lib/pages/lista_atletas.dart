@@ -52,28 +52,29 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
-    /*
+/*
     atletas = [
       Atleta(
           id: 1,
           name: 'João',
           surname: 'Anacleto',
           password: "abc",
-          category: 'under15'),
+          category: 'under15', image: ''),
       Atleta(
           id: 2,
           name: 'Valentim',
           surname: 'Paulo',
           password: "abcd",
-          category: 'under16'),
+          category: 'under16', image: ''),
       Atleta(
           id: 3,
           name: 'test',
           surname: 'aaa',
           password: "abcde",
-          category: 'under19')
+          category: 'under19', image: '')
     ];
-    */
+
+ */
 
     _getAthleteList();
   }
@@ -198,7 +199,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 30.0),
+            padding: EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.topCenter,
               child: Text(
@@ -206,7 +207,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color.fromRGBO(79, 79, 79, 1),
                 ),
               ),
             ),
@@ -222,7 +223,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   foregroundColor: Colors.white,
-                  backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                  backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
                 ),
                 child: const Text('Adicionar Atleta'),
               ),
@@ -354,7 +355,7 @@ class DetalhesAtletaDialog extends StatelessWidget {
             Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromRGBO(4, 180, 107, 0.2),
+            backgroundColor: const Color.fromRGBO(0, 128, 87, 0.2),
           ),
           child: const Text('Fechar'),
         ),
@@ -490,7 +491,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
-                      color: Color.fromRGBO(50, 190, 100, 1),
+                      color: Color.fromRGBO(0, 128, 87, 1),
                       width: 2,
                     ),
                     borderRadius: BorderRadius.circular(10.0),
@@ -525,7 +526,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(3, 110, 73, 1),
+                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
               ),
               child: const Text('Atualizar Atleta'),
             ),
