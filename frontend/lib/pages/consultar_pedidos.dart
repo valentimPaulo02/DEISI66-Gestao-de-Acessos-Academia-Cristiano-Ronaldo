@@ -6,6 +6,7 @@ import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/textfield.dart';
+import '../componentes/scp_list_object.dart';
 import '../main.dart';
 
 class Pedido {
@@ -65,6 +66,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     //_loadFakeWeekendPedidos();
   }
 
+  /*
   //lista forcada para testes dos pedidos temporários
   Future<void> _loadFakeTemporaryPedidos() async {
     setState(() {
@@ -114,6 +116,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       }
     });
   }
+
+   */
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
@@ -261,7 +265,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
               ),
               child: const Text('Fechar'),
             ),
-            if ((getRole() == 'supervisor' || getRole() == 'admin') && pedido.state == "pending") ...[
+            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
+                pedido.state == "pending") ...[
               TextButton(
                 onPressed: () {
                   _acceptRejectPedido(pedido.requestId, true);
@@ -325,7 +330,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   List<Pedido> getFilteredPedidos() {
     if (getRole() == 'athlete') {
-      return pedidosUser; //TROCAR AQUI PARA PEDIDOS USER
+      return pedidosUser;
     } else {
       return pedidosAll;
     }
@@ -355,6 +360,21 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       default:
         return [];
     }
+  }
+
+  Widget _buildPedidoListTile(Pedido pedido) {
+    return ScpListObject(
+      color: pedido.state == "refused"
+          ? Colors.black12
+          : pedido.state == "pending"
+              ? const Color.fromRGBO(243, 194, 66, 0.7)
+              : const Color.fromRGBO(0, 128, 87, 0.7),
+      nome: pedido.username,
+      numeroString: pedido.userId.toString(),
+      qqString: pedido.date,
+      textoOpcional: "Estado: ${pedido.state}",
+      onPressed: () => _showPedidoDetailsDialog(context, pedido),
+    );
   }
 
   @override
@@ -431,29 +451,13 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: getFilteredPedidos().length,
               itemBuilder: (context, index) {
                 final pedido = getFilteredPedidos()[index];
-                return ListTile(
-                  title: Text(
-                    '${pedido.date} - ${pedido.username} (ID: ${pedido.userId})',
-                  ),
-                  subtitle: Text('Estado: ${pedido.state}'),
-                  onTap: () {
-                    _showPedidoDetailsDialog(context, pedido);
-                  },
-                  trailing: getRole() == 'athlete'
-                      ? null
-                      /*IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _editPedido(context, pedido);
-                          },
-                        )*/
-                      : null,
-                );
+                return _buildPedidoListTile(pedido);
               },
             ),
           ),

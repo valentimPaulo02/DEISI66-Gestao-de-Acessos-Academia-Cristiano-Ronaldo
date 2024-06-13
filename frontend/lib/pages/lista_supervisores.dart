@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/image_picker.dart';
+import '../componentes/scp_list_object.dart';
 import '../main.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
@@ -46,15 +47,28 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
     super.initState();
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
-
 /*
     supervisores = [
-      Supervisor(id: 1, name: 'João', surname: 'Anacleto', password: "ola123", image: ''),
       Supervisor(
-          id: 2, name: 'Valentim', surname: 'Paulo', password: "sporting123", image: ''),
-      Supervisor(id: 3, name: 'test', surname: 'aaa', password: "sporting2024", image: '')
+          id: 1,
+          name: 'João',
+          surname: 'Anacleto',
+          password: "ola123",
+          image: ''),
+      Supervisor(
+          id: 2,
+          name: 'Valentim',
+          surname: 'Paulo',
+          password: "sporting123",
+          image: ''),
+      Supervisor(
+          id: 3,
+          name: 'test',
+          surname: 'aaa',
+          password: "sporting2024",
+          image: '')
     ];
-
+    
  */
 
     _getSupervisorList();
@@ -118,7 +132,6 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
       );
 
       if (response.statusCode == 200) {
-        // sendo excluido com sucesso da api, agora removo-o localmente da lista
         setState(() {
           supervisores.removeWhere((element) => element.id == supervisorID);
         });
@@ -206,45 +219,32 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: supervisores.length,
               itemBuilder: (context, index) {
                 final supervisor = supervisores[index];
-                return ListTile(
-                  title: Text(
-                    '${supervisor.name} ${supervisor.surname}',
-                  ),
-                  trailing: getRole() == 'admin'
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                _editSupervisor(supervisor);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                _deleteSupervisor(supervisor);
-                              },
-                            ),
-                          ],
-                        )
-                      : null,
-                  onTap: () {
+                return ScpListObject(
+                  color: const Color.fromRGBO(0, 128, 87, 0.9),
+                  nome: '${supervisor.name} ${supervisor.surname}',
+                  qqString: 'ID: ${supervisor.id}',
+                  onPressed: () {
                     if (getRole() == 'admin') {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return DetalhesSupervisorDialog(
-                            supervisor: supervisor,
-                          );
+                              supervisor: supervisor);
                         },
                       );
                     }
+                  },
+                  onEditPressed: () {
+                    _editSupervisor(supervisor);
+                  },
+                  onDeletePressed: () {
+                    _deleteSupervisor(supervisor);
                   },
                 );
               },

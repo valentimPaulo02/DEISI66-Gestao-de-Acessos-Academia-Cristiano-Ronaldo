@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 
 class ScpListObject extends StatelessWidget {
+  final Color color;
   final String nome;
-  final String numero;
   final String qqString;
   final VoidCallback onPressed;
+  final VoidCallback? onEditPressed;
+  final VoidCallback? onDeletePressed;
+  final String? textoOpcional;
+  final String? numeroString;
 
   ScpListObject({
+    required this.color,
     required this.nome,
-    required this.numero,
     required this.qqString,
     required this.onPressed,
+    this.numeroString,
+    this.onEditPressed,
+    this.onDeletePressed,
+    this.textoOpcional,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 409,
+      width: 180,
       height: 73,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.green, //MUDAR COR DA LISTA DPS
+        color: color,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Stack(
@@ -28,28 +37,31 @@ class ScpListObject extends StatelessWidget {
             child: Opacity(
               opacity: 0.2,
               child: Image.asset(
-                'lib/images/leaoPages.png', //ALTERAR ISTO PARA A IMAGEM CORRETA
+                'lib/images/just_lion.png',
                 height: 73,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Positioned.fill(
-            child: Center(
+            child: Align(
+              alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     nome,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    numero,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  if (numeroString != null)
+                    Text(
+                      numeroString!,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                 ],
               ),
             ),
@@ -60,12 +72,25 @@ class ScpListObject extends StatelessWidget {
             bottom: 0,
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                qqString,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    qqString,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (textoOpcional != null)
+                    Text(
+                      textoOpcional!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -75,12 +100,33 @@ class ScpListObject extends StatelessWidget {
             bottom: 0,
             child: Align(
               alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.remove_red_eye,
-                  color: Colors.white,
-                ),
-                onPressed: onPressed,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (onEditPressed != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      onPressed: onEditPressed,
+                    ),
+                  if (onDeletePressed != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      onPressed: onDeletePressed,
+                    ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.white,
+                    ),
+                    onPressed: onPressed,
+                  ),
+                ],
               ),
             ),
           ),

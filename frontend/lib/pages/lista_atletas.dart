@@ -9,6 +9,7 @@ import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/image_picker.dart';
 import '../componentes/navigation_manager.dart';
+import '../componentes/scp_list_object.dart';
 import '../componentes/textfield.dart';
 import '../main.dart';
 
@@ -51,27 +52,29 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
       currentPage = 3;
     }
     navigationManager = NavigationManager(context, currentPage: currentPage);
-
 /*
     atletas = [
       Atleta(
-          id: 1,
+          id: 126,
           name: 'João',
           surname: 'Anacleto',
           password: "abc",
-          category: 'under15', image: ''),
+          category: 'under15',
+          image: ''),
       Atleta(
-          id: 2,
+          id: 221,
           name: 'Valentim',
           surname: 'Paulo',
           password: "abcd",
-          category: 'under16', image: ''),
+          category: 'under16',
+          image: ''),
       Atleta(
-          id: 3,
+          id: 312,
           name: 'test',
           surname: 'aaa',
           password: "abcde",
-          category: 'under19', image: '')
+          category: 'under19',
+          image: '')
     ];
 
  */
@@ -253,34 +256,18 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
               itemCount: atletas.length,
               itemBuilder: (context, index) {
                 final atleta = atletas[index];
+
                 if (selectedCategory != null &&
                     atleta.category != selectedCategory) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
-                return ListTile(
-                  title: Text(
-                    '${atleta.name} ${atleta.surname} | ${atleta.category}',
-                  ),
-                  trailing: getRole() == 'admin'
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                _editAtleta(atleta);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                _deleteAtleta(atleta);
-                              },
-                            ),
-                          ],
-                        )
-                      : null,
-                  onTap: () {
+
+                return ScpListObject(
+                  color: const Color.fromRGBO(0, 128, 87, 0.9),
+                  nome: '${atleta.name} ${atleta.surname}',
+                  numeroString: atleta.category,
+                  qqString: 'ID: ${atleta.id}',
+                  onPressed: () {
                     if (getRole() == 'admin' || getRole() == 'supervisor') {
                       showDialog(
                         context: context,
@@ -289,6 +276,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                         },
                       );
                     }
+                  },
+                  onEditPressed: () {
+                    _editAtleta(atleta);
+                  },
+                  onDeletePressed: () {
+                    _deleteAtleta(atleta);
                   },
                 );
               },
