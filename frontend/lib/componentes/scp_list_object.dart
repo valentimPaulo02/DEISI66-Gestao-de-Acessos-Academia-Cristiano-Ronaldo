@@ -4,22 +4,25 @@ class ScpListObject extends StatelessWidget {
   final Color color;
   final String nome;
   final String qqString;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final VoidCallback? onEditPressed;
   final VoidCallback? onDeletePressed;
   final String? textoOpcional;
   final String? numeroString;
+  final String? textoIcone;
 
   ScpListObject({
     required this.color,
     required this.nome,
     required this.qqString,
-    required this.onPressed,
+    this.onPressed,
     this.numeroString,
     this.onEditPressed,
     this.onDeletePressed,
     this.textoOpcional,
-  });
+    this.textoIcone,
+  }) : assert(onPressed != null || textoIcone != null,
+            'O onPressed ou o textoIcone tem de ser dado como parametro.');
 
   @override
   Widget build(BuildContext context) {
@@ -119,13 +122,21 @@ class ScpListObject extends StatelessWidget {
                       ),
                       onPressed: onDeletePressed,
                     ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.white,
+                  if (onPressed != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.white,
+                      ),
+                      onPressed: onPressed,
+                    )
+                  else if (textoIcone != null)
+                    Text(
+                      textoIcone!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                    onPressed: onPressed,
-                  ),
                 ],
               ),
             ),
