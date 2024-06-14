@@ -29,6 +29,8 @@ class NavigationManager {
       case 6:
         routeName = '/lista_de_supervisores';
         break;
+      case 7:
+        routeName = 'lista_de_presenças';
       default:
         routeName = '/';
     }

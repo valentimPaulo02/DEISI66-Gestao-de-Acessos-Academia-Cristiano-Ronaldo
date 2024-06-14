@@ -1,5 +1,6 @@
 import 'package:deisi66/componentes/get_role.dart';
 import 'package:deisi66/pages/consultar_pedidos.dart';
+import 'package:deisi66/pages/lista_de_presen%C3%A7as.dart';
 import 'package:deisi66/pages/pedido_saida_fim_de_semana.dart';
 import 'package:deisi66/pages/pedido_saida_temporaria.dart';
 import 'package:deisi66/pages/lista_atletas.dart';
@@ -25,6 +26,7 @@ final menuItemsAdmin = [
   'Consultar Pedidos',
   'Lista de Atletas',
   'Lista de Supervisores',
+  'Lista de Presenças'
 ];
 
 final menuItemsAthlete = [
@@ -49,6 +51,7 @@ final List<IconData> pageIconsAdmin = [
   Icons.remove_red_eye,
   Icons.group_outlined,
   Icons.supervisor_account,
+  Icons.online_prediction
 ];
 
 final List<IconData> pageIconsAthlete = [
@@ -111,6 +114,7 @@ class MyApp extends StatelessWidget {
         '/lista_de_supervisores': (context) => const ListaSupervisoresPage(),
         '/registar_supervisores': (context) => const AddSupervisorPage(),
         '/profile': (context) => const ProfilePage(),
+        '/lista_de_presenças': (context) => const ListaPresencasPage(),
       },
     );
   }

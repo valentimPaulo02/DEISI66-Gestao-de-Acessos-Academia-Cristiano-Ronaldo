@@ -59,7 +59,7 @@ class LoginPage extends StatelessWidget {
             child: Container(
               width: double.infinity,
               height: 85,
-              color: const Color.fromRGBO(4, 180, 107, 1),
+              color: const Color.fromRGBO(3, 110, 73, 0.9),
               child: Center(
                 child: Image.asset(
                   'lib/images/simboloacademiav2.png',
@@ -137,7 +137,7 @@ class LoginPage extends StatelessWidget {
                     'Forgot Password?',
                     style: TextStyle(
                         fontSize: 12,
-                        color: Color.fromRGBO(4, 180, 107, 1),
+                        color: Color.fromRGBO(3, 110, 73, 1),
                       ),
                   ),
                 ],
