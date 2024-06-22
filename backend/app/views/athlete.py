@@ -1,5 +1,8 @@
 from flask import request, Blueprint
 from database import mysql
+from datetime import date, time, datetime, timedelta
+
+from flask import jsonify
 
 athlete_bp = Blueprint("athlete", __name__)
 
@@ -76,7 +79,7 @@ def updateAthlete():
 
         user_username = user_name + "_" + user_surname
 
-        query = "SELECT * FROM user WHERE username=%s;"
+        query = "SELECT * FROM temporaryrequest WHERE username=%s;"
         values = (user_username,)
         ptr.execute(query, values)
         info = ptr.fetchall()
@@ -89,3 +92,59 @@ def updateAthlete():
         mysql.connection.commit()
 
         return {"success":True}
+    
+
+@athlete_bp.route('/getAvailableAthletes', methods=["GET"])
+def getAvailableAthletes():
+    if request.method == "GET":
+        
+        ptr = mysql.connection.cursor()
+
+        current_date = datetime.now().date()
+        current_time = datetime.now().time()
+
+        unavailable_ids = []
+
+        # GET ALL ACCEPTED WEEKEND REQUEST
+        query = "SELECT * FROM weekendrequest WHERE state='authorized';"
+        ptr.execute(query)
+        weekend_list = ptr.fetchall()
+
+        for row in weekend_list:
+            formatted_row = {
+                "user_id": row['user_id'],
+                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
+                "leave_time": str(row['leave_time'])
+            }
+
+        # GET ALL ACCEPTED TEMPORARY REQUEST
+        query = "SELECT * FROM temporaryrequest WHERE state='authorized';"
+        ptr.execute(query)
+        temporary_list = ptr.fetchall()
+
+        for row in temporary_list:
+            if(row['user_id'] in unavailable_ids): continue
+
+            leave_time = datetime.strptime(str(row['leave_time']), "%H:%M:%S").time()
+            arrival_time = datetime.strptime(str(row['arrival_time']), "%H:%M:%S").time()
+
+            if (row['leave_date'] <= current_date <= row['arrival_date']):
+                if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.append(row['user_id'])
+                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.append(row['user_id'])
+                else: unavailable_ids.append(row['user_id'])
+
+        available_athletes = []
+        unavailable_athletes = []
+
+        #GET ALL ATHLETES
+        query = "SELECT * FROM user WHERE role='athlete';"
+        ptr.execute(query)
+        athletes = ptr.fetchall()
+
+        if len(athletes) == 0: return {"success": False, "error": "no_athletes_found"}
+
+        for row in athletes:
+            if(row['user_id'] in unavailable_ids): unavailable_athletes.append(row)
+            else: available_athletes.append(row)
+
+        return {"success": True, "available_athletes": available_athletes, "unavailable_athletes":unavailable_athletes}

@@ -55,6 +55,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
      */
     navigationManager = NavigationManager(context, currentPage: currentPage);
 
+    /*
     atletas = [
       Atleta(
           id: 126,
@@ -78,6 +79,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
           category: 'under19',
           image: '')
     ];
+    */
 
 
 

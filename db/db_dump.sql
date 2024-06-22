@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `temporaryrequest`;
 CREATE TABLE `temporaryrequest` (
   `request_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
-  `state` enum('pending','refused','authorized') DEFAULT NULL,
+  `state` varchar(10) DEFAULT NULL,
   `validated` tinyint(1) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `leave_date` date DEFAULT NULL,
@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS `weekendrequest`;
 CREATE TABLE `weekendrequest` (
   `request_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
-  `state` enum('pending','refused','authorized') DEFAULT NULL,
+  `state` varchar(10) DEFAULT NULL,
   `validated` tinyint(1) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `leave_date` date DEFAULT NULL,
