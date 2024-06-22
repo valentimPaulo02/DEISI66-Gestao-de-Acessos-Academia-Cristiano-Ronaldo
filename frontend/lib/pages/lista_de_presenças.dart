@@ -17,17 +17,13 @@ class Atleta {
   int id;
   String name;
   String surname;
-  String password;
   String category;
-  String image;
 
   Atleta({
     required this.id,
     required this.name,
     required this.surname,
-    required this.password,
     required this.category,
-    required this.image,
   });
 }
 
@@ -41,7 +37,8 @@ class ListaPresencasPage extends StatefulWidget {
 class _ListaPresencasPageState extends State<ListaPresencasPage> {
   int currentPage = 6;
   late NavigationManager navigationManager;
-  List<Atleta> atletas = [];
+  List<Atleta> atletas_disponiveis = [];
+  List<Atleta> atletas_ocupados = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
 
@@ -88,21 +85,19 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
 
   Future<void> _getAthleteList() async {
     final url =
-    await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
+    await http.get(Uri.parse('http://localhost:5000/getAvailableAthletes'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);
 
       if (data['success']) {
         setState(() {
-          atletas = (data['list'] as List)
+          atletas_disponiveis = (data['available_athletes'] as List)
               .map((atleta) => Atleta(
             id: atleta['user_id'],
             name: atleta['name'],
             surname: atleta['surname'],
-            password: atleta['password'],
             category: atleta['category'],
-            image: atleta['image_path'],
           ))
               .toList();
           selectedCategory = null; //limpa a categoria que está selecionada
@@ -221,9 +216,9 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
           const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
-              itemCount: atletas.length,
+              itemCount: atletas_disponiveis.length,
               itemBuilder: (context, index) {
-                final atleta = atletas[index];
+                final atleta = atletas_disponiveis[index];
 
                 if (selectedCategory != null &&
                     atleta.category != selectedCategory) {
