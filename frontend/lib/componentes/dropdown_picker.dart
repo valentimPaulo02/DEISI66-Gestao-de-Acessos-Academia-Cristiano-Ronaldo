@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class Dropdown extends StatefulWidget {
   final String labelText;
   final List<String> items;
+  final String? initialValue;
   final ValueChanged<String?>? onChanged;
 
   const Dropdown({
     Key? key,
     required this.labelText,
     required this.items,
+    this.initialValue,
     this.onChanged,
   }) : super(key: key);
 
@@ -18,6 +20,12 @@ class Dropdown extends StatefulWidget {
 
 class _DropdownState extends State<Dropdown> {
   String? _selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItem = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {

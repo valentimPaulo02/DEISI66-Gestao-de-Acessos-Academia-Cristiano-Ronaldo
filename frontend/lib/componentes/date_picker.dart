@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class DatePicker extends StatelessWidget {
   final String labelText;
   final TextEditingController controller;
+  final bool verification;
 
   const DatePicker({
     Key? key,
     required this.labelText,
     required this.controller,
+    required this.verification,
   }) : super(key: key);
 
   @override
@@ -34,13 +36,14 @@ class DatePicker extends StatelessWidget {
               final DateTime? pickedDate = await showDatePicker(
                 context: context,
                 initialDate: currentDate,
-                firstDate: currentDate,
-                lastDate: DateTime(2100),
+                firstDate: verification ? DateTime(1900) : currentDate,
+                lastDate: verification ? currentDate : DateTime(2100),
                 builder: (BuildContext context, Widget? child) {
                   return Theme(
                     data: ThemeData.light().copyWith(
                       colorScheme: const ColorScheme.highContrastLight(
-                          primary: Color.fromRGBO(0, 128, 87, 0.4)),
+                        primary: Color.fromRGBO(0, 128, 87, 0.4),
+                      ),
                     ),
                     child: child!,
                   );
@@ -68,13 +71,14 @@ class DatePicker extends StatelessWidget {
                   final DateTime? pickedDate = await showDatePicker(
                     context: context,
                     initialDate: currentDate,
-                    firstDate: currentDate,
-                    lastDate: DateTime(2100),
+                    firstDate: verification ? DateTime(1900) : currentDate,
+                    lastDate: verification ? currentDate : DateTime(2100),
                     builder: (BuildContext context, Widget? child) {
                       return Theme(
                         data: ThemeData.light().copyWith(
                           colorScheme: const ColorScheme.highContrastLight(
-                              primary: Color.fromRGBO(0, 128, 87, 0.4)),
+                            primary: Color.fromRGBO(0, 128, 87, 0.4),
+                          ),
                         ),
                         child: child!,
                       );

@@ -82,13 +82,11 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
   }
 
   String formatDate(DateTime dateTime) {
-    return "${dateTime.year}-${dateTime.month.toString().padLeft(
-        2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+    return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
   }
 
   String formatTime(TimeOfDay timeOfDay) {
-    return "${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute
-        .toString().padLeft(2, '0')}";
+    return "${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}";
   }
 
   Future<void> addLeaveRequest(BuildContext context) async {
@@ -98,7 +96,13 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
     String formattedReturnTime = arrivalTimeController.text;
     String destiny = destinyController.text;
 
-    if (destiny.isEmpty || transport.isEmpty || supervisor.isEmpty) {
+    if (destiny.isEmpty ||
+        transport.isEmpty ||
+        supervisor.isEmpty ||
+        formattedReturnTime.isEmpty ||
+        formattedReturnDate.isEmpty ||
+        formattedLeaveTime.isEmpty ||
+        formattedLeaveDate.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
@@ -204,6 +208,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                       child: DatePicker(
                         labelText: 'Data de Saída*',
                         controller: leaveDateController,
+                        verification: false,
                       ),
                     ),
                   ),
@@ -230,7 +235,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
               CustomTextField(
                 labelText: 'Destino*',
                 controller: destinyController,
@@ -238,7 +243,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                   // valor do campo é automaticamente atualizado no controller
                 },
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
               Dropdown(
                 labelText: 'Transporte*',
                 items: const ["transporte publico", "tvde", "carro privado"],
@@ -250,7 +255,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                   }
                 },
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
               Dropdown(
                 labelText: 'Com Quem Sai*',
                 items: const ["pai/mae", "tutor", "empresario"],
@@ -272,6 +277,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
                       child: DatePicker(
                         labelText: 'Data de Retorno*',
                         controller: arrivalDateController,
+                        verification: false,
                       ),
                     ),
                   ),

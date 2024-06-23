@@ -80,7 +80,7 @@ void setToken(String value) {
 // ------------------------------------
 
 // Role Related Stuff ----------------
-String role = "";
+String role = "admin";
 
 String getRole() {
   return role;

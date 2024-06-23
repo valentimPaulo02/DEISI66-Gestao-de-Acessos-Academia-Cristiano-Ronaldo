@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'package:deisi66/componentes/custom_button.dart';
+import 'package:deisi66/componentes/date_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
+import '../componentes/dropdown_picker.dart';
 import '../componentes/textfield.dart';
 import '../componentes/scp_list_object.dart';
+import '../componentes/time_picker.dart';
 import '../main.dart';
 
 class Pedido {
@@ -16,6 +20,9 @@ class Pedido {
   String state;
   String date;
   String type;
+  String note;
+  String updatedBy;
+  String updatedAt;
   String dataSaida;
   String horaSaida;
   String destino;
@@ -31,6 +38,9 @@ class Pedido {
     required this.state,
     required this.date,
     required this.type,
+    required this.note,
+    required this.updatedBy,
+    required this.updatedAt,
     required this.dataSaida,
     required this.horaSaida,
     required this.destino,
@@ -66,7 +76,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     //_loadFakeWeekendPedidos();
   }
 
-  /*
   //lista forcada para testes dos pedidos temporários
   Future<void> _loadFakeTemporaryPedidos() async {
     setState(() {
@@ -83,10 +92,13 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           dataSaida: 'Data Saída ${i + 1}',
           horaSaida: 'Hora Saída ${i + 1}',
           destino: 'Destino ${i + 1}',
-          transporte: 'Transporte ${i + 1}',
-          comQuemSai: 'Com Quem Sai ${i + 1}',
+          transporte: 'transporte publico',
+          comQuemSai: 'pai/mae',
           dataRetorno: 'Data Retorno ${i + 1}',
           horaRetorno: 'Hora Retorno ${i + 1}',
+          note: 'abcde',
+          updatedBy: 'staff01',
+          updatedAt: '2024-07-01',
         ));
       }
     });
@@ -108,16 +120,17 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           dataSaida: 'Data Saída ${i + 1}',
           horaSaida: 'Hora Saída ${i + 1}',
           destino: 'Destino ${i + 1}',
-          transporte: 'Transporte ${i + 1}',
-          comQuemSai: 'Com Quem Sai ${i + 1}',
-          dataRetorno: '',
-          horaRetorno: '',
+          transporte: 'transporte publico',
+          comQuemSai: 'pai/mae',
+          dataRetorno: 'Data Retorno ${i + 1}',
+          horaRetorno: 'Hora Retorno ${i + 1}',
+          note: 'abcde',
+          updatedBy: 'staff01',
+          updatedAt: '2024-07-01',
         ));
       }
     });
   }
-
-   */
 
   Future<void> _getPedidosFromBackend() async {
     String url = '';
@@ -170,6 +183,9 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       comQuemSai: pedido['supervisor'],
                       dataRetorno: pedido['arrival_date'],
                       horaRetorno: pedido['arrival_time'],
+                      note: pedido['note'],
+                      updatedBy: pedido['updated_by'],
+                      updatedAt: pedido['updated_at'],
                     ))
                 .toList();
           } else {
@@ -186,8 +202,11 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                       destino: pedido['destiny'],
                       transporte: pedido['transport'],
                       comQuemSai: pedido['supervisor'],
-                      dataRetorno: "",
-                      horaRetorno: "",
+                      dataRetorno: pedido['arrival_date'],
+                      horaRetorno: pedido['arrival_time'],
+                      note: pedido['note'],
+                      updatedBy: pedido['updated_by'],
+                      updatedAt: pedido['updated_at'],
                     ))
                 .toList();
           }
@@ -215,6 +234,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         'request_id': requestId,
         'accepted': accepted ? 1 : 0,
         'type': tipoPedido,
+        'checked_by': getToken(),
       }),
     );
 
@@ -234,10 +254,11 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         Text('Destino: ${pedido.destino}'),
         Text('Transporte: ${pedido.transporte}'),
         Text('Com quem sai: ${pedido.comQuemSai}'),
-        if (tipoPedido == "Temporary") ...[
-          Text('Data Retorno: ${pedido.dataRetorno}'),
-          Text('Hora Retorno: ${pedido.horaRetorno}'),
-        ],
+        Text('Data Retorno: ${pedido.dataRetorno}'),
+        Text('Hora Retorno: ${pedido.horaRetorno}'),
+        Text('Nota: ${pedido.note}'),
+        Text('UpdatedBy: ${pedido.updatedBy}'),
+        Text('UpdatedAt: ${pedido.updatedAt}'),
       ],
     );
   }
@@ -374,6 +395,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       qqString: pedido.date,
       textoOpcional: "Estado: ${pedido.state}",
       onPressed: () => _showPedidoDetailsDialog(context, pedido),
+      onEditPressed:
+          pedido.state == "pending" ? () => _editPedido(context, pedido) : null,
     );
   }
 
@@ -564,44 +587,81 @@ class _EditarPedidoTemporarioPageState
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextField(
-              labelText: 'Data Saída:',
-              controller: dataSaidaController,
-            ),
-            CustomTextField(
-              labelText: 'Hora Saída:',
-              controller: horaSaidaController,
-            ),
-            CustomTextField(
-              labelText: 'Destino:',
-              controller: destinoController,
-            ),
-            CustomTextField(
-              labelText: 'Transporte:',
-              controller: transporteController,
-            ),
-            CustomTextField(
-              labelText: 'Com quem sai:',
-              controller: comQuemSaiController,
-            ),
-            CustomTextField(
-              labelText: 'Data Retorno:',
-              controller: dataRetornoController,
-            ),
-            CustomTextField(
-              labelText: 'Hora Retorno:',
-              controller: horaRetornoController,
-            ),
-            ElevatedButton(
-              onPressed: _updatePedidoTemporario,
-              child: const Text('Atualizar'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                  child: Text(
+                'Editar Pedido Temporário',
+                style: TextStyle(
+                  color: Color.fromRGBO(79, 79, 79, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+              const SizedBox(height: 15),
+              DatePicker(
+                labelText: 'Data Saída:',
+                controller: dataSaidaController,
+                verification: true,
+              ),
+              const SizedBox(height: 15),
+              TimePicker(
+                labelText: 'Hora Saída:',
+                controller: horaSaidaController,
+              ),
+              const SizedBox(height: 15),
+              CustomTextField(
+                labelText: 'Destino:',
+                controller: destinoController,
+              ),
+              const SizedBox(height: 15),
+              Dropdown(
+                labelText: "Transporte:",
+                initialValue: transporteController.text,
+                items: const ["transporte publico", "tvde", "carro privado"],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      transporteController.text = newValue;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              Dropdown(
+                labelText: "Com quem sai:",
+                initialValue: comQuemSaiController.text,
+                items: const ["pai/mae", "tutor", "empresario"],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      comQuemSaiController.text = newValue;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              DatePicker(
+                labelText: 'Data Retorno:',
+                controller: dataRetornoController,
+                verification: true,
+              ),
+              const SizedBox(height: 15),
+              TimePicker(
+                labelText: 'Hora Retorno:',
+                controller: horaRetornoController,
+              ),
+              const SizedBox(height: 20),
+              SendButton(
+                onPressed: _updatePedidoTemporario,
+                buttonText: 'Atualizar',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -626,6 +686,8 @@ class _EditarPedidoFimDeSemanaPageState
   late TextEditingController destinoController;
   late TextEditingController transporteController;
   late TextEditingController comQuemSaiController;
+  late TextEditingController dataRetornoController;
+  late TextEditingController horaRetornoController;
 
   @override
   void initState() {
@@ -637,6 +699,10 @@ class _EditarPedidoFimDeSemanaPageState
         TextEditingController(text: widget.pedido.transporte);
     comQuemSaiController =
         TextEditingController(text: widget.pedido.comQuemSai);
+    dataRetornoController =
+        TextEditingController(text: widget.pedido.dataRetorno);
+    horaRetornoController =
+        TextEditingController(text: widget.pedido.horaRetorno);
   }
 
   @override
@@ -646,6 +712,8 @@ class _EditarPedidoFimDeSemanaPageState
     destinoController.dispose();
     transporteController.dispose();
     comQuemSaiController.dispose();
+    dataRetornoController.dispose();
+    horaRetornoController.dispose();
     super.dispose();
   }
 
@@ -655,13 +723,17 @@ class _EditarPedidoFimDeSemanaPageState
     final updatedDestino = destinoController.text;
     final updatedTransporte = transporteController.text;
     final updatedComQuemSai = comQuemSaiController.text;
+    final updatedDataRetorno = dataRetornoController.text;
+    final updatedHoraRetorno = horaRetornoController.text;
 
     final Map<String, dynamic> updatedData = {
-      'date': updatedDataSaida,
-      'horaSaida': updatedHoraSaida,
+      'leave_date': updatedDataSaida,
+      'leave_time': updatedHoraSaida,
       'destino': updatedDestino,
       'transporte': updatedTransporte,
       'comQuemSai': updatedComQuemSai,
+      'arrival_date': updatedDataRetorno,
+      'arrival_time': updatedHoraRetorno,
     };
 
     final response = await http.patch(
@@ -673,9 +745,10 @@ class _EditarPedidoFimDeSemanaPageState
     );
 
     if (response.statusCode == 200) {
-      // Atualização bem-sucedida
+      Navigator.pushNamed(context, '/consultar_pedido');
     } else {
-      print('Erro na atualização do pedido weekend: ${response.reasonPhrase}');
+      print(
+          'Erro na atualização do pedido fim de semana: ${response.reasonPhrase}');
     }
   }
 
@@ -691,36 +764,81 @@ class _EditarPedidoFimDeSemanaPageState
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextField(
-              labelText: 'Data Saída:',
-              controller: dataSaidaController,
-            ),
-            CustomTextField(
-              labelText: 'Hora Saída:',
-              controller: horaSaidaController,
-            ),
-            CustomTextField(
-              labelText: 'Destino:',
-              controller: destinoController,
-            ),
-            CustomTextField(
-              labelText: 'Transporte:',
-              controller: transporteController,
-            ),
-            CustomTextField(
-              labelText: 'Com quem sai:',
-              controller: comQuemSaiController,
-            ),
-            ElevatedButton(
-              onPressed: _updatePedidoFimDeSemana,
-              child: const Text('Atualizar'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                  child: Text(
+                'Editar Pedido Fim De Semana',
+                style: TextStyle(
+                  color: Color.fromRGBO(79, 79, 79, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+              const SizedBox(height: 15),
+              DatePicker(
+                labelText: 'Data Saída:',
+                controller: dataSaidaController,
+                verification: true,
+              ),
+              const SizedBox(height: 15),
+              TimePicker(
+                labelText: 'Hora Saída:',
+                controller: horaSaidaController,
+              ),
+              const SizedBox(height: 15),
+              CustomTextField(
+                labelText: 'Destino:',
+                controller: destinoController,
+              ),
+              const SizedBox(height: 15),
+              Dropdown(
+                labelText: "Transporte:",
+                initialValue: transporteController.text,
+                items: const ["transporte publico", "tvde", "carro privado"],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      transporteController.text = newValue;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              Dropdown(
+                labelText: "Com quem sai:",
+                initialValue: comQuemSaiController.text,
+                items: const ["pai/mae", "tutor", "empresario"],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      comQuemSaiController.text = newValue;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              DatePicker(
+                labelText: 'Data Retorno:',
+                controller: dataRetornoController,
+                verification: true,
+              ),
+              const SizedBox(height: 15),
+              TimePicker(
+                labelText: 'Hora Retorno:',
+                controller: horaRetornoController,
+              ),
+              const SizedBox(height: 20),
+              SendButton(
+                onPressed: _updatePedidoFimDeSemana,
+                buttonText: 'Atualizar',
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:deisi66/componentes/custom_button.dart';
+import 'package:deisi66/componentes/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/image_picker.dart';
 import '../componentes/inputfield.dart';
 
-String nameController = "";
-String surnameController = "";
-String passwordController = "";
+TextEditingController nameController = TextEditingController();
+TextEditingController surnameController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 List<int>? profileImageBytes; //bytes das imagens armazenadas
 const String defaultImagePath = "lib/images/defaultProfile.png"; //img default
 
@@ -77,56 +79,55 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Adicionar Supervisor',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Adicionar Supervisor',
+                style: TextStyle(
+                  color: Color.fromRGBO(79, 79, 79, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 20),
-            ImagePickerField(
-              labelText: 'Fotografia',
-              controller: photoController,
-            ),
-            const SizedBox(height: 20),
-            InputField(
-              labelText: 'Name',
-              onChanged: (value) {
-                nameController = value;
-              },
-            ),
-            const SizedBox(height: 20),
-            InputField(
-              labelText: 'Surname',
-              onChanged: (value) {
-                surnameController = value;
-              },
-            ),
-            const SizedBox(height: 20),
-            InputField(
-              labelText: 'Password',
-              onChanged: (value) {
-                passwordController = value;
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                addSupervisor(context, nameController, surnameController,
-                    passwordController, profileImageBytes);
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
+              const SizedBox(height: 20),
+              ImagePickerField(
+                labelText: 'Fotografia',
+                controller: photoController,
               ),
-              child: const Text('Adicionar Supervisor'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              CustomTextField(
+                labelText: 'Name',
+                controller: nameController,
+              ),
+              const SizedBox(height: 20),
+              CustomTextField(
+                labelText: 'Surname',
+                controller: surnameController,
+              ),
+              const SizedBox(height: 20),
+              CustomTextField(
+                labelText: 'Password',
+                controller: passwordController,
+              ),
+              const SizedBox(height: 20),
+              SendButton(
+                onPressed: () {
+                  addSupervisor(
+                      context,
+                      nameController.text,
+                      surnameController.text,
+                      passwordController.text,
+                      profileImageBytes);
+                },
+                buttonText: 'Adicionar Supervisor',
+              ),
+            ],
+          ),
         ),
       ),
     );

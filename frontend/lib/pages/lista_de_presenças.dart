@@ -1,16 +1,11 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
-import '../componentes/image_picker.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/scp_list_object.dart';
-import '../componentes/textfield.dart';
 import '../main.dart';
 
 class Atleta {
@@ -18,12 +13,14 @@ class Atleta {
   String name;
   String surname;
   String category;
+  bool isAvailable;
 
   Atleta({
     required this.id,
     required this.name,
     required this.surname,
     required this.category,
+    required this.isAvailable,
   });
 }
 
@@ -35,72 +32,53 @@ class ListaPresencasPage extends StatefulWidget {
 }
 
 class _ListaPresencasPageState extends State<ListaPresencasPage> {
-  int currentPage = 6;
+  int currentPage = 7;
   late NavigationManager navigationManager;
-  List<Atleta> atletas_disponiveis = [];
-  List<Atleta> atletas_ocupados = [];
+  List<Atleta> atletas = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
+  bool useTestData = false;
 
   @override
   void initState() {
     super.initState();
-    /*
-    if (getRole() == 'supervisor') {
-      currentPage = 3;
-    }
-     */
     navigationManager = NavigationManager(context, currentPage: currentPage);
-
-    /*
-    atletas = [
-      Atleta(
-          id: 126,
-          name: 'João',
-          surname: 'Anacleto',
-          password: "abc",
-          category: 'under15',
-          image: ''),
-      Atleta(
-          id: 221,
-          name: 'Valentim',
-          surname: 'Paulo',
-          password: "abcd",
-          category: 'under16',
-          image: ''),
-      Atleta(
-          id: 312,
-          name: 'test',
-          surname: 'aaa',
-          password: "abcde",
-          category: 'under19',
-          image: '')
-    ];
-    */
-
-
-
     _getAthleteList();
   }
 
   Future<void> _getAthleteList() async {
-    final url =
-    await http.get(Uri.parse('http://localhost:5000/getAvailableAthletes'));
+    if (useTestData) {
+      _loadTestAthleteList();
+      return;
+    }
 
-    if (url.statusCode == 200) {
-      final data = jsonDecode(url.body);
+    final response =
+        await http.get(Uri.parse('http://localhost:5000/getAvailableAthletes'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
 
       if (data['success']) {
         setState(() {
-          atletas_disponiveis = (data['available_athletes'] as List)
+          atletas = (data['available_athletes'] as List)
               .map((atleta) => Atleta(
-            id: atleta['user_id'],
-            name: atleta['name'],
-            surname: atleta['surname'],
-            category: atleta['category'],
-          ))
-              .toList();
-          selectedCategory = null; //limpa a categoria que está selecionada
+                    id: atleta['user_id'],
+                    name: atleta['name'],
+                    surname: atleta['surname'],
+                    category: atleta['category'],
+                    isAvailable: true,
+                  ))
+              .toList()
+            ..addAll((data['unavailable_athletes'] as List)
+                .map((atleta) => Atleta(
+                      id: atleta['user_id'],
+                      name: atleta['name'],
+                      surname: atleta['surname'],
+                      category: atleta['category'],
+                      isAvailable: false,
+                    ))
+                .toList());
+          selectedCategory = null;
         });
       } else {
         print('Erro ao procurar a lista de atletas: ${data['error']}');
@@ -110,13 +88,87 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
     }
   }
 
+  void _loadTestAthleteList() {
+    setState(() {
+      atletas = [
+        Atleta(
+            id: 1,
+            name: 'João',
+            surname: 'Silva',
+            category: 'under15',
+            isAvailable: true),
+        Atleta(
+            id: 2,
+            name: 'Pedro',
+            surname: 'Santos',
+            category: 'under16',
+            isAvailable: true),
+        Atleta(
+            id: 3,
+            name: 'Maria',
+            surname: 'Fernandes',
+            category: 'under19',
+            isAvailable: true),
+        Atleta(
+            id: 4,
+            name: 'Ana',
+            surname: 'Costa',
+            category: 'under15',
+            isAvailable: false),
+        Atleta(
+            id: 5,
+            name: 'Luís',
+            surname: 'Martins',
+            category: 'under16',
+            isAvailable: false),
+        Atleta(
+            id: 6,
+            name: 'Sofia',
+            surname: 'Gomes',
+            category: 'under19',
+            isAvailable: false),
+        Atleta(
+            id: 6,
+            name: 'asdsa',
+            surname: 'Gomes',
+            category: 'under19',
+            isAvailable: true),
+        Atleta(
+            id: 6,
+            name: 'xcvxc',
+            surname: 'Gomes',
+            category: 'under19',
+            isAvailable: true),
+        Atleta(
+            id: 6,
+            name: 'Szxzx',
+            surname: 'Gomes',
+            category: 'under19',
+            isAvailable: false),
+        Atleta(
+            id: 6,
+            name: 'asdasa',
+            surname: 'Gomes',
+            category: 'under19',
+            isAvailable: false),
+      ];
+      selectedCategory = null;
+    });
+  }
+
+  void _toggleTestData() {
+    setState(() {
+      useTestData = !useTestData;
+    });
+    _getAthleteList();
+  }
+
   void _navigateToPage(int index) {
     setState(() {
       currentPage = index;
     });
     navigationManager.navigateToPage(index);
   }
-
 
   static List<String> getMenuItems() {
     switch (getRole()) {
@@ -143,6 +195,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
         return [];
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,7 +222,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
             child: Align(
               alignment: Alignment.topCenter,
               child: Text(
-                'Lista de Atletas',
+                'Lista de Presenças',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -182,23 +235,12 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/register_user');
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  foregroundColor: Colors.white,
-                  backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
-                ),
-                child: const Text('Adicionar Atleta'),
-              ),
               DropdownButton<String>(
                 value: selectedCategory,
                 onChanged: (String? newValue) {
                   setState(() {
                     if (newValue == selectedCategory) {
-                      selectedCategory = null; //limpa a categoria selecionada
+                      selectedCategory = null;
                     } else {
                       selectedCategory = newValue;
                     }
@@ -213,12 +255,12 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: atletas_disponiveis.length,
+              itemCount: atletas.length,
               itemBuilder: (context, index) {
-                final atleta = atletas_disponiveis[index];
+                final atleta = atletas[index];
 
                 if (selectedCategory != null &&
                     atleta.category != selectedCategory) {
@@ -226,13 +268,14 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
                 }
 
                 return ScpListObject(
-                  color: const Color.fromRGBO(0, 128, 87, 0.9),
+                  color: atleta.isAvailable
+                      ? const Color.fromRGBO(0, 128, 87, 0.7)
+                      : Colors.black12,
                   nome: '${atleta.name} ${atleta.surname}',
                   numeroString: atleta.category,
                   qqString: 'ID: ${atleta.id}',
-                  onPressed: () {
-                    print("Mudar dps");
-                  },
+                  textoIcone:
+                      atleta.isAvailable ? 'Na academia' : 'Fora da academia',
                 );
               },
             ),

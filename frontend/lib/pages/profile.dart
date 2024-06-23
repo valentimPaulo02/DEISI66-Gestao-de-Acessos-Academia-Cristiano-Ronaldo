@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -16,8 +17,10 @@ class _ProfilePageState extends State<ProfilePage> {
   late String apelido = '';
   late String password = '';
   late String image = '';
+  late String roomNumber = '';
   TextEditingController passwordController = TextEditingController();
   bool isEditingPassword = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
           password = data['password'];
           image = data['image'];
           passwordController.text = password;
+          roomNumber = data['room_number'];
         });
       } else {
         throw Exception('Failed to load user profile data');
@@ -56,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
       apelido = 'Gyokeres';
       password = 'sporting123';
       passwordController.text = password;
+      roomNumber = 'A20';
     });
   }
 
@@ -128,29 +133,29 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            image.isEmpty 
-            ? Container(
-              width: 130,
-              height: 130,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage('lib/images/defaultProfile.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            )
-            : Container(
-              width: 130,
-              height: 130,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage('lib/images/arrowBack.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
+            image.isEmpty
+                ? Container(
+                    width: 130,
+                    height: 130,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage('lib/images/defaultProfile.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: 130,
+                    height: 130,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage('lib/images/arrowBack.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
             const SizedBox(height: 20),
             InputField(
               labelText: 'Nome',
@@ -161,6 +166,12 @@ class _ProfilePageState extends State<ProfilePage> {
             InputField(
               labelText: 'Apelido',
               initialValue: apelido,
+              enabled: false,
+            ),
+            const SizedBox(height: 10),
+            InputField(
+              labelText: 'Room Number',
+              initialValue: roomNumber,
               enabled: false,
             ),
             const SizedBox(height: 10),
@@ -182,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
             ),
             const SizedBox(height: 20),
-             ElevatedButton(
+            ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.redAccent,

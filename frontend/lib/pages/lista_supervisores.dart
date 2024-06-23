@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:deisi66/componentes/custom_button.dart';
 import 'package:deisi66/pages/registar_supervisor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,7 +69,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
           password: "sporting2024",
           image: '')
     ];
-    
+
  */
 
     _getSupervisorList();
@@ -376,58 +377,57 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Editar Supervisor',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Editar Supervisor',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: imageController.text.isEmpty
-                  ? Image.asset(
-                      'lib/images/defaultProfile.png',
-                      width: 100,
-                      height: 100,
-                    )
-                  : Image.asset(
-                      'lib/images/arrowBack.png',
-                      width: 100,
-                      height: 100,
-                    ),
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Name',
-              controller: nameController,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Surname',
-              controller: surnameController,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Password',
-              controller: passwordController,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _updateSupervisor();
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
+              const SizedBox(height: 20),
+              Center(
+                child: imageController.text.isEmpty
+                    ? Image.asset(
+                        'lib/images/defaultProfile.png',
+                        width: 100,
+                        height: 100,
+                      )
+                    : Image.asset(
+                        'lib/images/arrowBack.png',
+                        width: 100,
+                        height: 100,
+                      ),
               ),
-              child: const Text('Atualizar Supervisor'),
-            ),
-          ],
+              const SizedBox(height: 5),
+              CustomTextField(
+                labelText: 'Name',
+                controller: nameController,
+              ),
+              const SizedBox(height: 12),
+              CustomTextField(
+                labelText: 'Surname',
+                controller: surnameController,
+              ),
+              const SizedBox(height: 12),
+              CustomTextField(
+                labelText: 'Password',
+                controller: passwordController,
+              ),
+              const SizedBox(height: 20),
+              SendButton(
+                onPressed: () {
+                  _updateSupervisor();
+                },
+                buttonText: 'Atualizar Supervisor',
+              ),
+            ],
+          ),
         ),
       ),
     );

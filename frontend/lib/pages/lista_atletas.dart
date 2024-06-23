@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:deisi66/componentes/custom_button.dart';
+import 'package:deisi66/pages/registar_utilizador.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
+import '../componentes/date_picker.dart';
+import '../componentes/dropdown_picker.dart';
 import '../componentes/image_picker.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/scp_list_object.dart';
@@ -20,15 +26,18 @@ class Atleta {
   String password;
   String category;
   String image;
+  String roomNumber;
+  String birthDate;
 
-  Atleta({
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.password,
-    required this.category,
-    required this.image,
-  });
+  Atleta(
+      {required this.image,
+      required this.id,
+      required this.name,
+      required this.surname,
+      required this.password,
+      required this.category,
+      required this.roomNumber,
+      required this.birthDate});
 }
 
 class ListaAtletasPage extends StatefulWidget {
@@ -55,26 +64,33 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
 /*
     atletas = [
       Atleta(
-          id: 126,
-          name: 'João',
-          surname: 'Anacleto',
-          password: "abc",
-          category: 'under15',
-          image: ''),
+        id: 126,
+        name: 'João',
+        surname: 'Anacleto',
+        password: "abc",
+        category: 'under15',
+        image: '',
+        roomNumber: 'A20',
+        birthDate: '2002-11-14',
+      ),
       Atleta(
           id: 221,
           name: 'Valentim',
           surname: 'Paulo',
           password: "abcd",
           category: 'under16',
-          image: ''),
+          image: '',
+          roomNumber: 'A80',
+          birthDate: '2002-12-22'),
       Atleta(
           id: 312,
           name: 'test',
           surname: 'aaa',
           password: "abcde",
           category: 'under19',
-          image: '')
+          image: '',
+          roomNumber: 'A22',
+          birthDate: '2001-10-18')
     ];
 
  */
@@ -98,6 +114,8 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     surname: atleta['surname'],
                     password: atleta['password'],
                     category: atleta['category'],
+                    roomNumber: atleta['room_number'],
+                    birthDate: atleta['birth_date'],
                     image: atleta['image_path'],
                   ))
               .toList();
@@ -340,6 +358,20 @@ class DetalhesAtletaDialog extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
           ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              'Room Number: ${atleta.roomNumber}',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              'Birth Date: ${atleta.birthDate}',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
         ],
       ),
       actions: <Widget>[
@@ -371,6 +403,8 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
   final surnameController = TextEditingController();
   final passwordController = TextEditingController();
   String categoryController = "";
+  TextEditingController roomNumberController = TextEditingController();
+  TextEditingController birthDateController = TextEditingController();
   final imageController = TextEditingController();
 
   @override
@@ -380,6 +414,8 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     surnameController.text = widget.atleta.surname;
     passwordController.text = widget.atleta.password;
     categoryController = widget.atleta.category;
+    roomNumberController.text = widget.atleta.roomNumber;
+    birthDateController.text = widget.atleta.birthDate;
     imageController.text = widget.atleta.image;
   }
 
@@ -387,10 +423,10 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     final updatedName = nameController.text;
     final updatedSurname = surnameController.text;
     final updatedPassword = passwordController.text;
+    final updatedCategory = categoryController;
+    final updatedRoomNumber = roomNumberController.text;
+    final updatedBirthDate = birthDateController.text;
     final id = widget.atleta.id;
-
-    print(updatedPassword);
-    print(categoryController);
 
     final response = await http.post(
       Uri.parse('http://localhost:5000/updateAthlete'),
@@ -402,7 +438,9 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
         'name': updatedName,
         'surname': updatedSurname,
         'password': updatedPassword,
-        'category': categoryController,
+        'category': updatedCategory,
+        'room_number': updatedRoomNumber,
+        'birth_date': updatedBirthDate,
       }),
     );
 
@@ -425,105 +463,84 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Editar Atleta',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: imageController.text.isEmpty
-                  ? Image.asset(
-                      'lib/images/defaultProfile.png',
-                      width: 100,
-                      height: 100,
-                    )
-                  : Image.asset(
-                      'lib/images/arrowBack.png',
-                      width: 100,
-                      height: 100,
-                    ),
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Name',
-              controller: nameController,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Surname',
-              controller: surnameController,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              labelText: 'Password',
-              controller: passwordController,
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: DropdownButtonFormField<String>(
-                dropdownColor: const Color.fromRGBO(150, 150, 150, 0.9),
-                decoration: InputDecoration(
-                  labelText: 'Category',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(150, 150, 150, 0.5),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color.fromRGBO(150, 150, 150, 1),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color.fromRGBO(0, 128, 87, 1),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Editar Atleta',
+                  style: TextStyle(
+                    color: Color.fromRGBO(79, 79, 79, 1),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                value: categoryController,
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      categoryController = newValue;
-                    });
-                  }
-                },
-                items: ["under15", "under16", "under17", "under19"]
-                    .map((String option) {
-                  return DropdownMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+                const SizedBox(height: 15),
+                Center(
+                  child: imageController.text.isEmpty
+                      ? Image.asset(
+                          'lib/images/defaultProfile.png',
+                          width: 100,
+                          height: 100,
+                        )
+                      : Image.asset(
+                          'lib/images/arrowBack.png',
+                          width: 100,
+                          height: 100,
+                        ),
+                ),
+                const SizedBox(height: 5),
+                CustomTextField(
+                  labelText: 'Name',
+                  controller: nameController,
+                ),
+                const SizedBox(height: 12),
+                CustomTextField(
+                  labelText: 'Surname',
+                  controller: surnameController,
+                ),
+                const SizedBox(height: 12),
+                CustomTextField(
+                  labelText: 'Password',
+                  controller: passwordController,
+                ),
+                const SizedBox(height: 12),
+                Dropdown(
+                  labelText: "Category",
+                  initialValue: categoryController,
+                  items: underOptions,
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        categoryController = newValue;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 12),
+                CustomTextField(
+                  labelText: 'Room Number',
+                  controller: roomNumberController,
+                ),
+                const SizedBox(height: 12),
+                DatePicker(
+                  labelText: 'Birth Date',
+                  controller: birthDateController,
+                  verification: true,
+                ),
+                const SizedBox(height: 20),
+                SendButton(
+                  onPressed: () {
+                    _updateAtleta();
+                  },
+                  buttonText: 'Atualizar Atleta',
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _updateAtleta();
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromRGBO(0, 128, 87, 1),
-              ),
-              child: const Text('Atualizar Atleta'),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -58,56 +58,51 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Stack(
-              children: [
-                TextFormField(
-                  controller: widget.controller,
-                  readOnly: true,
-                  onTap: _pickImage,
-                  decoration: InputDecoration(
-                    labelText: widget.labelText,
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    filled: true,
-                    fillColor: const Color.fromRGBO(150, 150, 150, 0.5),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromRGBO(150, 150, 150, 1),
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromRGBO(0, 128, 87, 0.4),
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: IconButton(
-                    onPressed: _pickImage,
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: Color.fromRGBO(255, 255, 255, 0.8),
-                      size: 18.0,
-                    ),
-                  ),
-                ),
-              ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              widget.labelText,
+              style: const TextStyle(color: Color.fromRGBO(79, 79, 79, 0.8)),
             ),
+          ),
+          Stack(
+            children: [
+              TextField(
+                controller: widget.controller,
+                readOnly: true,
+                onTap: _pickImage,
+                decoration: InputDecoration(
+                  labelText: '',
+                  filled: true,
+                  fillColor: const Color.fromRGBO(0, 128, 87, 0.4),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                style: const TextStyle(
+                  color: Color.fromRGBO(255, 255, 255, 0.8),
+                  fontSize: 16,
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: IconButton(
+                  onPressed: _pickImage,
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    color: Color.fromRGBO(255, 255, 255, 0.8),
+                    size: 24.0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

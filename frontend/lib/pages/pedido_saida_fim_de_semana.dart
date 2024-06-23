@@ -26,6 +26,8 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
   TextEditingController leaveDateController = TextEditingController();
   TextEditingController leaveTimeController = TextEditingController();
   TextEditingController destinyController = TextEditingController();
+  TextEditingController arrivalDateController = TextEditingController();
+  TextEditingController arrivalTimeController = TextEditingController();
   String transport = ""; // valor padrão
   String supervisor = ""; // valor padrão
 
@@ -40,6 +42,8 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
     leaveDateController.dispose();
     leaveTimeController.dispose();
     destinyController.dispose();
+    arrivalDateController.dispose();
+    arrivalTimeController.dispose();
     super.dispose();
   }
 
@@ -86,11 +90,19 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
   }
 
   Future<void> addLeaveRequest(BuildContext context) async {
-    String formattedLeaveDate = formatDate(DateTime.now());
-    String formattedLeaveTime = formatTime(TimeOfDay.now());
+    String formattedLeaveDate = leaveDateController.text;
+    String formattedLeaveTime = leaveTimeController.text;
+    String formattedReturnDate = arrivalDateController.text;
+    String formattedReturnTime = arrivalTimeController.text;
     String destiny = destinyController.text;
 
-    if (destiny.isEmpty || transport.isEmpty || supervisor.isEmpty) {
+    if (destiny.isEmpty ||
+        transport.isEmpty ||
+        supervisor.isEmpty ||
+        formattedLeaveTime.isEmpty ||
+        formattedLeaveDate.isEmpty ||
+        formattedReturnDate.isEmpty ||
+        formattedReturnTime.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
@@ -114,6 +126,8 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
         'destiny': destiny,
         'transport': transport,
         'supervisor': supervisor,
+        'arrival_date': formattedReturnDate,
+        'arrival_time': formattedReturnTime,
       }),
       headers: {"Content-Type": "application/json"},
     );
@@ -194,6 +208,7 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
                       child: DatePicker(
                         labelText: 'Data de Saída*',
                         controller: leaveDateController,
+                        verification: false,
                       ),
                     ),
                   ),
@@ -249,6 +264,43 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
                     });
                   }
                 },
+              ),
+              const SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: DatePicker(
+                        labelText: 'Data de Retorno*',
+                        controller: arrivalDateController,
+                        verification: false,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: Text(
+                        ' - ',
+                        style: TextStyle(
+                          color: Color.fromRGBO(79, 79, 79, 1),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: TimePicker(
+                        labelText: 'Hora de Retorno*',
+                        controller: arrivalTimeController,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 80),
               SendButton(
