@@ -18,8 +18,12 @@ def registAthlete():
         password = str(data["password"])
         category = str(data["category"])
         image = str(data["image"])
+        room_number = data["room_number"]
+        birth_date = str(data["birth_date"])
         username = name + "_" + surname
         role = "athlete"
+
+        date = datetime.fromisoformat(birth_date).date()
 
         query = "SELECT * FROM user WHERE username=%s;"
         values = (username,)
@@ -28,8 +32,8 @@ def registAthlete():
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "INSERT INTO user (username, name, surname, password, role, category, image_path) VALUES (%s, %s, %s, %s, %s, %s, %s);"
-        values = (username, name, surname, password, role, category, image)
+        query = "INSERT INTO user (username, name, surname, password, role, category, image_path, room_number, birth_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        values = (username, name, surname, password, role, category, image, room_number, date)
         ptr.execute(query, values)
         mysql.connection.commit()
         
@@ -59,10 +63,14 @@ def updateAthlete():
         data = request.get_json()
 
         id = data["user_id"]
-        name = data["name"]
-        surname = data["surname"]
-        password = data["password"]
+        name = str(data["name"])
+        surname = str(data["surname"])
+        password = str(data["password"])
         category = str(data["category"])
+        room_number = data["room_number"]
+        birth_date = str(data["birth_date"])
+
+        date = datetime.fromisoformat(birth_date).date()
 
         query = "SELECT * FROM user WHERE user_id=%s;"
         values = (id,)
@@ -79,15 +87,15 @@ def updateAthlete():
 
         user_username = user_name + "_" + user_surname
 
-        query = "SELECT * FROM temporaryrequest WHERE username=%s;"
+        query = "SELECT * FROM user WHERE username=%s;"
         values = (user_username,)
         ptr.execute(query, values)
         info = ptr.fetchall()
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "UPDATE user SET name=%s, surname=%s, username=%s, password=%s, category=%s WHERE user_id=%s"
-        values = (user_name, user_surname, user_username, password, category, id)
+        query = "UPDATE user SET name=%s, surname=%s, username=%s, password=%s, category=%s, room_number=%s, birth_date=%s WHERE user_id=%s"
+        values = (user_name, user_surname, user_username, password, category, id, room_number, date)
         ptr.execute(query, values)
         mysql.connection.commit()
 
@@ -111,11 +119,15 @@ def getAvailableAthletes():
         weekend_list = ptr.fetchall()
 
         for row in weekend_list:
-            formatted_row = {
-                "user_id": row['user_id'],
-                "leave_date": row['leave_date'].strftime("%Y-%m-%d"),
-                "leave_time": str(row['leave_time'])
-            }
+            if(row['user_id'] in unavailable_ids): continue
+
+            leave_time = datetime.strptime(str(row['leave_time']), "%H:%M:%S").time()
+            arrival_time = datetime.strptime(str(row['arrival_time']), "%H:%M:%S").time()
+
+            if (row['leave_date'] <= current_date <= row['arrival_date']):
+                if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.append(row['user_id'])
+                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.append(row['user_id'])
+                else: unavailable_ids.append(row['user_id'])
 
         # GET ALL ACCEPTED TEMPORARY REQUEST
         query = "SELECT * FROM temporaryrequest WHERE state='authorized';"

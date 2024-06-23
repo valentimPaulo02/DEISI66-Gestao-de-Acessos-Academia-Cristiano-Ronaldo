@@ -17,6 +17,8 @@ def makeWeekendRequest():
         supervisor = str(data["supervisor"])
         transport = str(data["transport"])
         destiny = str(data["destiny"])
+        arrival_date = str(data["arrival_date"])
+        arrival_time = str(data["arrival_time"])
         state = "pending"
         validated = False
         date = datetime.today().date()
@@ -28,10 +30,12 @@ def makeWeekendRequest():
 
         user_id = info[0]["user_id"]
         leave_date = datetime.fromisoformat(leave_date).date()
+        arrival_date = datetime.fromisoformat(arrival_date).date()
         leave_time = datetime.strptime(leave_time, "%H:%M").time()
+        arrival_time = datetime.strptime(arrival_time, "%H:%M").time()
 
-        query = "INSERT INTO weekendrequest (user_id, state, validated, date, leave_date, leave_time, supervisor, transport_out, destiny) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        values = (user_id, state, validated, date, leave_date, leave_time, supervisor, transport, destiny)
+        query = "INSERT INTO weekendrequest (user_id, state, validated, date, leave_date, leave_time, supervisor, transport_out, destiny, arrival_date, arrival_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        values = (user_id, state, validated, date, leave_date, leave_time, supervisor, transport, destiny, arrival_date, arrival_time)
         ptr.execute(query, values)
         mysql.connection.commit()
         
@@ -70,7 +74,12 @@ def getAllWeekendRequest():
                 "leave_time": str(row['leave_time']),
                 "destiny": row['destiny'],
                 "transport": row['transport_out'],
-                "supervisor": row['supervisor']
+                "supervisor": row['supervisor'],
+                "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
+                "arrival_time": str(row['arrival_time']),
+                "note": str(row['note']),
+                "updated_by": row['updated_by'],
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
@@ -113,7 +122,12 @@ def getUserWeekendRequest():
                 "leave_time": str(row['leave_time']),
                 "destiny": row['destiny'],
                 "transport": row['transport_out'],
-                "supervisor": row['supervisor']
+                "supervisor": row['supervisor'],
+                "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
+                "arrival_time": str(row['arrival_time']),
+                "note": str(row['note']),
+                "updated_by": row['updated_by'],
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
@@ -133,12 +147,16 @@ def updateWeekendRequest():
         supervisor = str(data["supervisor"])
         transport = str(data["transport"])
         destiny = str(data["destiny"])
+        arrival_date = str(data["arrival_date"])
+        arrival_time = str(data["arrival_time"])
 
         leave_date = datetime.fromisoformat(leave_date).date()
+        arrival_date = datetime.fromisoformat(arrival_date).date()
         leave_time = datetime.strptime(leave_time, "%H:%M").time()
+        arrival_time = datetime.strptime(arrival_time, "%H:%M").time()
 
-        query = "UPDATE weekendrequest SET leave_date=%s, leave_time=%s, supervisor=%s, transport_out=%s, destiny=%s WHERE request_id=%s;"
-        values = (leave_date, leave_time, supervisor, transport, destiny, request_id)
+        query = "UPDATE weekendrequest SET leave_date=%s, leave_time=%s, supervisor=%s, transport_out=%s, destiny=%s, arrival_date=%s, arrival_time=%s WHERE request_id=%s;"
+        values = (leave_date, leave_time, supervisor, transport, destiny, arrival_date, arrival_time, request_id)
         ptr.execute(query, values)
         mysql.connection.commit()
         

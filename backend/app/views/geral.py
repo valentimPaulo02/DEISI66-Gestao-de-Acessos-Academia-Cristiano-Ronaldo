@@ -119,8 +119,9 @@ def getUserData():
         surname = info[0]["surname"]
         password = info[0]["password"]
         image = info[0]["image_path"]
+        room = info[0]["room_number"]
 
-        return {"success":True, "name":name, "surname":surname, "password":password, "image":image}
+        return {"success":True, "name":name, "surname":surname, "password":password, "image":image, "room":room}
     
 
 @geral_bp.route('/updatePassword', methods=["POST"])

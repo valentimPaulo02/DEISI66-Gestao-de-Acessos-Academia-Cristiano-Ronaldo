@@ -3,7 +3,7 @@ from database import mysql
 
 supervisor_bp = Blueprint("supervisor", __name__)
 
-@supervisor_bp.route('/registSupervisor', methods=["POST"]) #TODO - UPDATE
+@supervisor_bp.route('/registSupervisor', methods=["POST"]) 
 def registSupervisor():
     if request.method=="POST":
 

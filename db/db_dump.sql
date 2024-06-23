@@ -37,6 +37,9 @@ CREATE TABLE `temporaryrequest` (
   `destiny` varchar(50) DEFAULT NULL,
   `arrival_date` date DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
+  `note` varchar(200) DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `updated_at` date DEFAULT NULL,
   PRIMARY KEY (`request_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `temporaryrequest_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
@@ -67,7 +70,9 @@ CREATE TABLE `user` (
   `password` text,
   `role` enum('athlete','supervisor','admin') DEFAULT NULL,
   `token` text,
-  `category` enum('under15','under16','under17','under19') DEFAULT NULL,
+  `category` varchar(7) DEFAULT NULL,
+  `room_number` int DEFAULT NULL,
+  `birth_date` date DEFAULT NULL,
   `image_path` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
@@ -80,9 +85,9 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1, 'admin', 'user', 'admin_user', 'admin123', 'admin', NULL, NULL, '');
-INSERT INTO `user` VALUES (2, 'supervisor', 'user', 'supervisor_user', 'supervisor123', 'supervisor', NULL, NULL, ''); 
-INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15', ''); 
+INSERT INTO `user` VALUES (1, 'admin', 'user', 'admin_user', 'admin123', 'admin', NULL, NULL, NULL, NULL, '');
+INSERT INTO `user` VALUES (2, 'supervisor', 'user', 'supervisor_user', 'supervisor123', 'supervisor', NULL, NULL, NULL, NULL, ''); 
+INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15', 25, '2002-12-15', ''); 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,6 +109,11 @@ CREATE TABLE `weekendrequest` (
   `supervisor` varchar(50) DEFAULT NULL,
   `transport_out` varchar(50) DEFAULT NULL,
   `destiny` varchar(50) DEFAULT NULL,
+  `arrival_date` date DEFAULT NULL,
+  `arrival_time` time DEFAULT NULL,
+  `note` varchar(200) DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `updated_at` date DEFAULT NULL,
   PRIMARY KEY (`request_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `weekendrequest_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)

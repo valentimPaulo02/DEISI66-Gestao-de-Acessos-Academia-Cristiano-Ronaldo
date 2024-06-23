@@ -76,7 +76,10 @@ def getAllTemporaryRequest():
                 "transport": row['transport_out'],
                 "supervisor": row['supervisor'],
                 "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
-                "arrival_time": str(row['arrival_time'])
+                "arrival_time": str(row['arrival_time']),
+                "note": str(row['note']),
+                "updated_by": row['updated_by'],
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
@@ -121,7 +124,10 @@ def getUserTemporaryRequest():
                 "transport": row['transport_out'],
                 "supervisor": row['supervisor'],
                 "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
-                "arrival_time": str(row['arrival_time'])
+                "arrival_time": str(row['arrival_time']),
+                "note": str(row['note']),
+                "updated_by": row['updated_by'],
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
             }
             formatted_list.append(formatted_row)
 
