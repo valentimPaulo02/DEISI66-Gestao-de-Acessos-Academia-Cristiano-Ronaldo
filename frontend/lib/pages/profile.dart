@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
           password = data['password'];
           image = data['image'];
           passwordController.text = password;
-          roomNumber = data['room_number'];
+          roomNumber = data['room'];
         });
       } else {
         throw Exception('Failed to load user profile data');
@@ -168,12 +168,12 @@ class _ProfilePageState extends State<ProfilePage> {
               initialValue: apelido,
               enabled: false,
             ),
-            const SizedBox(height: 10),
-            InputField(
-              labelText: 'Room Number',
-              initialValue: roomNumber,
-              enabled: false,
-            ),
+            getRole() == "athlete" ? 
+              InputField(
+                labelText: 'Room Number',
+                initialValue: roomNumber,
+                enabled: false,
+              ) :
             const SizedBox(height: 10),
             InputField(
               labelText: 'Password',

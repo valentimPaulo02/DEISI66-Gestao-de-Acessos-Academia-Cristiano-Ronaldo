@@ -119,7 +119,7 @@ def getUserData():
         surname = info[0]["surname"]
         password = info[0]["password"]
         image = info[0]["image_path"]
-        room = info[0]["room_number"]
+        room = info[0]["room_number"] if info[0]['room_number'] is not None else ""
 
         return {"success":True, "name":name, "surname":surname, "password":password, "image":image, "room":room}
     
