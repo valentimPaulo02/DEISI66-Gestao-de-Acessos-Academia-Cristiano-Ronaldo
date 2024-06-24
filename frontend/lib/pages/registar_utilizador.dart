@@ -79,6 +79,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
       final data = json.decode(response.body);
 
       if (data['success'] == true) {
+        _resetFields();
         Navigator.pushNamed(context, '/lista_de_atletas');
         //showSuccess(context, 'O jogador foi adicionado com sucesso.');
       } else {
@@ -88,6 +89,19 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
     } else {
       // showNetworkError(context);
     }
+  }
+
+  void _resetFields() {
+    setState(() {
+      nameController.clear();
+      surnameController.clear();
+      passwordController.clear();
+      categoryController = "";
+      roomNumberController.clear();
+      birthDateController.clear();
+      photoController.clear();
+      profileImageBytes = null;
+    });
   }
 
   @override
