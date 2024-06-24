@@ -234,7 +234,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         'request_id': requestId,
         'accepted': accepted ? 1 : 0,
         'type': tipoPedido,
-        'checked_by': getToken(),
+        'updated_by': getToken(),
       }),
     );
 
@@ -249,13 +249,18 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Data: ${pedido.dataSaida}'),
+        Text('Pedido feito a ${pedido.date}'),
+        Text(''),
+        Text('---------- Detalhes do pedido ----------'),
+        Text('Data Saída: ${pedido.dataSaida}'),
         Text('Hora Saída: ${pedido.horaSaida}'),
         Text('Destino: ${pedido.destino}'),
         Text('Transporte: ${pedido.transporte}'),
         Text('Com quem sai: ${pedido.comQuemSai}'),
         Text('Data Retorno: ${pedido.dataRetorno}'),
         Text('Hora Retorno: ${pedido.horaRetorno}'),
+        Text(''),
+        Text('-------------- Informação --------------'),
         Text('Nota: ${pedido.note}'),
         Text('UpdatedBy: ${pedido.updatedBy}'),
         Text('UpdatedAt: ${pedido.updatedAt}'),

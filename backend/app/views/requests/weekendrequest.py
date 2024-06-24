@@ -77,9 +77,9 @@ def getAllWeekendRequest():
                 "supervisor": row['supervisor'],
                 "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
                 "arrival_time": str(row['arrival_time']),
-                "note": str(row['note']),
-                "updated_by": row['updated_by'],
-                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
+                "note": str(row['note']) if row['note'] is not None else "",
+                "updated_by": row['updated_by'] if row['updated_by'] is not None else "",
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d") if row['updated_at'] is not None else ""
             }
             formatted_list.append(formatted_row)
 
@@ -125,9 +125,9 @@ def getUserWeekendRequest():
                 "supervisor": row['supervisor'],
                 "arrival_date": row['arrival_date'].strftime("%Y-%m-%d"),
                 "arrival_time": str(row['arrival_time']),
-                "note": str(row['note']),
-                "updated_by": row['updated_by'],
-                "updated_at": row['updated_at'].strftime("%Y-%m-%d")
+                "note": str(row['note']) if row['note'] is not None else "",
+                "updated_by": row['updated_by'] if row['updated_by'] is not None else "",
+                "updated_at": row['updated_at'].strftime("%Y-%m-%d") if row['updated_at'] is not None else ""
             }
             formatted_list.append(formatted_row)
 

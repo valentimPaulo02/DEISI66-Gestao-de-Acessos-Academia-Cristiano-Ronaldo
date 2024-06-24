@@ -2,6 +2,8 @@ from flask import request, Blueprint
 from database import mysql
 from datetime import date, time, datetime
 
+from flask import jsonify
+
 request_bp = Blueprint("request", __name__)
 
 @request_bp.route('/checkRequest', methods=["POST"])
@@ -14,8 +16,15 @@ def checkRequest():
         request_id = data["request_id"]
         accepted = data["accepted"]
         type = data["type"]
-        checked_by = data["updated_by"]
+        token = data["updated_by"]
         check_date = datetime.today().date()
+
+        query = "SELECT * FROM user WHERE token=%s;"
+        values = (token,)
+        ptr.execute(query, values)
+        info = ptr.fetchall()
+
+        checked_by = info[0]["username"]
 
         if accepted == 1 : state = "authorized"
         elif accepted == 0 : state = "refused"

@@ -2,8 +2,6 @@ from flask import request, Blueprint
 from database import mysql
 from datetime import date, time, datetime, timedelta
 
-from flask import jsonify
-
 athlete_bp = Blueprint("athlete", __name__)
 
 @athlete_bp.route('/registAthlete', methods=["POST"])

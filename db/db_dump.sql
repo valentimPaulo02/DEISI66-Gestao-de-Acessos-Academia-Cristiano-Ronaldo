@@ -38,7 +38,7 @@ CREATE TABLE `temporaryrequest` (
   `arrival_date` date DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
   `note` varchar(200) DEFAULT NULL,
-  `updated_by` int DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` date DEFAULT NULL,
   PRIMARY KEY (`request_id`),
   KEY `user_id` (`user_id`),
@@ -71,7 +71,7 @@ CREATE TABLE `user` (
   `role` enum('athlete','supervisor','admin') DEFAULT NULL,
   `token` text,
   `category` varchar(7) DEFAULT NULL,
-  `room_number` int DEFAULT NULL,
+  `room_number` varchar(20) DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
   `image_path` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
@@ -87,7 +87,7 @@ LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES (1, 'admin', 'user', 'admin_user', 'admin123', 'admin', NULL, NULL, NULL, NULL, '');
 INSERT INTO `user` VALUES (2, 'supervisor', 'user', 'supervisor_user', 'supervisor123', 'supervisor', NULL, NULL, NULL, NULL, ''); 
-INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15', 25, '2002-12-15', ''); 
+INSERT INTO `user` VALUES (3, 'athlete', 'user', 'athlete_user', 'athlete123', 'athlete', NULL, 'under15', "A25", '2002-12-15', ''); 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +112,7 @@ CREATE TABLE `weekendrequest` (
   `arrival_date` date DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
   `note` varchar(200) DEFAULT NULL,
-  `updated_by` int DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` date DEFAULT NULL,
   PRIMARY KEY (`request_id`),
   KEY `user_id` (`user_id`),
