@@ -80,14 +80,13 @@ class LoginPage extends StatelessWidget {
               child: Text(
                 "Login",
                 style: TextStyle(
-                    fontSize: 40,
-                    color: Color.fromRGBO(160, 160, 160, 0.9),
-                    fontWeight: FontWeight.bold,
-                  ),
+                  fontSize: 40,
+                  color: Color.fromRGBO(160, 160, 160, 0.9),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          
+          ),
 
           // Username step
 
@@ -136,9 +135,9 @@ class LoginPage extends StatelessWidget {
                   Text(
                     'Forgot Password?',
                     style: TextStyle(
-                        fontSize: 12,
-                        color: Color.fromRGBO(3, 110, 73, 1),
-                      ),
+                      fontSize: 12,
+                      color: Color.fromRGBO(3, 110, 73, 1),
+                    ),
                   ),
                 ],
               ),
@@ -155,8 +154,8 @@ class LoginPage extends StatelessWidget {
                 height: 50, // comprimento // // // //
                 child: ElevatedButton(
                   onPressed: () {
-                    signUserIn(context, usernameController, passwordController);
-                    //Navigator.pushNamed(context, '/home');
+                    //signUserIn(context, usernameController, passwordController);
+                    Navigator.pushNamed(context, '/home');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -171,10 +170,10 @@ class LoginPage extends StatelessWidget {
                   child: const Text(
                     'Sign In',
                     style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      color: Colors.white70,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

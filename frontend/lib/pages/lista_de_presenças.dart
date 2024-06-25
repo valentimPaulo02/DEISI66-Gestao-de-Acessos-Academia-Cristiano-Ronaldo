@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
+import '../componentes/filter.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/scp_list_object.dart';
 import '../main.dart';
@@ -37,7 +38,8 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
   List<Atleta> atletas = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
-  bool useTestData = false;
+  String nameFilter = '';
+  bool useTestData = true;
 
   @override
   void initState() {
@@ -79,6 +81,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
                     ))
                 .toList());
           selectedCategory = null;
+          nameFilter = '';
         });
       } else {
         print('Erro ao procurar a lista de atletas: ${data['error']}');
@@ -128,31 +131,32 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
             category: 'under19',
             isAvailable: false),
         Atleta(
-            id: 6,
+            id: 7,
             name: 'asdsa',
             surname: 'Gomes',
             category: 'under19',
             isAvailable: true),
         Atleta(
-            id: 6,
+            id: 8,
             name: 'xcvxc',
             surname: 'Gomes',
             category: 'under19',
             isAvailable: true),
         Atleta(
-            id: 6,
+            id: 9,
             name: 'Szxzx',
             surname: 'Gomes',
             category: 'under19',
             isAvailable: false),
         Atleta(
-            id: 6,
+            id: 10,
             name: 'asdasa',
             surname: 'Gomes',
             category: 'under19',
             isAvailable: false),
       ];
       selectedCategory = null;
+      nameFilter = '';
     });
   }
 
@@ -168,6 +172,13 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
       currentPage = index;
     });
     navigationManager.navigateToPage(index);
+  }
+
+  void _onFilterSelected(String name, String? category) {
+    setState(() {
+      nameFilter = name;
+      selectedCategory = category;
+    });
   }
 
   static List<String> getMenuItems() {
@@ -214,71 +225,64 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
         onMenuItemSelected: _navigateToPage,
         pageIcons: getPageIcons(),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                'Lista de Presenças',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(79, 79, 79, 1),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    'Lista de Presenças',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(79, 79, 79, 1),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              DropdownButton<String>(
-                value: selectedCategory,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    if (newValue == selectedCategory) {
-                      selectedCategory = null;
-                    } else {
-                      selectedCategory = newValue;
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: atletas.length,
+                  itemBuilder: (context, index) {
+                    final atleta = atletas[index];
+
+                    if (selectedCategory != null &&
+                        atleta.category != selectedCategory) {
+                      return const SizedBox.shrink();
                     }
-                  });
-                },
-                items: underOptions.map((String category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
+
+                    if (nameFilter.isNotEmpty &&
+                        !('${atleta.name} ${atleta.surname}'
+                            .toLowerCase()
+                            .contains(nameFilter.toLowerCase()))) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return ScpListObject(
+                      color: atleta.isAvailable
+                          ? const Color.fromRGBO(0, 128, 87, 0.7)
+                          : Colors.black12,
+                      nome: '${atleta.name} ${atleta.surname}',
+                      numeroString: atleta.category,
+                      qqString: 'ID: ${atleta.id}',
+                      textoIcone: atleta.isAvailable
+                          ? 'Na academia'
+                          : 'Fora da academia',
+                    );
+                  },
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              itemCount: atletas.length,
-              itemBuilder: (context, index) {
-                final atleta = atletas[index];
-
-                if (selectedCategory != null &&
-                    atleta.category != selectedCategory) {
-                  return const SizedBox.shrink();
-                }
-
-                return ScpListObject(
-                  color: atleta.isAvailable
-                      ? const Color.fromRGBO(0, 128, 87, 0.7)
-                      : Colors.black12,
-                  nome: '${atleta.name} ${atleta.surname}',
-                  numeroString: atleta.category,
-                  qqString: 'ID: ${atleta.id}',
-                  textoIcone:
-                      atleta.isAvailable ? 'Na academia' : 'Fora da academia',
-                );
-              },
-            ),
+          FilterButton(
+            onFilterSelected: _onFilterSelected,
+            filterOptions: underOptions,
+            selectedCategory: selectedCategory,
           ),
         ],
       ),
