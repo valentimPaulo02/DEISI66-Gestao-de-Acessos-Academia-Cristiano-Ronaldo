@@ -39,7 +39,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
   String nameFilter = '';
-  bool useTestData = true;
+  bool useTestData = false;
 
   @override
   void initState() {

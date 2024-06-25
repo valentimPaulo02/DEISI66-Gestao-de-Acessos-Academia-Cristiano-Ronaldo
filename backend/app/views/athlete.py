@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 from database import mysql
 from datetime import date, time, datetime, timedelta
+import pytz
 
 athlete_bp = Blueprint("athlete", __name__)
 
@@ -106,10 +107,11 @@ def getAvailableAthletes():
         
         ptr = mysql.connection.cursor()
 
+        portugal_tz = pytz.timezone('Europe/Lisbon')
         current_date = datetime.now().date()
-        current_time = datetime.now().time()
+        current_time = datetime.now(portugal_tz).time()
 
-        unavailable_ids = []
+        unavailable_ids = set()
 
         # GET ALL ACCEPTED WEEKEND REQUEST
         query = "SELECT * FROM weekendrequest WHERE state='authorized';"
@@ -123,9 +125,9 @@ def getAvailableAthletes():
             arrival_time = datetime.strptime(str(row['arrival_time']), "%H:%M:%S").time()
 
             if (row['leave_date'] <= current_date <= row['arrival_date']):
-                if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.append(row['user_id'])
-                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.append(row['user_id'])
-                else: unavailable_ids.append(row['user_id'])
+                if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.add(row['user_id'])
+                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.add(row['user_id'])
+                elif(row['leave_date'] < current_date < row['arrival_date']): unavailable_ids.add(row['user_id'])
 
         # GET ALL ACCEPTED TEMPORARY REQUEST
         query = "SELECT * FROM temporaryrequest WHERE state='authorized';"
@@ -139,9 +141,17 @@ def getAvailableAthletes():
             arrival_time = datetime.strptime(str(row['arrival_time']), "%H:%M:%S").time()
 
             if (row['leave_date'] <= current_date <= row['arrival_date']):
-                if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.append(row['user_id'])
-                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.append(row['user_id'])
-                else: unavailable_ids.append(row['user_id'])
+
+                if((row['leave_date'] == current_date) and (leave_time <= current_time)):
+                    if((row['arrival_date'] == current_date) and (current_time <= arrival_time)): unavailable_ids.add(row['user_id'])
+                    elif(current_date < row['arrival_date']): unavailable_ids.add(row['user_id'])
+
+                elif((row['arrival_date'] == current_date) and (current_time <= arrival_time)):
+                    if((row['leave_date'] == current_date) and (leave_time <= current_time)): unavailable_ids.add(row['user_id'])
+                    elif(row['leave_date'] < current_date): unavailable_ids.add(row['user_id'])
+
+                elif(row['leave_date'] < current_date < row['arrival_date']):
+                    unavailable_ids.add(row['user_id'])
 
         available_athletes = []
         unavailable_athletes = []
