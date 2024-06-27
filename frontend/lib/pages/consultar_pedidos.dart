@@ -366,8 +366,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                                 onPressed: () {
                                   _editRequest(
                                       context, pedido, noteA, accepted);
-                                  print(accepted);
-                                  print(noteA);
                                   Navigator.pop(context);
                                 },
                                 iconSize: 20,
@@ -515,7 +513,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       if (responseBody["success"]) {
         _getPedidosFromBackend();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nota atualizada com sucesso.')),
+          const SnackBar(content: Text('Pedido atualizado com sucesso.')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

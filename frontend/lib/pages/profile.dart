@@ -168,12 +168,13 @@ class _ProfilePageState extends State<ProfilePage> {
               initialValue: apelido,
               enabled: false,
             ),
-            getRole() == "athlete" ? 
+            if(getRole() == "athlete")
+              const SizedBox(height: 10),
               InputField(
                 labelText: 'Room Number',
                 initialValue: roomNumber,
                 enabled: false,
-              ) :
+              ),
             const SizedBox(height: 10),
             InputField(
               labelText: 'Password',

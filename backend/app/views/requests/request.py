@@ -57,12 +57,32 @@ def editRequest():
         elif accepted == 0 : state = "refused"
         else : return {"success":False, "error":"invalid_value_of_accepted"}
 
-        if type == "Temporary" : query = "UPDATE temporaryrequest SET state=%s, note=%s WHERE request_id=%s"
-        elif type == "Weekend" : query = "UPDATE weekendrequest SET state=%s, note=%s WHERE request_id=%s"
+        if type == "Temporary" : 
+            if note == "": 
+                query = "UPDATE temporaryrequest SET state=%s WHERE request_id=%s"
+                values = (state, request_id)
+                ptr.execute(query, values)
+                mysql.connection.commit()
+            else:
+                query = "UPDATE temporaryrequest SET state=%s, note=%s WHERE request_id=%s"
+                values = (state, note, request_id)
+                ptr.execute(query, values)
+                mysql.connection.commit()
+
+        elif type == "Weekend" :
+            if note == "": 
+                query = "UPDATE weekendrequest SET state=%s WHERE request_id=%s"
+                values = (state, request_id)
+                ptr.execute(query, values)
+                mysql.connection.commit()
+            else:
+                query = "UPDATE weekendrequest SET state=%s, note=%s WHERE request_id=%s"
+                values = (state, note, request_id)
+                ptr.execute(query, values)
+                mysql.connection.commit()
+                
         else : return {"success":False, "error":"invalid_value_of_type"}
         
-        values = (state, note, request_id)
-        ptr.execute(query, values)
-        mysql.connection.commit()
+        
         
         return {"success":True}
