@@ -13,6 +13,8 @@ import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/date_picker.dart';
 import '../componentes/dropdown_picker.dart';
+import '../componentes/filters/athlete_filter.dart';
+import '../componentes/filters/filter.dart';
 import '../componentes/image_picker.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/scp_list_object.dart';
@@ -53,6 +55,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
   List<Atleta> atletas = [];
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
+  String? nameFilter = "";
 
   @override
   void initState() {
@@ -95,6 +98,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
 
  */
 
+    selectedCategory = null;
     _getAthleteList();
   }
 
@@ -119,7 +123,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     image: atleta['image_path'],
                   ))
               .toList();
-          selectedCategory = null; //limpa a categoria que está selecionada
+          selectedCategory = null;
         });
       } else {
         print('Erro ao procurar a lista de atletas: ${data['error']}');
@@ -144,6 +148,25 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
         ),
       );
     }
+  }
+
+  void _onNameFilterChanged(String value) {
+    setState(() {
+      nameFilter = value.toLowerCase();
+    });
+  }
+
+  void _onCategoryFilterChanged(String? value) {
+    setState(() {
+      selectedCategory = value;
+    });
+  }
+
+  void _onClearFilters() {
+    setState(() {
+      nameFilter = "";
+      selectedCategory = null;
+    });
   }
 
   Future<void> _deleteAtleta(Atleta atleta) async {
@@ -248,24 +271,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                 ),
                 child: const Text('Adicionar Atleta'),
               ),
-              DropdownButton<String>(
-                value: selectedCategory,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    if (newValue == selectedCategory) {
-                      selectedCategory = null; //limpa a categoria selecionada
-                    } else {
-                      selectedCategory = newValue;
-                    }
-                  });
-                },
-                items: underOptions.map((String category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -274,6 +279,12 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
               itemCount: atletas.length,
               itemBuilder: (context, index) {
                 final atleta = atletas[index];
+
+                if ((nameFilter != null && nameFilter!.isNotEmpty) &&
+                    (!atleta.name.toLowerCase().contains(nameFilter!) &&
+                        !atleta.surname.toLowerCase().contains(nameFilter!))) {
+                  return const SizedBox.shrink();
+                }
 
                 if (selectedCategory != null &&
                     atleta.category != selectedCategory) {
@@ -303,6 +314,19 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                   },
                 );
               },
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: AthleteFilter(
+                initialNameFilter: nameFilter,
+                initialCategoryFilter: selectedCategory,
+                onNameFilterChanged: _onNameFilterChanged,
+                onCategoryFilterChanged: _onCategoryFilterChanged,
+                onClearFilters: _onClearFilters,
+              ),
             ),
           ),
         ],

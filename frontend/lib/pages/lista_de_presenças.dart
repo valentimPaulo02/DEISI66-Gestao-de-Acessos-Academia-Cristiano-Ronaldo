@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
-import '../componentes/filter.dart';
+import '../componentes/filters/filter.dart';
 import '../componentes/navigation_manager.dart';
 import '../componentes/scp_list_object.dart';
+import '../componentes/scp_list_object2.dart';
 import '../main.dart';
 
 class Atleta {
@@ -39,7 +40,8 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
   List<String> underOptions = ['under15', 'under16', 'under17', 'under19'];
   String? selectedCategory;
   String nameFilter = '';
-  bool useTestData = false;
+  bool showOnlyAvailable = false;
+  bool useTestData = true;
 
   @override
   void initState() {
@@ -116,19 +118,19 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
             id: 4,
             name: 'Ana',
             surname: 'Costa',
-            category: 'under15',
+            category: 'under17',
             isAvailable: false),
         Atleta(
             id: 5,
-            name: 'Luís',
-            surname: 'Martins',
-            category: 'under16',
-            isAvailable: false),
+            name: 'Rui',
+            surname: 'Gomes',
+            category: 'under15',
+            isAvailable: true),
         Atleta(
             id: 6,
-            name: 'Sofia',
+            name: 'Carlos',
             surname: 'Gomes',
-            category: 'under19',
+            category: 'under16',
             isAvailable: false),
         Atleta(
             id: 7,
@@ -174,10 +176,12 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
     navigationManager.navigateToPage(index);
   }
 
-  void _onFilterSelected(String name, String? category) {
+  void _onFilterSelected(
+      String name, String? category, bool? showOnlyAvailable) {
     setState(() {
       nameFilter = name;
       selectedCategory = category;
+      this.showOnlyAvailable = showOnlyAvailable ?? false;
     });
   }
 
@@ -263,13 +267,16 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
                       return const SizedBox.shrink();
                     }
 
-                    return ScpListObject(
+                    if (showOnlyAvailable && !atleta.isAvailable) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return ScpListObject2(
                       color: atleta.isAvailable
                           ? const Color.fromRGBO(0, 128, 87, 0.7)
                           : Colors.black12,
-                      nome: '${atleta.name} ${atleta.surname}',
-                      numeroString: atleta.category,
-                      qqString: 'ID: ${atleta.id}',
+                      nome: atleta.category,
+                      qqString: '${atleta.name} ${atleta.surname}',
                       textoIcone: atleta.isAvailable
                           ? 'Na academia'
                           : 'Fora da academia',
@@ -283,6 +290,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
             onFilterSelected: _onFilterSelected,
             filterOptions: underOptions,
             selectedCategory: selectedCategory,
+            showOnlyAvailable: showOnlyAvailable,
           ),
         ],
       ),

@@ -8,6 +8,7 @@ import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/dropdown_picker.dart';
+import '../componentes/filters/filter.dart';
 import '../componentes/textfield.dart';
 import '../componentes/scp_list_object.dart';
 import '../componentes/time_picker.dart';
@@ -64,6 +65,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   List<Pedido> pedidosUser = [];
   List<Pedido> pedidos = [];
   String tipoPedido = "Temporary";
+  String usernameFilter = "";
 
   @override
   void initState() {

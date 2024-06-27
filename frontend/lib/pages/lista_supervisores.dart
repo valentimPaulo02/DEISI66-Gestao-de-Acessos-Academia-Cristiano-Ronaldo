@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../componentes/app_bar_with_back.dart';
+import '../componentes/filters/supervisor_filter.dart';
 import '../componentes/image_picker.dart';
 import '../componentes/scp_list_object.dart';
 import '../main.dart';
@@ -42,13 +43,15 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
   int currentPage = 6;
   late NavigationManager navigationManager;
   List<Supervisor> supervisores = [];
+  String? nameFilter = '';
 
   @override
   void initState() {
     super.initState();
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
-/*
+
+    /*
     supervisores = [
       Supervisor(
           id: 1,
@@ -70,7 +73,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
           image: '')
     ];
 
- */
+     */
 
     _getSupervisorList();
   }
@@ -119,6 +122,18 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
         ),
       );
     }
+  }
+
+  void _onNameFilterChanged(String value) {
+    setState(() {
+      nameFilter = value.toLowerCase();
+    });
+  }
+
+  void _onClearFilters() {
+    setState(() {
+      nameFilter = null;
+    });
   }
 
   Future<void> _deleteSupervisor(Supervisor supervisor) async {
@@ -226,29 +241,41 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
               itemCount: supervisores.length,
               itemBuilder: (context, index) {
                 final supervisor = supervisores[index];
+                final fullName =
+                    '${supervisor.name} ${supervisor.surname}'.toLowerCase();
+
+                if (nameFilter != null &&
+                    nameFilter!.isNotEmpty &&
+                    !fullName.contains(nameFilter!)) {
+                  return const SizedBox.shrink();
+                }
+
                 return ScpListObject(
                   color: const Color.fromRGBO(0, 128, 87, 0.9),
                   nome: '${supervisor.name} ${supervisor.surname}',
                   qqString: 'ID: ${supervisor.id}',
                   onPressed: () {
-                    if (getRole() == 'admin') {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DetalhesSupervisorDialog(
-                              supervisor: supervisor);
-                        },
-                      );
-                    }
+                    // Lógica para exibir detalhes do supervisor
                   },
                   onEditPressed: () {
                     _editSupervisor(supervisor);
                   },
                   onDeletePressed: () {
-                    _deleteSupervisor(supervisor);
+                    // Lógica para deletar supervisor
                   },
                 );
               },
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SupervisorFilter(
+                initialNameFilter: nameFilter,
+                onNameFilterChanged: _onNameFilterChanged,
+                onClearFilters: _onClearFilters,
+              ),
             ),
           ),
         ],
