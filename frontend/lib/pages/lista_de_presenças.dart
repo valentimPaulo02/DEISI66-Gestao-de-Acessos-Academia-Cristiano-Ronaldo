@@ -41,7 +41,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
   String? selectedCategory;
   String nameFilter = '';
   bool showOnlyAvailable = false;
-  bool useTestData = true;
+  bool useTestData = false;
 
   @override
   void initState() {

@@ -97,7 +97,6 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                   ))
               .toList();
         });
-        print(supervisores);
       } else {
         print('Erro ao procurar a lista de supervisores: ${data['error']}');
       }

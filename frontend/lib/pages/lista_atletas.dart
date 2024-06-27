@@ -120,7 +120,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
                     category: atleta['category'],
                     roomNumber: atleta['room_number'],
                     birthDate: atleta['birth_date'],
-                    image: atleta['image_path'],
+                    image: atleta['image'],
                   ))
               .toList();
           selectedCategory = null;
@@ -385,14 +385,14 @@ class DetalhesAtletaDialog extends StatelessWidget {
           const SizedBox(height: 8),
           Center(
             child: Text(
-              'Room Number: ${atleta.roomNumber}',
+              'Quarto: ${atleta.roomNumber}',
               style: const TextStyle(fontSize: 16),
             ),
           ),
           const SizedBox(height: 8),
           Center(
             child: Text(
-              'Birth Date: ${atleta.birthDate}',
+              'Data de Nascimento: ${atleta.birthDate}',
               style: const TextStyle(fontSize: 16),
             ),
           ),

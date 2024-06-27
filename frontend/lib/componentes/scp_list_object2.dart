@@ -28,7 +28,7 @@ class ScpListObject2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 180,
-      height: 30,
+      height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: BoxDecoration(
         color: color,
@@ -41,7 +41,7 @@ class ScpListObject2 extends StatelessWidget {
               opacity: 0.2,
               child: Image.asset(
                 'lib/images/just_lion.png',
-                height: 30,
+                height: 50,
                 fit: BoxFit.cover,
               ),
             ),

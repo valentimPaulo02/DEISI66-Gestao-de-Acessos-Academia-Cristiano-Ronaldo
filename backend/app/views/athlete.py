@@ -51,7 +51,22 @@ def getAthleteList():
 
         if len(list)==0: return {"success":False,"error":"no_athletes_found"}
 
-        return {"success":True, "list":list}
+        formatted_list = []
+        for row in list:
+            
+            formatted_row = {
+                "user_id": row['user_id'],
+                "name": row['name'],
+                "surname": row['surname'],
+                "password": row['password'],
+                "category": row['category'],
+                "room_number": row['room_number'],
+                "birth_date": row['birth_date'].strftime("%Y-%m-%d"),
+                "image": row['image_path'],
+            }
+            formatted_list.append(formatted_row)
+
+        return {"success":True, "list":formatted_list}
     
 
 @athlete_bp.route('/updateAthlete', methods=["POST"])

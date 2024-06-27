@@ -39,3 +39,30 @@ def checkRequest():
         mysql.connection.commit()
         
         return {"success":True}
+    
+
+@request_bp.route('/editRequest', methods=["POST"])
+def editRequest():
+    if request.method=="POST":
+
+        ptr = mysql.connection.cursor()
+        data = request.get_json()
+
+        request_id = data["request_id"]
+        accepted = data["accepted"]
+        type = data["type"]
+        note = data["note"]
+
+        if accepted == 1 : state = "authorized"
+        elif accepted == 0 : state = "refused"
+        else : return {"success":False, "error":"invalid_value_of_accepted"}
+
+        if type == "Temporary" : query = "UPDATE temporaryrequest SET state=%s, note=%s WHERE request_id=%s"
+        elif type == "Weekend" : query = "UPDATE weekendrequest SET state=%s, note=%s WHERE request_id=%s"
+        else : return {"success":False, "error":"invalid_value_of_type"}
+        
+        values = (state, note, request_id)
+        ptr.execute(query, values)
+        mysql.connection.commit()
+        
+        return {"success":True}

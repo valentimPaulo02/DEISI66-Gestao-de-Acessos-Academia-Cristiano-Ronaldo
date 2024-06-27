@@ -253,7 +253,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       children: [
         Text('Pedido feito a ${pedido.date}'),
         Text(''),
-        Text('---------- Detalhes do pedido ----------'),
+        Text('--------------- Detalhes ---------------'),
         Text('Data Saída: ${pedido.dataSaida}'),
         Text('Hora Saída: ${pedido.horaSaida}'),
         Text('Destino: ${pedido.destino}'),
@@ -263,9 +263,10 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         Text('Hora Retorno: ${pedido.horaRetorno}'),
         Text(''),
         Text('-------------- Informação --------------'),
+        Text('Estado: ${pedido.state}'),
+        Text('Verificado por: ${pedido.updatedBy.replaceAll('_', ' ')}'),
+        Text('Verificado a: ${pedido.updatedAt}'),
         Text('Nota: ${pedido.note}'),
-        Text('UpdatedBy: ${pedido.updatedBy}'),
-        Text('UpdatedAt: ${pedido.updatedAt}'),
       ],
     );
   }
@@ -284,15 +285,6 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
             ],
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
-              ),
-              child: const Text('Fechar'),
-            ),
             if ((getRole() == 'supervisor' || getRole() == 'admin') &&
                 pedido.state == "pending") ...[
               TextButton(
@@ -316,6 +308,15 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                 child: const Text('Recusar'),
               ),
             ],
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
+              ),
+              child: const Text('Fechar'),
+            ),
           ],
         );
       },
@@ -397,7 +398,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           : pedido.state == "pending"
               ? const Color.fromRGBO(243, 194, 66, 0.7)
               : const Color.fromRGBO(0, 128, 87, 0.7),
-      nome: pedido.username,
+      nome: pedido.username.replaceAll('_', ' '),
       numeroString: pedido.userId.toString(),
       qqString: pedido.date,
       textoOpcional: "Estado: ${pedido.state}",
