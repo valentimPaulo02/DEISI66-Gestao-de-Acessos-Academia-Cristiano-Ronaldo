@@ -50,8 +50,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
     super.initState();
 
     navigationManager = NavigationManager(context, currentPage: currentPage);
-
-    /*
+/*
     supervisores = [
       Supervisor(
           id: 1,
@@ -72,8 +71,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
           password: "sporting2024",
           image: '')
     ];
-
-     */
+ */
 
     _getSupervisorList();
   }
@@ -254,13 +252,21 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
                   nome: '${supervisor.name} ${supervisor.surname}',
                   qqString: 'ID: ${supervisor.id}',
                   onPressed: () {
-                    // Lógica para exibir detalhes do supervisor
+                    if (getRole() == 'admin' || getRole() == 'supervisor') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DetalhesSupervisorDialog(
+                              supervisor: supervisor);
+                        },
+                      );
+                    }
                   },
                   onEditPressed: () {
                     _editSupervisor(supervisor);
                   },
                   onDeletePressed: () {
-                    // Lógica para deletar supervisor
+                    _deleteSupervisor(supervisor);
                   },
                 );
               },
@@ -292,50 +298,64 @@ class DetalhesSupervisorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Detalhes do Supervisor'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
+      content: Stack(
         children: [
-          Center(
-            child: supervisor.image.isEmpty
-                ? Image.asset(
-                    'lib/images/defaultProfile.png',
-                    width: 70,
-                    height: 70,
-                  )
-                : Image.asset(
-                    'lib/images/arrowBack.png',
-                    width: 70,
-                    height: 70,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: Text(
+                  'Detalhes do Atleta',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: supervisor.image.isEmpty
+                    ? Image.asset(
+                        'lib/images/defaultProfile.png',
+                        width: 70,
+                        height: 70,
+                      )
+                    : Image.asset(
+                        'lib/images/arrowBack.png',
+                        width: 70,
+                        height: 70,
+                      ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Text(
+                  'Nome: ${supervisor.name}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Text(
+                  'Sobrenome: ${supervisor.surname}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              'Nome: ${supervisor.name}',
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              'Sobrenome: ${supervisor.surname}',
-              style: const TextStyle(fontSize: 16),
+          Positioned(
+            top: -15,
+            right: -15,
+            child: IconButton(
+              iconSize: 18,
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              color: Colors.black,
             ),
           ),
         ],
       ),
-      actions: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromRGBO(0, 128, 87, 0.2),
-          ),
-          child: const Text('Fechar'),
-        ),
-      ],
     );
   }
 }

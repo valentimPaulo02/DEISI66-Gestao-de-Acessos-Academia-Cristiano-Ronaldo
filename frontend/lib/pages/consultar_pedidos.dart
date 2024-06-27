@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:deisi66/componentes/custom_button.dart';
 import 'package:deisi66/componentes/date_picker.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           requestId: i + 1,
           userId: 100 + i,
           username: 'GYOKERES ${i + 1}',
-          state: 'pending',
+          state: 'authorized',
           date: 'Data ${i + 1}',
           type: 'Temporary',
           dataSaida: 'Data Saída ${i + 1}',
@@ -272,55 +273,260 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   }
 
   void _showPedidoDetailsDialog(BuildContext context, Pedido pedido) {
+    TextEditingController noteController =
+        TextEditingController(text: pedido.note);
+    bool controller = false;
+    bool accepted;
+    bool isSelectedA = false;
+    bool isSelectedR = false;
+    pedido.state == "authorized" ? accepted = true : accepted = false;
+    String noteA = "";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              content: Stack(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            'Detalhes do Pedido',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      _outputPedidoDetails(pedido),
+                      const SizedBox(height: 16),
+                      if ((getRole() == 'supervisor' || getRole() == 'admin') &&
+                          pedido.state == "pending") ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                _acceptRejectPedido(pedido.requestId, true);
+                                Navigator.of(context).pop();
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    const Color.fromRGBO(0, 128, 87, 1),
+                              ),
+                              child: const Text('Aceitar'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                _acceptRejectPedido(pedido.requestId, false);
+                                Navigator.of(context).pop();
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    const Color.fromRGBO(0, 128, 87, 1),
+                              ),
+                              child: const Text('Recusar'),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if ((getRole() == 'supervisor' || getRole() == 'admin') &&
+                          (pedido.state == "authorized" ||
+                              pedido.state == "refused")) ...[
+                        if (!controller)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    controller = true;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      const Color.fromRGBO(0, 128, 87, 1),
+                                ),
+                                child: const Text('Editar'),
+                              ),
+                            ],
+                          ),
+                        if (controller) ...{
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  _editRequest(
+                                      context, pedido, noteA, accepted);
+                                  print(accepted);
+                                  print(noteA);
+                                  Navigator.pop(context);
+                                },
+                                iconSize: 20,
+                                splashRadius: 25.0,
+                                icon: const Icon(Icons.save,
+                                    color: Color.fromRGBO(0, 128, 87, 1)),
+                              ),
+                              const SizedBox(width: 13),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    accepted = true;
+                                    isSelectedA = true;
+                                    isSelectedR = false;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: isSelectedR
+                                      ? const Color.fromRGBO(0, 128, 87, 0.5)
+                                      : const Color.fromRGBO(0, 128, 87, 1),
+                                ),
+                                child: const Text('Aceitar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    accepted = false;
+                                    isSelectedR = true;
+                                    isSelectedA = false;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                    foregroundColor: isSelectedA
+                                        ? const Color.fromRGBO(0, 128, 87, 0.5)
+                                        : const Color.fromRGBO(0, 128, 87, 1)),
+                                child: const Text('Recusar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _askForNoteDialog(
+                                      context, pedido, noteController,
+                                      (String value) {
+                                    setState(() {
+                                      noteA = value;
+                                    });
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      const Color.fromRGBO(0, 128, 87, 1),
+                                ),
+                                child: const Text('Nota'),
+                              ),
+                            ],
+                          ),
+                        }
+                      ],
+                    ],
+                  ),
+                  Positioned(
+                    top: -12,
+                    right: -13,
+                    child: IconButton(
+                      iconSize: 18,
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _askForNoteDialog(BuildContext context, Pedido pedido,
+      TextEditingController noteController, Function(String) onNoteChanged) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Detalhes do Pedido'),
+          title: const Text('Adicionar Nota'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _outputPedidoDetails(pedido),
+              TextField(
+                controller: noteController,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
             ],
           ),
-          actions: <Widget>[
-            if ((getRole() == 'supervisor' || getRole() == 'admin') &&
-                pedido.state == "pending") ...[
-              TextButton(
-                onPressed: () {
-                  _acceptRejectPedido(pedido.requestId, true);
-                  Navigator.of(context).pop();
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
-                ),
-                child: const Text('Aceitar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _acceptRejectPedido(pedido.requestId, false);
-                  Navigator.of(context).pop();
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
-                ),
-                child: const Text('Recusar'),
-              ),
-            ],
+          actions: [
             TextButton(
               onPressed: () {
+                onNoteChanged(noteController.text);
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
                 foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
               ),
-              child: const Text('Fechar'),
+              child: const Text('Sim'),
+            ),
+            TextButton(
+              onPressed: () {
+                onNoteChanged("");
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: const Color.fromRGBO(0, 128, 87, 1),
+              ),
+              child: const Text('Não'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _editRequest(
+      BuildContext context, Pedido pedido, String note, bool accepted) async {
+    final data = {
+      "request_id": pedido.requestId,
+      "accepted": accepted ? 1 : 0,
+      "type": pedido.type,
+      "note": note,
+    };
+
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/editRequest'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      if (responseBody["success"]) {
+        _getPedidosFromBackend();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nota atualizada com sucesso.')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro: ${responseBody["error"]}')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao comunicar com o servidor.')),
+      );
+    }
   }
 
   void _editPedido(BuildContext context, Pedido pedido) {
@@ -833,7 +1039,7 @@ class _EditarPedidoFimDeSemanaPageState
               DatePicker(
                 labelText: 'Data Retorno:',
                 controller: dataRetornoController,
-                verification: true,
+                verification: false,
               ),
               const SizedBox(height: 15),
               TimePicker(
