@@ -103,7 +103,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
 
   Future<void> _getAthleteList() async {
     final url =
-        await http.get(Uri.parse('http://localhost:5000/getAthleteList'));
+        await http.get(Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/getAthleteList'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);
@@ -173,7 +173,7 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
       final int atletaId = atleta.id;
 
       final response = await http.post(
-        Uri.parse('http://localhost:5000/deleteUser'),
+        Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/deleteUser'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -466,7 +466,7 @@ class _EditAtletaPageState extends State<EditAtletaPage> {
     final id = widget.atleta.id;
 
     final response = await http.post(
-      Uri.parse('http://localhost:5000/updateAthlete'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/updateAthlete'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

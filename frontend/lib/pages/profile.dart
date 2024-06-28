@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchData() async {
     try {
       var response = await http.get(
-          Uri.parse('http://localhost:5000/getUserData'),
+          Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/getUserData'),
           headers: {"Content-Type": "application/json", "token": getToken()});
 
       if (response.statusCode == 200) {
@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> updatePassword(String newPassword) async {
     try {
       var response =
-          await http.post(Uri.parse('http://localhost:5000/updatePassword'),
+          await http.post(Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/updatePassword'),
               body: json.encode({
                 'token': getToken(),
                 'password': newPassword,
@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> logout() async {
-    var response = await http.post(Uri.parse('http://localhost:5000/logout'),
+    var response = await http.post(Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/logout'),
         body: json.encode({
           'token': getToken(),
         }),

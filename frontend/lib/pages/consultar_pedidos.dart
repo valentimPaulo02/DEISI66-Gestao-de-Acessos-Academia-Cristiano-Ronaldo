@@ -147,18 +147,18 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     if (getRole() == 'athlete') {
       if (tipoPedido == 'Weekend') {
         type = "Weekend";
-        url = 'http://localhost:5000/getUserWeekendRequest';
+        url = 'https://projects.deisi.ulusofona.pt/DEISI66/getUserWeekendRequest';
       } else if (tipoPedido == 'Temporary') {
         type = "Temporary";
-        url = 'http://localhost:5000/getUserTemporaryRequest';
+        url = 'https://projects.deisi.ulusofona.pt/DEISI66/getUserTemporaryRequest';
       }
     } else {
       if (tipoPedido == 'Weekend') {
         type = "Weekend";
-        url = 'http://localhost:5000/getAllWeekendRequest';
+        url = 'https://projects.deisi.ulusofona.pt/DEISI66/getAllWeekendRequest';
       } else if (tipoPedido == 'Temporary') {
         type = "Temporary";
-        url = 'http://localhost:5000/getAllTemporaryRequest';
+        url = 'https://projects.deisi.ulusofona.pt/DEISI66/getAllTemporaryRequest';
       }
     }
 
@@ -231,7 +231,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
   void _acceptRejectPedido(int requestId, bool accepted) async {
     final response = await http.post(
-      Uri.parse('http://localhost:5000/checkRequest'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/checkRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -255,7 +255,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Pedido feito a ${pedido.date}'),
-        Text(''),
+        SizedBox(height: 8),
         Text('--------------- Detalhes ---------------'),
         Text('Data Saída: ${pedido.dataSaida}'),
         Text('Hora Saída: ${pedido.horaSaida}'),
@@ -264,16 +264,23 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         Text('Com quem sai: ${pedido.comQuemSai}'),
         Text('Data Retorno: ${pedido.dataRetorno}'),
         Text('Hora Retorno: ${pedido.horaRetorno}'),
-        Text(''),
+        SizedBox(height: 8),
         Text('-------------- Informação --------------'),
         Text('Estado: ${pedido.state}'),
         Text('Verificado por: ${pedido.updatedBy.replaceAll('_', ' ')}'),
         Text('Verificado a: ${pedido.updatedAt}'),
-        Text(''),
-        Text('Nota: ${pedido.note}'),
+        SizedBox(height: 8),
+        Text('Nota:'),
+        SizedBox(
+          height: 80.0,
+          child: SingleChildScrollView(
+            child: Text(pedido.note),
+          ),
+        ),
       ],
     );
   }
+
 
   void _showPedidoDetailsDialog(BuildContext context, Pedido pedido) {
     TextEditingController noteController =
@@ -506,7 +513,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
     };
 
     final response = await http.post(
-      Uri.parse('http://localhost:5000/editRequest'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/editRequest'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(data),
     );
@@ -844,7 +851,7 @@ class _EditarPedidoTemporarioPageState
     };
 
     final response = await http.post(
-      Uri.parse('http://localhost:5000/updateTemporaryRequest'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/updateTemporaryRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -1022,7 +1029,7 @@ class _EditarPedidoFimDeSemanaPageState
     };
 
     final response = await http.post(
-      Uri.parse('http://localhost:5000/updateWeekendRequest'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/updateWeekendRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -115,7 +115,7 @@ class _FazerPedidoFSPageState extends State<FazerPedidoFSPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:5000/makeWeekendRequest');
+    final url = Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/makeWeekendRequest');
 
     final response = await http.post(
       url,

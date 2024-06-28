@@ -37,7 +37,7 @@ class _AddSupervisorPageState extends State<AddSupervisorPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:5000/registSupervisor');
+    final url = Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/registSupervisor');
 
     final response = await http.post(url,
         body: json.encode({

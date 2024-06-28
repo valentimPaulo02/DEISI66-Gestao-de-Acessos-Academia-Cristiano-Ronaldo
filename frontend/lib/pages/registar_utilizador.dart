@@ -56,7 +56,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:5000/registAthlete');
+    final url = Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/registAthlete');
 
     final response = await http.post(
       url,

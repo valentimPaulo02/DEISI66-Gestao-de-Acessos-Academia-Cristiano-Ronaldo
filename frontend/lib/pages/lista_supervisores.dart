@@ -78,7 +78,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
 
   Future<void> _getSupervisorList() async {
     final url =
-        await http.get(Uri.parse('http://localhost:5000/getSupervisorList'));
+        await http.get(Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/getSupervisorList'));
 
     if (url.statusCode == 200) {
       final data = jsonDecode(url.body);
@@ -137,7 +137,7 @@ class _ListaSupervisoresPageState extends State<ListaSupervisoresPage> {
     if (getRole() == 'admin') {
       final int supervisorID = supervisor.id;
       final response = await http.post(
-        Uri.parse('http://localhost:5000/deleteUser'),
+        Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/deleteUser'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -392,7 +392,7 @@ class _EditSupervisorPageState extends State<EditSupervisorPage> {
     final id = widget.supervisor.id;
 
     final response = await http.post(
-      Uri.parse('http://localhost:5000/updateSupervisor'),
+      Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/updateSupervisor'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

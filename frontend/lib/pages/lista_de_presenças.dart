@@ -57,7 +57,7 @@ class _ListaPresencasPageState extends State<ListaPresencasPage> {
     }
 
     final response =
-        await http.get(Uri.parse('http://localhost:5000/getAvailableAthletes'));
+        await http.get(Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/getAvailableAthletes'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

@@ -115,7 +115,7 @@ class _FazerPedidoTPageState extends State<FazerPedidoTPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:5000/makeTemporaryRequest');
+    final url = Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/makeTemporaryRequest');
 
     final response = await http.post(
       url,
