@@ -59,30 +59,22 @@ def updateSupervisor():
         surname = data["surname"]
         password = data["password"]
 
-        query = "SELECT * FROM user WHERE user_id=%s;"
-        values = (id,)
+        query = "UPDATE user SET password=%s WHERE user_id=%s"
+        values = (password, id)
         ptr.execute(query, values)
-        info = ptr.fetchall()
+        mysql.connection.commit()
 
-        user_name = info[0]["name"]
-        user_surname = info[0]["surname"]
-        user_password = info[0]["password"]
-
-        if name != user_name: user_name = name
-        if surname != user_surname: user_surname = surname
-        if password != user_password: user_password = password
-
-        user_username = user_name + "_" + user_surname
+        username = name + "_" + surname
 
         query = "SELECT * FROM user WHERE username=%s;"
-        values = (user_username,)
+        values = (username,)
         ptr.execute(query, values)
         info = ptr.fetchall()
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "UPDATE user SET name=%s, surname=%s, username=%s, password=%s WHERE user_id=%s"
-        values = (user_name, user_surname, user_username, user_password, id)
+        query = "UPDATE user SET name=%s, surname=%s, username=%s WHERE user_id=%s"
+        values = (name, surname, username, id)
         ptr.execute(query, values)
         mysql.connection.commit()
 

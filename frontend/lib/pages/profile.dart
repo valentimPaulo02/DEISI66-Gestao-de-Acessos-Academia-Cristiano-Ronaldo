@@ -170,6 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             if(getRole() == "athlete")
               const SizedBox(height: 10),
+            if(getRole() == "athlete")
               InputField(
                 labelText: 'Room Number',
                 initialValue: roomNumber,

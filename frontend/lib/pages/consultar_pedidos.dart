@@ -269,6 +269,7 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         Text('Estado: ${pedido.state}'),
         Text('Verificado por: ${pedido.updatedBy.replaceAll('_', ' ')}'),
         Text('Verificado a: ${pedido.updatedAt}'),
+        Text(''),
         Text('Nota: ${pedido.note}'),
       ],
     );
@@ -660,8 +661,9 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       qqString: pedido.date,
       textoOpcional: "Estado: ${pedido.state}",
       onPressed: () => _showPedidoDetailsDialog(context, pedido),
-      onEditPressed:
-          pedido.state == "pending" ? () => _editPedido(context, pedido) : null,
+      onEditPressed: pedido.state == "pending" && getRole() == "athlete"
+          ? () => _editPedido(context, pedido)
+          : null,
     );
   }
 
@@ -850,7 +852,7 @@ class _EditarPedidoTemporarioPageState
     );
 
     if (response.statusCode == 200) {
-      Navigator.pushNamed(context, '/consultar_pedido');
+      Navigator.pushNamed(context, '/consultar_pedidos');
     } else {
       print(
           'Erro na atualização do pedido temporario: ${response.reasonPhrase}');
@@ -888,7 +890,7 @@ class _EditarPedidoTemporarioPageState
               DatePicker(
                 labelText: 'Data Saída:',
                 controller: dataSaidaController,
-                verification: true,
+                verification: false,
               ),
               const SizedBox(height: 15),
               TimePicker(
@@ -930,7 +932,7 @@ class _EditarPedidoTemporarioPageState
               DatePicker(
                 labelText: 'Data Retorno:',
                 controller: dataRetornoController,
-                verification: true,
+                verification: false,
               ),
               const SizedBox(height: 15),
               TimePicker(
@@ -974,7 +976,7 @@ class _EditarPedidoFimDeSemanaPageState
   @override
   void initState() {
     super.initState();
-    dataSaidaController = TextEditingController(text: widget.pedido.date);
+    dataSaidaController = TextEditingController(text: widget.pedido.dataSaida);
     horaSaidaController = TextEditingController(text: widget.pedido.horaSaida);
     destinoController = TextEditingController(text: widget.pedido.destino);
     transporteController =
@@ -1009,16 +1011,17 @@ class _EditarPedidoFimDeSemanaPageState
     final updatedHoraRetorno = horaRetornoController.text;
 
     final Map<String, dynamic> updatedData = {
+      'request_id': widget.pedido.requestId,
       'leave_date': updatedDataSaida,
       'leave_time': updatedHoraSaida,
-      'destino': updatedDestino,
-      'transporte': updatedTransporte,
-      'comQuemSai': updatedComQuemSai,
+      'destiny': updatedDestino,
+      'transport': updatedTransporte,
+      'supervisor': updatedComQuemSai,
       'arrival_date': updatedDataRetorno,
       'arrival_time': updatedHoraRetorno,
     };
 
-    final response = await http.patch(
+    final response = await http.post(
       Uri.parse('http://localhost:5000/updateWeekendRequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -1027,7 +1030,7 @@ class _EditarPedidoFimDeSemanaPageState
     );
 
     if (response.statusCode == 200) {
-      Navigator.pushNamed(context, '/consultar_pedido');
+      Navigator.pushNamed(context, '/consultar_pedidos');
     } else {
       print(
           'Erro na atualização do pedido fim de semana: ${response.reasonPhrase}');
@@ -1065,7 +1068,7 @@ class _EditarPedidoFimDeSemanaPageState
               DatePicker(
                 labelText: 'Data Saída:',
                 controller: dataSaidaController,
-                verification: true,
+                verification: false,
               ),
               const SizedBox(height: 15),
               TimePicker(

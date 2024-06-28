@@ -67,7 +67,7 @@ CREATE TABLE `user` (
   `name` varchar(20) DEFAULT NULL,
   `surname` varchar(20) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
-  `password` text,
+  `password` varchar(30),
   `role` enum('athlete','supervisor','admin') DEFAULT NULL,
   `token` text,
   `category` varchar(7) DEFAULT NULL,

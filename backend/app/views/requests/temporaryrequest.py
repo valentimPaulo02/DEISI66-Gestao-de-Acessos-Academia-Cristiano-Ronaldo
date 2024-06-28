@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from database import mysql
 from datetime import date, time, datetime
 
@@ -142,21 +142,21 @@ def updateTemporaryRequest():
         data = request.get_json()
 
         request_id = data["request_id"]
-        leave_date = str(data["leave_date"])
-        leave_time = str(data["leave_time"])
-        supervisor = str(data["supervisor"])
-        transport = str(data["transport"])
-        destiny = str(data["destiny"])
-        arrival_date = str(data["arrival_date"])
-        arrival_time = str(data["arrival_time"])
+        leave_date = data["leave_date"]
+        leave_time = data["leave_time"]
+        supervisor = data["supervisor"]
+        transport = data["transport"]
+        destiny = data["destiny"]
+        arrival_date = data["arrival_date"]
+        arrival_time = data["arrival_time"]
 
-        leave_date = datetime.fromisoformat(leave_date).date()
-        arrival_date = datetime.fromisoformat(arrival_date).date()
-        leave_time = datetime.strptime(leave_time, "%H:%M").time()
-        arrival_time = datetime.strptime(arrival_time, "%H:%M").time()
+        query = "UPDATE temporaryrequest SET leave_date=%s, leave_time=%s, arrival_date=%s, arrival_time=%s WHERE request_id=%s;"
+        values = (leave_date, leave_time, arrival_date, arrival_time, request_id)
+        ptr.execute(query, values)
+        mysql.connection.commit()
 
-        query = "UPDATE temporaryrequest SET leave_date=%s, leave_time=%s, supervisor=%s, transport_out=%s, destiny=%s, arrival_date=%s, arrival_time=%s WHERE request_id=%s;"
-        values = (leave_date, leave_time, supervisor, transport, destiny, arrival_date, arrival_time, request_id)
+        query = "UPDATE temporaryrequest SET supervisor=%s, transport_out=%s, destiny=%s WHERE request_id=%s;"
+        values = (supervisor, transport, destiny, request_id)
         ptr.execute(query, values)
         mysql.connection.commit()
         

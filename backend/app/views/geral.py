@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from uuid import uuid4
 from database import mysql
 
@@ -100,7 +100,7 @@ def deleteUser():
         mysql.connection.commit()
 
         return {"success":True}
-    
+        
 
 @geral_bp.route('/getUserData', methods=["GET"])
 def getUserData():

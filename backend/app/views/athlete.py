@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from database import mysql
 from datetime import date, time, datetime, timedelta
 import pytz
@@ -77,39 +77,34 @@ def updateAthlete():
         data = request.get_json()
 
         id = data["user_id"]
-        name = str(data["name"])
-        surname = str(data["surname"])
-        password = str(data["password"])
-        category = str(data["category"])
+        name = data["name"]
+        surname = data["surname"]
+        password = data["password"]
+        category = data["category"]
         room_number = data["room_number"]
-        birth_date = str(data["birth_date"])
+        birth_date = data["birth_date"]
 
-        date = datetime.fromisoformat(birth_date).date()
-
-        query = "SELECT * FROM user WHERE user_id=%s;"
-        values = (id,)
+        query = "UPDATE user SET password=%s WHERE user_id=%s"
+        values = (password, id)
         ptr.execute(query, values)
-        info = ptr.fetchall()
+        mysql.connection.commit()
 
-        user_name = info[0]["name"]
-        user_surname = info[0]["surname"]
-        user_password = info[0]["password"]
+        query = "UPDATE user SET category=%s, room_number=%s, birth_date=%s WHERE user_id=%s"
+        values = (category, room_number, birth_date, id)
+        ptr.execute(query, values)
+        mysql.connection.commit()
 
-        if name != user_name: user_name = name
-        if surname != user_surname: user_surname = surname
-        if password != user_password: user_password = password
-
-        user_username = user_name + "_" + user_surname
+        username = name + "_" + surname
 
         query = "SELECT * FROM user WHERE username=%s;"
-        values = (user_username,)
+        values = (username,)
         ptr.execute(query, values)
         info = ptr.fetchall()
 
         if len(info)!=0: return {"success":False,"error":"username_already_exists"}
 
-        query = "UPDATE user SET name=%s, surname=%s, username=%s, password=%s, category=%s, room_number=%s, birth_date=%s WHERE user_id=%s"
-        values = (user_name, user_surname, user_username, password, category, id, room_number, date)
+        query = "UPDATE user SET name=%s, surname=%s, username=%s WHERE user_id=%s"
+        values = (name, surname, username, id)
         ptr.execute(query, values)
         mysql.connection.commit()
 
