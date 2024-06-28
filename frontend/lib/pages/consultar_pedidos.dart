@@ -76,9 +76,9 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       currentPage = 2;
     }
     super.initState();
-    //_getPedidosFromBackend();
-    _loadFakeTemporaryPedidos();
-    _loadFakeWeekendPedidos();
+    _getPedidosFromBackend();
+    //_loadFakeTemporaryPedidos();
+    //_loadFakeWeekendPedidos();
   }
 
   //lista forcada para testes dos pedidos temporários
