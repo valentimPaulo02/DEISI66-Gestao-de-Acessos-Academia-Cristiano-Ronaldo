@@ -95,7 +95,6 @@ class _ListaAtletasPageState extends State<ListaAtletasPage> {
           roomNumber: 'A22',
           birthDate: '2001-10-18')
     ];
-
  */
 
     selectedCategory = null;

@@ -9,7 +9,7 @@ import '../componentes/app_bar_with_back.dart';
 import '../componentes/app_pages.dart';
 import '../componentes/custom_app_bar.dart';
 import '../componentes/dropdown_picker.dart';
-import '../componentes/filters/filter.dart';
+import '../componentes/filters/cp_filter.dart';
 import '../componentes/textfield.dart';
 import '../componentes/scp_list_object.dart';
 import '../componentes/time_picker.dart';
@@ -67,6 +67,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   List<Pedido> pedidos = [];
   String tipoPedido = "Temporary";
   String usernameFilter = "";
+  DateTime? startDateFilter;
+  DateTime? endDateFilter;
 
   @override
   void initState() {
@@ -90,14 +92,14 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           userId: 100 + i,
           username: 'GYOKERES ${i + 1}',
           state: 'authorized',
-          date: 'Data ${i + 1}',
+          date: '2024-06-18',
           type: 'Temporary',
-          dataSaida: 'Data Saída ${i + 1}',
+          dataSaida: '2024-06-18',
           horaSaida: 'Hora Saída ${i + 1}',
           destino: 'Destino ${i + 1}',
           transporte: 'transporte publico',
           comQuemSai: 'pai/mae',
-          dataRetorno: 'Data Retorno ${i + 1}',
+          dataRetorno: '2024-06-21',
           horaRetorno: 'Hora Retorno ${i + 1}',
           note: 'abcde',
           updatedBy: 'staff01',
@@ -118,14 +120,14 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
           userId: 200 + i,
           username: 'ESGAIO ${i + 1}',
           state: 'pending',
-          date: 'Data ${i + 1}',
+          date: '2024-06-18',
           type: 'Weekend',
-          dataSaida: 'Data Saída ${i + 1}',
+          dataSaida: '2024-06-18',
           horaSaida: 'Hora Saída ${i + 1}',
           destino: 'Destino ${i + 1}',
           transporte: 'transporte publico',
           comQuemSai: 'pai/mae',
-          dataRetorno: 'Data Retorno ${i + 1}',
+          dataRetorno: '2024-06-21',
           horaRetorno: 'Hora Retorno ${i + 1}',
           note: 'abcde',
           updatedBy: 'staff01',
@@ -562,11 +564,36 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
   }
 
   List<Pedido> getFilteredPedidos() {
+    List<Pedido> filteredPedidos = [];
+
     if (getRole() == 'athlete') {
-      return pedidosUser;
+      filteredPedidos = List.from(pedidosUser);
     } else {
-      return pedidosAll;
+      filteredPedidos = List.from(pedidosAll);
     }
+
+    if (usernameFilter.isNotEmpty) {
+      filteredPedidos = filteredPedidos
+          .where((pedido) =>
+              pedido.username.toLowerCase().contains(usernameFilter))
+          .toList();
+    }
+
+    if (startDateFilter != null) {
+      filteredPedidos = filteredPedidos
+          .where(
+              (pedido) => DateTime.parse(pedido.date).isAfter(startDateFilter!))
+          .toList();
+    }
+
+    if (endDateFilter != null) {
+      filteredPedidos = filteredPedidos
+          .where(
+              (pedido) => DateTime.parse(pedido.date).isBefore(endDateFilter!))
+          .toList();
+    }
+
+    return filteredPedidos;
   }
 
   static List<String> getMenuItems() {
@@ -593,6 +620,32 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       default:
         return [];
     }
+  }
+
+  void _filterByUsername(String value) {
+    setState(() {
+      usernameFilter = value.toLowerCase();
+    });
+  }
+
+  void _filterByStartDate(DateTime? value) {
+    setState(() {
+      startDateFilter = value;
+    });
+  }
+
+  void _filterByEndDate(DateTime? value) {
+    setState(() {
+      endDateFilter = value;
+    });
+  }
+
+  void _clearFilters() {
+    setState(() {
+      usernameFilter = '';
+      startDateFilter = null;
+      endDateFilter = null;
+    });
   }
 
   Widget _buildPedidoListTile(Pedido pedido) {
@@ -630,70 +683,87 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
         onMenuItemSelected: _navigateToPage,
         pageIcons: getPageIcons(),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                'Consultar Pedidos',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(79, 79, 79, 1),
+          Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    'Consultar Pedidos',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(79, 79, 79, 1),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      tipoPedido = "Temporary";
-                    });
-                    _getPedidosFromBackend();
-                    //_loadFakeTemporaryPedidos();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: tipoPedido == "Temporary"
-                        ? const Color.fromRGBO(0, 128, 87, 1)
-                        : Colors.grey,
-                  ),
-                  child: const Text('Saída Temporária'),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          tipoPedido = "Temporary";
+                        });
+                        _getPedidosFromBackend();
+                        //_loadFakeTemporaryPedidos();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: tipoPedido == "Temporary"
+                            ? const Color.fromRGBO(0, 128, 87, 1)
+                            : Colors.grey,
+                      ),
+                      child: const Text('Saída Temporária'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          tipoPedido = "Weekend";
+                        });
+                        _getPedidosFromBackend();
+                        //_loadFakeWeekendPedidos();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: tipoPedido == "Weekend"
+                            ? const Color.fromRGBO(0, 128, 87, 1)
+                            : Colors.grey,
+                      ),
+                      child: const Text('Saída Fim-de-Semana'),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      tipoPedido = "Weekend";
-                    });
-                    _getPedidosFromBackend();
-                    //_loadFakeWeekendPedidos();
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: getFilteredPedidos().length,
+                  itemBuilder: (context, index) {
+                    final pedido = getFilteredPedidos()[index];
+                    return _buildPedidoListTile(pedido);
                   },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: tipoPedido == "Weekend"
-                        ? const Color.fromRGBO(0, 128, 87, 1)
-                        : Colors.grey,
-                  ),
-                  child: const Text('Saída Fim-de-Semana'),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: getFilteredPedidos().length,
-              itemBuilder: (context, index) {
-                final pedido = getFilteredPedidos()[index];
-                return _buildPedidoListTile(pedido);
-              },
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: CpFilter(
+              initialUsernameFilter: usernameFilter,
+              initialStartDate: startDateFilter,
+              initialEndDate: endDateFilter,
+              onUsernameFilterChanged: _filterByUsername,
+              onStartDateChanged: _filterByStartDate,
+              onEndDateChanged: _filterByEndDate,
+              onClearFilters: _clearFilters,
             ),
           ),
         ],

@@ -74,9 +74,21 @@ class _AthleteFilterState extends State<AthleteFilter> {
                               onChanged: (value) {
                                 widget.onNameFilterChanged(value);
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Name:',
-                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(
+                                  color: Color.fromRGBO(79, 79, 79, 0.8),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(79, 79, 79, 0.8),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(79, 79, 79, 0.8),
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -97,7 +109,19 @@ class _AthleteFilterState extends State<AthleteFilter> {
                                       .toList(),
                               decoration: const InputDecoration(
                                 labelText: 'Category:',
-                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(
+                                  color: Color.fromRGBO(79, 79, 79, 0.8),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(79, 79, 79, 0.8),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(79, 79, 79, 0.8),
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16.0),
