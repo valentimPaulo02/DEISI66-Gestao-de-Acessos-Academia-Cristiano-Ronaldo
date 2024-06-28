@@ -41,3 +41,15 @@ E de modo a executar o frontend, utilizar o comando,
 ```bash
 flutter run
 ```
+
+# Guião de Instalação e Utilização
+
+A segurança e a monitorização de acessos são prioridades essenciais para todas as organizações. 
+Visando aumentar a segurança e facilitar o controlo dos acessos, foi desenvolvido um projeto para a Academia Cristiano Ronaldo. 
+Esta aplicação móvel permite fazer a gestão dos acessos à academia, bem como registar e controlar os atletas. 
+Além disso, a aplicação oferece funcionalidades para fazer a gestão de pedidos de saída temporária ou de fim de semana feitos pelos atletas. 
+Substituindo os métodos que anteriormente praticavam, o uso de uma aplicação proporciona uma gestão detalhada e mais segura das informações, garantindo um controle eficiente e preciso dos acessos e atividades dos atletas na academia.
+
+![Logotipo Academia Cristiano Ronaldo](imagesR/drawerS.png)
+
+
