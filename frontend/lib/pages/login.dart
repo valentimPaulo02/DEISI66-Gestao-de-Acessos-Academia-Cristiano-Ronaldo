@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
   void signUserIn(
       BuildContext context, String username, String password) async {
     // URL do seu servidor Flask
-    final url = Uri.parse('http://localhost:5000/login');
+    final url = Uri.parse('https://projects.deisi.ulusofona.pt/DEISI66/login');
 
     // solicitação POST para o servidor
     final response = await http.post(url,
@@ -122,27 +122,6 @@ class LoginPage extends StatelessWidget {
           ),
 
           // Forgot Password?
-
-          const Positioned(
-            top: 415,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color.fromRGBO(3, 110, 73, 1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
 
           Positioned(
             top: 445, // Ajuste de posição vertical
