@@ -76,9 +76,9 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
       currentPage = 2;
     }
     super.initState();
-    _getPedidosFromBackend();
-    //_loadFakeTemporaryPedidos();
-    //_loadFakeWeekendPedidos();
+    //_getPedidosFromBackend();
+    _loadFakeTemporaryPedidos();
+    _loadFakeWeekendPedidos();
   }
 
   //lista forcada para testes dos pedidos temporários
@@ -555,12 +555,12 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
     if (index == 4) {
       tipoPedido = "Weekend";
-      //_loadFakeWeekendPedidos();
-      _getPedidosFromBackend();
+      _loadFakeWeekendPedidos();
+      //_getPedidosFromBackend();
     } else if (index == 5) {
       tipoPedido = "Temporary";
-      //_loadFakeTemporaryPedidos();
-      _getPedidosFromBackend();
+      _loadFakeTemporaryPedidos();
+      //_getPedidosFromBackend();
     }
   }
 
@@ -582,15 +582,15 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
 
     if (startDateFilter != null) {
       filteredPedidos = filteredPedidos
-          .where(
-              (pedido) => DateTime.parse(pedido.date).isAfter(startDateFilter!))
+          .where((pedido) => DateTime.parse(pedido.date)
+              .isAfter(startDateFilter!.subtract(const Duration(days: 1))))
           .toList();
     }
 
     if (endDateFilter != null) {
       filteredPedidos = filteredPedidos
-          .where(
-              (pedido) => DateTime.parse(pedido.date).isBefore(endDateFilter!))
+          .where((pedido) => DateTime.parse(pedido.date)
+              .isBefore(endDateFilter!.add(const Duration(days: 1))))
           .toList();
     }
 
@@ -713,8 +713,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                         setState(() {
                           tipoPedido = "Temporary";
                         });
-                        _getPedidosFromBackend();
-                        //_loadFakeTemporaryPedidos();
+                        //_getPedidosFromBackend();
+                        _loadFakeTemporaryPedidos();
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -729,8 +729,8 @@ class _ConsultarPedidoPageState extends State<ConsultarPedidoPage> {
                         setState(() {
                           tipoPedido = "Weekend";
                         });
-                        _getPedidosFromBackend();
-                        //_loadFakeWeekendPedidos();
+                        //_getPedidosFromBackend();
+                        _loadFakeWeekendPedidos();
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
