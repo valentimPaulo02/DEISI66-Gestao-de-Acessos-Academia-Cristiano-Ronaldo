@@ -3,7 +3,7 @@ from database import mysql
 from datetime import date, time, datetime, timedelta
 import pytz
 
-athlete_bp = Blueprint("athlete", __name__)
+athlete_bp = Blueprint("athlete", __name__, url_prefix="/DEISI66")
 
 @athlete_bp.route('/registAthlete', methods=["POST"])
 def registAthlete():

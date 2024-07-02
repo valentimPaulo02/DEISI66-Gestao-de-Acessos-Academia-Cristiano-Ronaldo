@@ -4,7 +4,7 @@ from datetime import date, time, datetime
 
 from flask import jsonify
 
-request_bp = Blueprint("request", __name__)
+request_bp = Blueprint("request", __name__, url_prefix="/DEISI66")
 
 @request_bp.route('/checkRequest', methods=["POST"])
 def checkRequest():

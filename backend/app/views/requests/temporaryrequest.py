@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 from database import mysql
 from datetime import date, time, datetime
 
-temporaryrequest_bp = Blueprint("temporaryrequest", __name__)
+temporaryrequest_bp = Blueprint("temporaryrequest", __name__, url_prefix="/DEISI66")
 
 @temporaryrequest_bp.route('/makeTemporaryRequest', methods=["POST"])
 def makeTemporaryRequest():

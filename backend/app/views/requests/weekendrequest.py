@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 from database import mysql
 from datetime import date, time, datetime, timedelta
 
-weekendrequest_bp = Blueprint("weekendrequest", __name__)
+weekendrequest_bp = Blueprint("weekendrequest", __name__, url_prefix="/DEISI66")
 
 @weekendrequest_bp.route('/makeWeekendRequest', methods=["POST"])
 def makeWeekendRequest():

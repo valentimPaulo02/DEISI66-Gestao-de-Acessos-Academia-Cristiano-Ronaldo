@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 from uuid import uuid4
 from database import mysql
 
-geral_bp = Blueprint("geral", __name__)
+geral_bp = Blueprint("geral", __name__, url_prefix="/DEISI66")
 
 @geral_bp.route('/login', methods=["POST"])
 def login():
